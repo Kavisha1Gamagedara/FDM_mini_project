@@ -22,8 +22,10 @@ from pydantic import BaseModel, Field
 # Import the inference pipeline
 try:
     from backend.pipeline import CancellationPipeline
+    from backend.database import save_reservation_to_db, get_all_reservations_from_db, get_reservation_by_ref
 except ImportError:
     from pipeline import CancellationPipeline
+    from database import save_reservation_to_db, get_all_reservations_from_db, get_reservation_by_ref
 
 # ==============================================================================
 # FastAPI App Initialization & CORS Configuration
@@ -379,3 +381,92 @@ async def predict_batch_bookings(file: UploadFile = File(...)):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to process CSV file: {str(e)}"
         )
+
+
+# ==============================================================================
+# Customer Reservations & MongoDB Persistence Endpoints
+# ==============================================================================
+
+class CustomerReservationInput(BaseModel):
+    booking_ref: Optional[str] = None
+    guest_name: str = Field(default="Guest", description="Name of the lead guest")
+    guest_email: str = Field(default="guest@example.com", description="Guest contact email")
+    hotel: Literal["City Hotel", "Resort Hotel"] = "City Hotel"
+    lead_time: int = Field(default=30, ge=0)
+    arrival_date_month: str = "July"
+    arrival_date_week_number: int = Field(default=28, ge=1, le=53)
+    stays_in_weekend_nights: int = Field(default=1, ge=0)
+    stays_in_week_nights: int = Field(default=2, ge=0)
+    adults: int = Field(default=2, ge=1)
+    children: int = Field(default=0, ge=0)
+    babies: int = Field(default=0, ge=0)
+    meal: str = "BB"
+    country: str = "PRT"
+    market_segment: str = "Direct"
+    distribution_channel: str = "Direct"
+    is_repeated_guest: int = 0
+    previous_cancellations: int = 0
+    previous_bookings_not_canceled: int = 0
+    reserved_room_type: str = "A"
+    deposit_type: str = "No Deposit"
+    customer_type: str = "Transient"
+    adr: float = Field(default=115.0, ge=0.0)
+    required_car_parking_spaces: int = Field(default=0, ge=0)
+    total_of_special_requests: int = Field(default=0, ge=0)
+    created_at: Optional[str] = None
+
+
+@app.post("/reservations", tags=["Reservations"])
+def create_customer_reservation(payload: CustomerReservationInput):
+    """
+    Creates a new reservation from the Customer Portal, automatically evaluates its
+    cancellation risk using the champion XGBoost model, and persists the booking into MongoDB.
+    """
+    try:
+        data = payload.model_dump()
+        
+        # Ensure unique booking reference if not supplied
+        if not data.get("booking_ref"):
+            import random
+            data["booking_ref"] = f"AUR-{random.randint(100000, 999999)}"
+            
+        # Run AI prediction on booking features
+        ai_assessment = pipeline.predict_booking(data)
+        data["prediction"] = ai_assessment
+        
+        # Persist directly into MongoDB
+        saved_doc = save_reservation_to_db(data)
+        return saved_doc
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to create reservation: {str(e)}"
+        )
+
+
+@app.get("/reservations", tags=["Reservations"])
+def list_customer_reservations(limit: int = 100):
+    """
+    Retrieves all customer reservations stored in MongoDB (ordered newest first)
+    so hotel administrators and revenue managers can review bookings and risk scores at any time.
+    """
+    try:
+        reservations = get_all_reservations_from_db(limit=limit)
+        return {"total": len(reservations), "reservations": reservations}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve reservations from database: {str(e)}"
+        )
+
+
+@app.get("/reservations/{booking_ref}", tags=["Reservations"])
+def get_single_reservation(booking_ref: str):
+    """
+    Retrieves a single reservation by its unique booking reference code.
+    """
+    res = get_reservation_by_ref(booking_ref)
+    if not res:
+        raise HTTPException(status_code=404, detail=f"Reservation {booking_ref} not found")
+    return res
+

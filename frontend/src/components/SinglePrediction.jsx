@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Building2, Calendar, Clock, UserCheck, CreditCard, Sparkles, 
   RotateCcw, AlertTriangle, CheckCircle, Info, ChevronRight,
@@ -150,7 +150,7 @@ const PRESETS = {
   }
 };
 
-export default function SinglePrediction({ metadata, apiBaseUrl }) {
+export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustomerBooking }) {
   const today = new Date();
   const todayStr = formatDate(today);
   const initialBookingDate = todayStr;
@@ -173,6 +173,38 @@ export default function SinglePrediction({ metadata, apiBaseUrl }) {
   const [loading, setLoading] = useState(false);
   const [prediction, setPrediction] = useState(null);
   const [error, setError] = useState(null);
+
+  // Automatically populate form when a customer booking is selected from the live feed
+  useEffect(() => {
+    if (selectedCustomerBooking) {
+      setForm(prev => ({
+        ...prev,
+        hotel: selectedCustomerBooking.hotel || prev.hotel,
+        lead_time: selectedCustomerBooking.lead_time ?? prev.lead_time,
+        arrival_date_month: selectedCustomerBooking.arrival_date_month || prev.arrival_date_month,
+        arrival_date_week_number: selectedCustomerBooking.arrival_date_week_number || prev.arrival_date_week_number,
+        stays_in_weekend_nights: selectedCustomerBooking.stays_in_weekend_nights ?? prev.stays_in_weekend_nights,
+        stays_in_week_nights: selectedCustomerBooking.stays_in_week_nights ?? prev.stays_in_week_nights,
+        adults: selectedCustomerBooking.adults ?? prev.adults,
+        children: selectedCustomerBooking.children ?? prev.children,
+        babies: selectedCustomerBooking.babies ?? prev.babies,
+        meal: selectedCustomerBooking.meal || prev.meal,
+        country: selectedCustomerBooking.country || prev.country,
+        market_segment: selectedCustomerBooking.market_segment || prev.market_segment,
+        distribution_channel: selectedCustomerBooking.distribution_channel || prev.distribution_channel,
+        is_repeated_guest: selectedCustomerBooking.is_repeated_guest ?? prev.is_repeated_guest,
+        reserved_room_type: selectedCustomerBooking.reserved_room_type || prev.reserved_room_type,
+        deposit_type: selectedCustomerBooking.deposit_type || prev.deposit_type,
+        adr: selectedCustomerBooking.adr ?? prev.adr,
+        required_car_parking_spaces: selectedCustomerBooking.required_car_parking_spaces ?? prev.required_car_parking_spaces,
+        total_of_special_requests: selectedCustomerBooking.total_of_special_requests ?? prev.total_of_special_requests
+      }));
+
+      if (selectedCustomerBooking.prediction) {
+        setPrediction(selectedCustomerBooking.prediction);
+      }
+    }
+  }, [selectedCustomerBooking]);
 
   const countryList = (metadata?.top_countries || [
     { code: 'PRT', name: 'Portugal (PRT)' },

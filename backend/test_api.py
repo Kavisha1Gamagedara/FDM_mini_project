@@ -134,6 +134,43 @@ def test_predict_batch_csv():
     assert len(data["predictions"]) == 2
     print(f"[PASS] POST /predict/batch (CSV Upload): PASSED -> {data['total_bookings']} bookings processed successfully!")
 
+def test_customer_reservations_mongo():
+    # Test creating customer reservation and persisting to MongoDB
+    booking_data = {
+        "booking_ref": "AUR-TEST-AUTO99",
+        "guest_name": "Jonathan Harker",
+        "guest_email": "jonathan@example.com",
+        "hotel": "City Hotel",
+        "lead_time": 45,
+        "arrival_date_month": "August",
+        "arrival_date_week_number": 33,
+        "stays_in_weekend_nights": 1,
+        "stays_in_week_nights": 2,
+        "adults": 2,
+        "children": 0,
+        "babies": 0,
+        "meal": "BB",
+        "country": "GBR",
+        "deposit_type": "No Deposit",
+        "adr": 135.0,
+        "required_car_parking_spaces": 0,
+        "total_of_special_requests": 1
+    }
+    create_res = client.post("/reservations", json=booking_data)
+    assert create_res.status_code == 200
+    created = create_res.json()
+    assert created["booking_ref"] == "AUR-TEST-AUTO99"
+    assert "prediction" in created
+    assert "risk_band" in created["prediction"]
+    
+    # Test retrieving list from MongoDB
+    list_res = client.get("/reservations")
+    assert list_res.status_code == 200
+    list_data = list_res.json()
+    assert list_data["total"] >= 1
+    
+    print(f"[PASS] POST /reservations & GET /reservations (MongoDB Storage): PASSED -> Ref {created['booking_ref']} saved with {created['prediction']['risk_band']}!")
+
 if __name__ == "__main__":
     print("=" * 70)
     print("RUNNING BACKEND TEST SUITE (backend/test_api.py)")
@@ -145,6 +182,7 @@ if __name__ == "__main__":
     test_predict_low_risk()
     test_predict_validation_error()
     test_predict_batch_csv()
+    test_customer_reservations_mongo()
     print("=" * 70)
-    print("ALL BACKEND TESTS PASSED SUCCESSFULLY! (7/7)")
+    print("ALL BACKEND TESTS PASSED SUCCESSFULLY! (8/8)")
     print("=" * 70)

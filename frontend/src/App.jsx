@@ -1,9 +1,10 @@
 import React, { useState, useEffect, Component } from 'react';
-import { UserCheck, Layers, HelpCircle, ShieldCheck, AlertOctagon } from 'lucide-react';
+import { UserCheck, Layers, HelpCircle, ShieldCheck, AlertOctagon, Sparkles, Eye, ArrowRight } from 'lucide-react';
 import Header from './components/Header';
 import SinglePrediction from './components/SinglePrediction';
 import BatchPrediction from './components/BatchPrediction';
 import ModelIntelModal from './components/ModelIntelModal';
+import CustomerPortal from './components/CustomerPortal';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -42,83 +43,202 @@ class ErrorBoundary extends Component {
 }
 
 export default function App() {
+  const [activePortal, setActivePortal] = useState('admin'); // 'admin' | 'customer'
   const [activeTab, setActiveTab] = useState('single'); // 'single' | 'batch'
   const [backendHealth, setBackendHealth] = useState(null);
   const [metadata, setMetadata] = useState(null);
   const [intelOpen, setIntelOpen] = useState(false);
 
-  // Poll or check backend health & metadata on startup
+  // Customer portal bookings state
+  const [customerBookings, setCustomerBookings] = useState([]);
+  const [selectedCustomerBooking, setSelectedCustomerBooking] = useState(null);
+
+  // Poll or check backend health, metadata & MongoDB reservations on startup
+  const fetchSystemStatus = async () => {
+    try {
+      const healthRes = await fetch(`${API_BASE_URL}/health`);
+      if (healthRes.ok) {
+        const healthData = await healthRes.json();
+        setBackendHealth(healthData);
+      }
+    } catch (err) {
+      console.warn('Backend server not detected yet on http://127.0.0.1:8000');
+    }
+
+    try {
+      const metaRes = await fetch(`${API_BASE_URL}/metadata`);
+      if (metaRes.ok) {
+        const metaData = await metaRes.json();
+        setMetadata(metaData);
+      }
+    } catch (err) {
+      console.warn('Could not load metadata from backend');
+    }
+
+    try {
+      const resRes = await fetch(`${API_BASE_URL}/reservations`);
+      if (resRes.ok) {
+        const resData = await resRes.json();
+        if (resData.reservations && Array.isArray(resData.reservations)) {
+          setCustomerBookings(resData.reservations);
+        }
+      }
+    } catch (err) {
+      console.warn('Could not load reservations from MongoDB backend');
+    }
+  };
+
   useEffect(() => {
-    const fetchSystemStatus = async () => {
-      try {
-        const healthRes = await fetch(`${API_BASE_URL}/health`);
-        if (healthRes.ok) {
-          const healthData = await healthRes.json();
-          setBackendHealth(healthData);
-        }
-      } catch (err) {
-        console.warn('Backend server not detected yet on http://127.0.0.1:8000');
-      }
-
-      try {
-        const metaRes = await fetch(`${API_BASE_URL}/metadata`);
-        if (metaRes.ok) {
-          const metaData = await metaRes.json();
-          setMetadata(metaData);
-        }
-      } catch (err) {
-        console.warn('Could not load metadata from backend');
-      }
-    };
-
     fetchSystemStatus();
     const interval = setInterval(fetchSystemStatus, 15000); // Check every 15s
     return () => clearInterval(interval);
   }, []);
 
+  // When a guest submits a reservation in the Customer Portal
+  const handleCustomerBookingCreated = (savedBooking) => {
+    setCustomerBookings(prev => {
+      const filtered = prev.filter(b => b.booking_ref !== savedBooking.booking_ref);
+      return [savedBooking, ...filtered];
+    });
+    setSelectedCustomerBooking(savedBooking);
+  };
+
   return (
     <div className="app-container">
-      {/* Top Header & System Indicator */}
+      {/* Top Header & System Indicator with Portal Switcher */}
       <Header 
         backendHealth={backendHealth} 
-        onOpenIntel={() => setIntelOpen(true)} 
+        onOpenIntel={() => setIntelOpen(true)}
+        activePortal={activePortal}
+        onSelectPortal={setActivePortal}
+        customerBookingsCount={customerBookings.length}
       />
 
-      {/* Primary Tab Navigation */}
-      <nav className="tabs-nav">
-        <button
-          type="button"
-          id="tab-single-btn"
-          className={`tab-btn ${activeTab === 'single' ? 'active' : ''}`}
-          onClick={() => setActiveTab('single')}
-        >
-          <UserCheck size={18} />
-          <span>Single Booking Risk Assessment</span>
-        </button>
-
-        <button
-          type="button"
-          id="tab-batch-btn"
-          className={`tab-btn ${activeTab === 'batch' ? 'active' : ''}`}
-          onClick={() => setActiveTab('batch')}
-        >
-          <Layers size={18} />
-          <span>Batch Portfolio CSV Analyzer</span>
-        </button>
-      </nav>
-
-      {/* Main Content Area */}
+      {/* Main Content Render based on Active Portal */}
       <main>
         <ErrorBoundary>
-          {activeTab === 'single' ? (
-            <SinglePrediction 
-              metadata={metadata} 
-              apiBaseUrl={API_BASE_URL} 
+          {activePortal === 'customer' ? (
+            <CustomerPortal 
+              onBookingCreated={handleCustomerBookingCreated}
+              onSwitchToAdmin={() => setActivePortal('admin')}
+              metadata={metadata}
+              apiBaseUrl={API_BASE_URL}
             />
           ) : (
-            <BatchPrediction 
-              apiBaseUrl={API_BASE_URL} 
-            />
+            <div>
+              {/* Live Incoming Customer Bookings Stream in Admin View */}
+              {customerBookings.length > 0 && (
+                <div className="glass-panel" style={{ padding: '1rem 1.25rem', marginBottom: '1.75rem', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.06)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <span className="health-pulse" style={{ background: '#818cf8', boxShadow: '0 0 8px #818cf8' }}></span>
+                      <h4 style={{ fontSize: '0.95rem', color: '#fff', fontWeight: 700 }}>
+                        Live Guest Reservations Feed ({customerBookings.length} loaded from MongoDB)
+                      </h4>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <button 
+                        type="button" 
+                        className="preset-btn" 
+                        onClick={fetchSystemStatus}
+                        style={{ fontSize: '0.72rem', padding: '0.2rem 0.6rem' }}
+                        title="Sync with MongoDB"
+                      >
+                        ↻ Sync Database
+                      </button>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        Click any reservation to inspect live AI risk diagnosis
+                      </span>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.75rem' }}>
+                    {customerBookings.map((bk, i) => {
+                      const probPct = bk.prediction ? bk.prediction.cancellation_probability_pct : null;
+                      const riskBand = bk.prediction ? bk.prediction.risk_band : 'Evaluating';
+                      const bandClass = bk.prediction ? bk.prediction.risk_level : 'low';
+
+                      return (
+                        <div
+                          key={bk.booking_ref || i}
+                          onClick={() => {
+                            setSelectedCustomerBooking(bk);
+                            setActiveTab('single');
+                          }}
+                          style={{
+                            padding: '0.85rem 1rem',
+                            background: 'rgba(17,24,39,0.85)',
+                            borderRadius: '12px',
+                            border: '1px solid var(--border-subtle)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.35rem'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--primary-500)'}
+                          onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border-subtle)'}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#fff' }}>
+                              {bk.guest_name}
+                            </span>
+                            {bk.prediction && (
+                              <span className={`risk-band-pill ${bandClass}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.5rem' }}>
+                                {riskBand} ({probPct}%)
+                              </span>
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
+                            <span>{bk.hotel} • {bk.stays_in_weekend_nights + bk.stays_in_week_nights} nts</span>
+                            <span style={{ color: '#34d399', fontWeight: 600 }}>${bk.adr}/nt</span>
+                          </div>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                            Ref #{bk.booking_ref} • Deposit: {bk.deposit_type}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Admin Primary Tab Navigation */}
+              <nav className="tabs-nav">
+                <button
+                  type="button"
+                  id="tab-single-btn"
+                  className={`tab-btn ${activeTab === 'single' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('single')}
+                >
+                  <UserCheck size={18} />
+                  <span>Single Booking Risk Assessment</span>
+                </button>
+
+                <button
+                  type="button"
+                  id="tab-batch-btn"
+                  className={`tab-btn ${activeTab === 'batch' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('batch')}
+                >
+                  <Layers size={18} />
+                  <span>Batch Portfolio CSV Analyzer</span>
+                </button>
+              </nav>
+
+              {/* Admin Views */}
+              {activeTab === 'single' ? (
+                <SinglePrediction 
+                  metadata={metadata} 
+                  apiBaseUrl={API_BASE_URL} 
+                  selectedCustomerBooking={selectedCustomerBooking}
+                />
+              ) : (
+                <BatchPrediction 
+                  apiBaseUrl={API_BASE_URL} 
+                />
+              )}
+            </div>
           )}
         </ErrorBoundary>
       </main>
@@ -131,7 +251,7 @@ export default function App() {
 
       {/* Footer */}
       <footer style={{ marginTop: '3.5rem', textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-        <p>AuraStay AI Intelligence • Stage 9 Operational Deployment • Rogue One Hotel Cancellation Analysis</p>
+        <p>AuraStay AI Intelligence • Dual Guest & Staff Revenue Architecture • Stage 9 Operational Deployment</p>
       </footer>
     </div>
   );
