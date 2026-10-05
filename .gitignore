@@ -4,6 +4,7 @@
 
 # Raw and preprocessed dataset files (large files, GitHub limit is 100MB)
 *.csv
+!reports/*.csv
 data/
 hotel_bookings.csv
 
