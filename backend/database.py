@@ -105,20 +105,50 @@ def save_reservation_to_db(reservation_data: Dict[str, Any]) -> Dict[str, Any]:
     return doc
 
 
-def get_all_reservations_from_db(limit: int = 100) -> List[Dict[str, Any]]:
+def get_all_reservations_from_db(
+    limit: int = 200,
+    market_segment: Optional[str] = None,
+    arrival_date: Optional[str] = None,
+    month: Optional[str] = None,
+    risk_band: Optional[str] = None
+) -> List[Dict[str, Any]]:
     """
-    Retrieves all reservations ordered by most recent first for the admin dashboard.
+    Retrieves reservations ordered by most recent first for the admin dashboard,
+    with optional filtering by market segment, arrival date, month, and risk band.
     """
+    query: Dict[str, Any] = {}
+    if market_segment and market_segment != "all":
+        query["market_segment"] = market_segment
+    if arrival_date and arrival_date != "all":
+        query["$or"] = [
+            {"check_in_date": arrival_date},
+            {"arrival_date_month": arrival_date}
+        ]
+    if month and month != "all":
+        query["arrival_date_month"] = month
+    if risk_band and risk_band != "all":
+        query["prediction.risk_band"] = risk_band
+
     db = get_db()
     if db is not None:
         try:
             col = db[COLLECTION_NAME]
-            cursor = col.find({}, {"_id": 0}).sort("created_at", pymongo.DESCENDING).limit(limit)
+            cursor = col.find(query, {"_id": 0}).sort("created_at", pymongo.DESCENDING).limit(limit)
             return list(cursor)
         except Exception as e:
             print(f"[MongoDB Error] get_all_reservations failed: {e}")
 
-    return list(_in_memory_reservations[:limit])
+    # Fallback in-memory filtering
+    res = list(_in_memory_reservations)
+    if market_segment and market_segment != "all":
+        res = [r for r in res if r.get("market_segment") == market_segment]
+    if arrival_date and arrival_date != "all":
+        res = [r for r in res if r.get("check_in_date") == arrival_date or r.get("arrival_date_month") == arrival_date]
+    if month and month != "all":
+        res = [r for r in res if r.get("arrival_date_month") == month]
+    if risk_band and risk_band != "all":
+        res = [r for r in res if (r.get("prediction") or {}).get("risk_band") == risk_band]
+    return res[:limit]
 
 
 def get_reservation_by_ref(booking_ref: str) -> Optional[Dict[str, Any]]:

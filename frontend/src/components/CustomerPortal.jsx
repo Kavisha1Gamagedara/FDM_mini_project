@@ -212,6 +212,8 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
       guest_name: guestName,
       guest_email: guestEmail,
       hotel: property,
+      check_in_date: checkIn,
+      check_out_date: checkOut,
       lead_time: leadTime,
       arrival_date_month: arrivalMonth,
       arrival_date_week_number: weekNumber,

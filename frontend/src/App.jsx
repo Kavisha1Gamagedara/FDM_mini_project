@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Component } from 'react';
-import { UserCheck, Layers, HelpCircle, ShieldCheck, AlertOctagon, Sparkles, Eye, ArrowRight } from 'lucide-react';
+import { UserCheck, Layers, HelpCircle, ShieldCheck, AlertOctagon, Sparkles, Eye, ArrowRight, CalendarCheck } from 'lucide-react';
 import Header from './components/Header';
 import SinglePrediction from './components/SinglePrediction';
 import BatchPrediction from './components/BatchPrediction';
 import ModelIntelModal from './components/ModelIntelModal';
 import CustomerPortal from './components/CustomerPortal';
+import ReservationsRiskMonitor from './components/ReservationsRiskMonitor';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -44,10 +45,11 @@ class ErrorBoundary extends Component {
 
 export default function App() {
   const [activePortal, setActivePortal] = useState('admin'); // 'admin' | 'customer'
-  const [activeTab, setActiveTab] = useState('single'); // 'single' | 'batch'
+  const [activeTab, setActiveTab] = useState('monitor'); // 'monitor' | 'single' | 'batch'
   const [backendHealth, setBackendHealth] = useState(null);
   const [metadata, setMetadata] = useState(null);
   const [intelOpen, setIntelOpen] = useState(false);
+  const [isLoadingReservations, setIsLoadingReservations] = useState(false);
 
   // Customer portal bookings state
   const [customerBookings, setCustomerBookings] = useState([]);
@@ -55,6 +57,7 @@ export default function App() {
 
   // Poll or check backend health, metadata & MongoDB reservations on startup
   const fetchSystemStatus = async () => {
+    setIsLoadingReservations(true);
     try {
       const healthRes = await fetch(`${API_BASE_URL}/health`);
       if (healthRes.ok) {
@@ -85,6 +88,8 @@ export default function App() {
       }
     } catch (err) {
       console.warn('Could not load reservations from MongoDB backend');
+    } finally {
+      setIsLoadingReservations(false);
     }
   };
 
@@ -120,114 +125,27 @@ export default function App() {
           {activePortal === 'customer' ? (
             <CustomerPortal 
               onBookingCreated={handleCustomerBookingCreated}
-              onSwitchToAdmin={() => setActivePortal('admin')}
+              onSwitchToAdmin={() => {
+                setActivePortal('admin');
+                setActiveTab('monitor');
+              }}
               metadata={metadata}
               apiBaseUrl={API_BASE_URL}
             />
           ) : (
             <div>
-              {/* Live Incoming Customer Bookings Stream in Admin View */}
-              {customerBookings.length > 0 && (
-                <div className="glass-panel" style={{ padding: '1rem 1.25rem', marginBottom: '1.75rem', border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.06)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <span className="health-pulse" style={{ background: '#818cf8', boxShadow: '0 0 8px #818cf8' }}></span>
-                      <h4 style={{ fontSize: '0.95rem', color: '#fff', fontWeight: 700 }}>
-                        Live Guest Reservations Feed ({customerBookings.length} loaded from MongoDB)
-                      </h4>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <button 
-                        type="button" 
-                        className="preset-btn" 
-                        onClick={fetchSystemStatus}
-                        style={{ fontSize: '0.72rem', padding: '0.2rem 0.6rem' }}
-                        title="Sync with MongoDB"
-                      >
-                        ↻ Sync Database
-                      </button>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        Click any reservation to inspect live AI risk diagnosis
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.75rem' }}>
-                    {customerBookings.map((bk, i) => {
-                      const probPct = bk.prediction ? bk.prediction.cancellation_probability_pct : null;
-                      const riskBand = bk.prediction ? bk.prediction.risk_band : 'Evaluating';
-                      const bandClass = bk.prediction ? bk.prediction.risk_level : 'low';
-
-                      return (
-                        <div
-                          key={bk.booking_ref || i}
-                          onClick={() => {
-                            setSelectedCustomerBooking(bk);
-                            setActiveTab('single');
-                          }}
-                          style={{
-                            padding: '0.85rem 1rem',
-                            background: 'rgba(17,24,39,0.85)',
-                            borderRadius: '12px',
-                            border: '1px solid var(--border-subtle)',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.35rem'
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--primary-500)'}
-                          onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border-subtle)'}
-                        >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                            <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                              {bk.guest_name}
-                            </span>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
-                              <span style={{
-                                fontSize: '0.66rem',
-                                fontWeight: 700,
-                                padding: '0.12rem 0.45rem',
-                                borderRadius: '9999px',
-                                textTransform: 'uppercase',
-                                background: bk.market_segment === 'Direct' ? 'rgba(16,185,129,0.15)' :
-                                            bk.market_segment === 'Corporate' ? 'rgba(99,102,241,0.15)' :
-                                            bk.market_segment === 'Groups' ? 'rgba(192,132,252,0.15)' : 'rgba(251,191,36,0.15)',
-                                color: bk.market_segment === 'Direct' ? '#34d399' :
-                                       bk.market_segment === 'Corporate' ? '#818cf8' :
-                                       bk.market_segment === 'Groups' ? '#c084fc' : '#fbbf24',
-                                border: '1px solid ' + (
-                                  bk.market_segment === 'Direct' ? 'rgba(16,185,129,0.35)' :
-                                  bk.market_segment === 'Corporate' ? 'rgba(99,102,241,0.35)' :
-                                  bk.market_segment === 'Groups' ? 'rgba(192,132,252,0.35)' : 'rgba(251,191,36,0.35)'
-                                )
-                              }}>
-                                {bk.market_segment || 'Direct'}
-                                {bk.room_count && bk.room_count > 1 ? ` (${bk.room_count} rms)` : ''}
-                              </span>
-                              {bk.prediction && (
-                                <span className={`risk-band-pill ${bandClass}`} style={{ fontSize: '0.68rem', padding: '0.12rem 0.45rem' }}>
-                                  {riskBand} ({probPct}%)
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
-                            <span>{bk.hotel} • {bk.stays_in_weekend_nights + bk.stays_in_week_nights} nts</span>
-                            <span style={{ color: '#34d399', fontWeight: 600 }}>${bk.adr}/nt</span>
-                          </div>
-                          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                            Ref #{bk.booking_ref} • Deposit: {bk.deposit_type}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
               {/* Admin Primary Tab Navigation */}
-              <nav className="tabs-nav">
+              <nav className="tabs-nav" style={{ marginBottom: '1.75rem' }}>
+                <button
+                  type="button"
+                  id="tab-monitor-btn"
+                  className={`tab-btn ${activeTab === 'monitor' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('monitor')}
+                >
+                  <CalendarCheck size={18} />
+                  <span>Live Reservations & Risk Monitor</span>
+                </button>
+
                 <button
                   type="button"
                   id="tab-single-btn"
@@ -235,7 +153,7 @@ export default function App() {
                   onClick={() => setActiveTab('single')}
                 >
                   <UserCheck size={18} />
-                  <span>Single Booking Risk Assessment</span>
+                  <span>Single Booking AI Inspector</span>
                 </button>
 
                 <button
@@ -250,13 +168,58 @@ export default function App() {
               </nav>
 
               {/* Admin Views */}
-              {activeTab === 'single' ? (
-                <SinglePrediction 
-                  metadata={metadata} 
-                  apiBaseUrl={API_BASE_URL} 
-                  selectedCustomerBooking={selectedCustomerBooking}
+              {activeTab === 'monitor' && (
+                <ReservationsRiskMonitor
+                  reservations={customerBookings}
+                  onSelectBooking={(bk) => {
+                    setSelectedCustomerBooking(bk);
+                    setActiveTab('single');
+                  }}
+                  onRefresh={fetchSystemStatus}
+                  isLoading={isLoadingReservations}
                 />
-              ) : (
+              )}
+
+              {activeTab === 'single' && (
+                <div>
+                  {selectedCustomerBooking && (
+                    <div style={{ 
+                      padding: '0.85rem 1.25rem', 
+                      marginBottom: '1.25rem', 
+                      borderRadius: '12px', 
+                      background: 'rgba(99,102,241,0.1)', 
+                      border: '1px solid rgba(99,102,241,0.3)',
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '0.75rem'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
+                        <Sparkles size={16} color="#818cf8" />
+                        <span>
+                          Currently Inspecting Live Reservation: <strong>{selectedCustomerBooking.guest_name}</strong> (#{selectedCustomerBooking.booking_ref})
+                        </span>
+                      </div>
+                      <button 
+                        type="button" 
+                        className="preset-btn"
+                        onClick={() => setActiveTab('monitor')}
+                        style={{ fontSize: '0.75rem', padding: '0.25rem 0.65rem' }}
+                      >
+                        ← Back to Daily Risk Monitor
+                      </button>
+                    </div>
+                  )}
+                  <SinglePrediction 
+                    metadata={metadata} 
+                    apiBaseUrl={API_BASE_URL} 
+                    selectedCustomerBooking={selectedCustomerBooking}
+                  />
+                </div>
+              )}
+
+              {activeTab === 'batch' && (
                 <BatchPrediction 
                   apiBaseUrl={API_BASE_URL} 
                 />

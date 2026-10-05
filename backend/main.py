@@ -413,6 +413,8 @@ class CustomerReservationInput(BaseModel):
     adr: float = Field(default=115.0, ge=0.0)
     required_car_parking_spaces: int = Field(default=0, ge=0)
     total_of_special_requests: int = Field(default=0, ge=0)
+    check_in_date: Optional[str] = None
+    check_out_date: Optional[str] = None
     booking_channel_name: Optional[str] = "Hotel Direct Website"
     corporate_code: Optional[str] = None
     room_count: Optional[int] = 1
@@ -450,13 +452,25 @@ def create_customer_reservation(payload: CustomerReservationInput):
 
 
 @app.get("/reservations", tags=["Reservations"])
-def list_customer_reservations(limit: int = 100):
+def list_customer_reservations(
+    limit: int = 200,
+    market_segment: Optional[str] = None,
+    arrival_date: Optional[str] = None,
+    month: Optional[str] = None,
+    risk_band: Optional[str] = None
+):
     """
     Retrieves all customer reservations stored in MongoDB (ordered newest first)
-    so hotel administrators and revenue managers can review bookings and risk scores at any time.
+    with optional filtering by market segment, arrival date, month, and risk band.
     """
     try:
-        reservations = get_all_reservations_from_db(limit=limit)
+        reservations = get_all_reservations_from_db(
+            limit=limit,
+            market_segment=market_segment,
+            arrival_date=arrival_date,
+            month=month,
+            risk_band=risk_band
+        )
         return {"total": len(reservations), "reservations": reservations}
     except Exception as e:
         raise HTTPException(
