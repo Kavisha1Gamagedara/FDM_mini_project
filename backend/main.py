@@ -19,13 +19,31 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-# Import the inference pipeline
+# Import the inference pipeline and database functions
 try:
     from backend.pipeline import CancellationPipeline
-    from backend.database import save_reservation_to_db, get_all_reservations_from_db, get_reservation_by_ref
+    from backend.database import (
+        save_reservation_to_db, 
+        get_all_reservations_from_db, 
+        get_reservation_by_ref,
+        create_user,
+        get_user_by_identifier,
+        authenticate_user,
+        get_user_booking_history,
+        cancel_reservation
+    )
 except ImportError:
     from pipeline import CancellationPipeline
-    from database import save_reservation_to_db, get_all_reservations_from_db, get_reservation_by_ref
+    from database import (
+        save_reservation_to_db, 
+        get_all_reservations_from_db, 
+        get_reservation_by_ref,
+        create_user,
+        get_user_by_identifier,
+        authenticate_user,
+        get_user_booking_history,
+        cancel_reservation
+    )
 
 # ==============================================================================
 # FastAPI App Initialization & CORS Configuration
@@ -384,13 +402,73 @@ async def predict_batch_bookings(file: UploadFile = File(...)):
 
 
 # ==============================================================================
+# User Authentication & RBAC Schemas & Endpoints
+# ==============================================================================
+
+class UserRegisterRequest(BaseModel):
+    username: str = Field(..., min_length=3, max_length=50)
+    email: str = Field(..., min_length=5, max_length=100)
+    password: str = Field(..., min_length=4)
+    name: str = "Guest"
+    role: Literal["customer", "admin"] = "customer"
+
+
+class UserLoginRequest(BaseModel):
+    identifier: str  # username or email
+    password: str
+
+
+@app.post("/auth/register", tags=["Authentication"])
+def register_user(payload: UserRegisterRequest):
+    """
+    Registers a new user (customer or admin).
+    """
+    clean_username = payload.username.strip().lower()
+    clean_email = payload.email.strip().lower()
+    
+    if get_user_by_identifier(clean_username) or get_user_by_identifier(clean_email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username or email is already registered."
+        )
+    user = create_user(payload.model_dump())
+    return {"message": "User registered successfully", "user": user}
+
+
+@app.post("/auth/login", tags=["Authentication"])
+def login_user(payload: UserLoginRequest):
+    """
+    Authenticates user or admin with credentials.
+    """
+    user = authenticate_user(payload.identifier, payload.password)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username/email or password."
+        )
+    return {"message": "Login successful", "user": user}
+
+
+@app.get("/auth/history/{identifier}", tags=["Authentication"])
+def user_history(identifier: str):
+    """
+    Retrieves previous booking count, visit count, and cancellation count from MongoDB
+    for a given guest email or username.
+    """
+    history = get_user_booking_history(identifier, identifier)
+    return history
+
+
+# ==============================================================================
 # Customer Reservations & MongoDB Persistence Endpoints
 # ==============================================================================
 
 class CustomerReservationInput(BaseModel):
     booking_ref: Optional[str] = None
+    username: Optional[str] = None
     guest_name: str = Field(default="Guest", description="Name of the lead guest")
-    guest_email: str = Field(default="guest@example.com", description="Guest contact email")
+    guest_email: Optional[str] = Field(default=None, description="Guest contact email")
+    email: Optional[str] = Field(default=None, description="Alias for guest_email")
     hotel: Literal["City Hotel", "Resort Hotel"] = "City Hotel"
     lead_time: int = Field(default=30, ge=0)
     arrival_date_month: str = "July"
@@ -420,14 +498,20 @@ class CustomerReservationInput(BaseModel):
     room_count: Optional[int] = 1
     company: Optional[Union[float, int, str]] = None
     agent: Optional[Union[float, int, str]] = None
+    status: Optional[str] = "confirmed"
     created_at: Optional[str] = None
 
 
 @app.post("/reservations", tags=["Reservations"])
 def create_customer_reservation(payload: CustomerReservationInput):
     """
-    Creates a new reservation from the Customer Portal, automatically evaluates its
-    cancellation risk using the champion XGBoost model, and persists the booking into MongoDB.
+    Creates a new reservation from the Customer Portal.
+    Automatically checks the guest's past booking history in MongoDB to determine
+    if they have visited before or previously cancelled, automatically populating:
+    - is_repeated_guest
+    - previous_cancellations
+    - previous_bookings_not_canceled
+    Evaluates cancellation risk using the champion XGBoost model and persists into MongoDB.
     """
     try:
         data = payload.model_dump()
@@ -437,9 +521,54 @@ def create_customer_reservation(payload: CustomerReservationInput):
             import random
             data["booking_ref"] = f"AUR-{random.randint(100000, 999999)}"
             
+        # Check guest history in MongoDB by email or username
+        guest_email = (data.get("guest_email") or data.get("email") or "").strip().lower()
+        username = (data.get("username") or "").strip().lower()
+        if not guest_email and not username:
+            guest_email = "guest@example.com"
+        data["guest_email"] = guest_email
+
+        # Link or auto-register customer into MongoDB users collection
+        user = get_user_by_identifier(username) if username else None
+        if not user and guest_email:
+            user = get_user_by_identifier(guest_email)
+        if user:
+            data["username"] = user.get("username")
+            data["guest_name"] = data.get("guest_name") or user.get("name", "Guest")
+        elif guest_email and guest_email != "guest@example.com":
+            try:
+                user = create_user({
+                    "username": username or guest_email.split('@')[0],
+                    "email": guest_email,
+                    "name": data.get("guest_name", "Guest"),
+                    "role": "customer"
+                })
+                data["username"] = user.get("username")
+            except Exception:
+                pass
+
+        history = get_user_booking_history(guest_email, data.get("username"))
+        
+        # Auto-update ML history features from real MongoDB record
+        if history["total_past_bookings"] > 0:
+            data["is_repeated_guest"] = history["is_repeated_guest"]
+            data["previous_cancellations"] = history["previous_cancellations"]
+            data["previous_bookings_not_canceled"] = history["previous_bookings_not_canceled"]
+        else:
+            data["is_repeated_guest"] = 0
+            data["previous_cancellations"] = 0
+            data["previous_bookings_not_canceled"] = 0
+            
         # Run AI prediction on booking features
         ai_assessment = pipeline.predict_booking(data)
         data["prediction"] = ai_assessment
+        data["guest_history"] = {
+            "has_ever_visited": history["has_ever_visited"],
+            "has_ever_cancelled": history["has_ever_cancelled"],
+            "total_past_bookings": history["total_past_bookings"],
+            "previous_cancellations": history["previous_cancellations"],
+            "previous_bookings_not_canceled": history["previous_bookings_not_canceled"]
+        }
         
         # Persist directly into MongoDB
         saved_doc = save_reservation_to_db(data)
@@ -488,4 +617,16 @@ def get_single_reservation(booking_ref: str):
     if not res:
         raise HTTPException(status_code=404, detail=f"Reservation {booking_ref} not found")
     return res
+
+
+@app.post("/reservations/{booking_ref}/cancel", tags=["Reservations"])
+def cancel_guest_reservation(booking_ref: str):
+    """
+    Cancels an existing reservation in MongoDB.
+    Future bookings by this user will now reflect a recorded previous cancellation!
+    """
+    updated = cancel_reservation(booking_ref)
+    if not updated:
+        raise HTTPException(status_code=404, detail=f"Reservation {booking_ref} not found")
+    return {"message": "Reservation cancelled successfully", "reservation": updated}
 

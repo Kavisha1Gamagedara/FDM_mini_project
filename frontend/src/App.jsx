@@ -6,6 +6,8 @@ import BatchPrediction from './components/BatchPrediction';
 import ModelIntelModal from './components/ModelIntelModal';
 import CustomerPortal from './components/CustomerPortal';
 import ReservationsRiskMonitor from './components/ReservationsRiskMonitor';
+import AuthModal from './components/AuthModal';
+import AdminLoginGate from './components/AdminLoginGate';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -44,7 +46,31 @@ class ErrorBoundary extends Component {
 }
 
 export default function App() {
-  const [activePortal, setActivePortal] = useState('admin'); // 'admin' | 'customer'
+  // Authentication & RBAC Session State
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('aurastay_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState('login');
+  const [authModalAdminPrompt, setAuthModalAdminPrompt] = useState(false);
+
+  // Portal State: Default to customer portal for guests, or admin if already logged in as admin
+  const [activePortal, setActivePortal] = useState(() => {
+    try {
+      const saved = localStorage.getItem('aurastay_user');
+      const u = saved ? JSON.parse(saved) : null;
+      return u?.role === 'admin' ? 'admin' : 'customer';
+    } catch (e) {
+      return 'customer';
+    }
+  });
+
   const [activeTab, setActiveTab] = useState('monitor'); // 'monitor' | 'single' | 'batch'
   const [backendHealth, setBackendHealth] = useState(null);
   const [metadata, setMetadata] = useState(null);
@@ -99,6 +125,34 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Authentication Handlers
+  const handleOpenAuth = (mode = 'login', adminPrompt = false) => {
+    setAuthModalMode(mode);
+    setAuthModalAdminPrompt(adminPrompt);
+    setAuthModalOpen(true);
+  };
+
+  const handleAuthSuccess = (user) => {
+    setCurrentUser(user);
+    try {
+      localStorage.setItem('aurastay_user', JSON.stringify(user));
+    } catch (e) {}
+
+    // If admin logged in, automatically switch to admin portal
+    if (user.role === 'admin') {
+      setActivePortal('admin');
+      setActiveTab('monitor');
+    }
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    try {
+      localStorage.removeItem('aurastay_user');
+    } catch (e) {}
+    setActivePortal('customer');
+  };
+
   // When a guest submits a reservation in the Customer Portal
   const handleCustomerBookingCreated = (savedBooking) => {
     setCustomerBookings(prev => {
@@ -108,15 +162,40 @@ export default function App() {
     setSelectedCustomerBooking(savedBooking);
   };
 
+  // Admin action to cancel a reservation
+  const handleAdminCancelReservation = async (bookingRef) => {
+    if (!window.confirm(`Are you sure you want to cancel reservation #${bookingRef} in MongoDB?`)) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/reservations/${bookingRef}/cancel`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        fetchSystemStatus();
+        alert(`Reservation #${bookingRef} has been marked as cancelled in MongoDB.`);
+      }
+    } catch (e) {
+      alert('Failed to cancel reservation.');
+    }
+  };
+
   return (
     <div className="app-container">
-      {/* Top Header & System Indicator with Portal Switcher */}
+      {/* Top Header & System Indicator with Portal Switcher and RBAC Badges */}
       <Header 
         backendHealth={backendHealth} 
         onOpenIntel={() => setIntelOpen(true)}
         activePortal={activePortal}
-        onSelectPortal={setActivePortal}
+        onSelectPortal={(portal) => {
+          if (portal === 'admin' && currentUser?.role !== 'admin') {
+            handleOpenAuth('admin', true);
+          } else {
+            setActivePortal(portal);
+          }
+        }}
         customerBookingsCount={customerBookings.length}
+        currentUser={currentUser}
+        onOpenAuth={handleOpenAuth}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Render based on Active Portal */}
@@ -127,10 +206,18 @@ export default function App() {
               onBookingCreated={handleCustomerBookingCreated}
               onSwitchToAdmin={() => {
                 setActivePortal('admin');
-                setActiveTab('monitor');
               }}
               metadata={metadata}
               apiBaseUrl={API_BASE_URL}
+              currentUser={currentUser}
+              onOpenAuth={handleOpenAuth}
+            />
+          ) : currentUser?.role !== 'admin' ? (
+            <AdminLoginGate
+              apiBaseUrl={API_BASE_URL}
+              onAuthSuccess={handleAuthSuccess}
+              onCancel={() => setActivePortal('customer')}
+              currentUser={currentUser}
             />
           ) : (
             <div>
@@ -176,6 +263,7 @@ export default function App() {
                     setActiveTab('single');
                   }}
                   onRefresh={fetchSystemStatus}
+                  onCancelReservation={handleAdminCancelReservation}
                   isLoading={isLoadingReservations}
                 />
               )}
@@ -228,6 +316,16 @@ export default function App() {
           )}
         </ErrorBoundary>
       </main>
+
+      {/* Authentication Modal with Customer Sign In, Register, and Admin Access */}
+      <AuthModal 
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+        initialMode={authModalMode}
+        adminPrompt={authModalAdminPrompt}
+        apiBaseUrl={API_BASE_URL}
+      />
 
       {/* Modal Dialog for Model Intel & Architecture */}
       <ModelIntelModal 

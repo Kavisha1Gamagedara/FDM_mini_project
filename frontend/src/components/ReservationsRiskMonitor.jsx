@@ -3,7 +3,7 @@ import {
   Calendar, Filter, Layers, AlertTriangle, CheckCircle2, 
   AlertOctagon, Search, Eye, RefreshCw, Clock, 
   TrendingDown, DollarSign, Users, Building2, Sparkles, 
-  X, ShieldCheck, ArrowRight, ChevronRight
+  X, ShieldCheck, ArrowRight, ChevronRight, Ban
 } from 'lucide-react';
 
 const MONTH_NAMES = [
@@ -28,6 +28,7 @@ export default function ReservationsRiskMonitor({
   reservations = [], 
   onSelectBooking, 
   onRefresh, 
+  onCancelReservation,
   isLoading = false 
 }) {
   const today = new Date();
@@ -665,9 +666,48 @@ export default function ReservationsRiskMonitor({
                     >
                       {/* Ref & Guest */}
                       <td style={{ padding: '0.85rem 0.6rem' }}>
-                        <div style={{ fontWeight: 700, color: '#fff' }}>{bk.guest_name || 'Guest'}</div>
-                        <div style={{ fontSize: '0.72rem', color: '#818cf8', fontFamily: 'monospace', marginTop: '0.1rem' }}>
-                          #{bk.booking_ref}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
+                          <span style={{ fontWeight: 700, color: '#fff' }}>{bk.guest_name || 'Guest'}</span>
+                          {bk.is_repeated_guest === 1 && (
+                            <span style={{ 
+                              fontSize: '0.62rem', 
+                              padding: '0.1rem 0.4rem', 
+                              borderRadius: '4px', 
+                              background: 'rgba(52, 211, 153, 0.15)', 
+                              color: '#34d399', 
+                              border: '1px solid rgba(52, 211, 153, 0.35)', 
+                              fontWeight: 700 
+                            }}>
+                              REPEAT
+                            </span>
+                          )}
+                          {bk.previous_cancellations > 0 && (
+                            <span style={{ 
+                              fontSize: '0.62rem', 
+                              padding: '0.1rem 0.4rem', 
+                              borderRadius: '4px', 
+                              background: 'rgba(244, 63, 94, 0.15)', 
+                              color: '#f43f5e', 
+                              border: '1px solid rgba(244, 63, 94, 0.35)', 
+                              fontWeight: 700 
+                            }}>
+                              {bk.previous_cancellations} CANCEL
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', marginTop: '0.15rem' }}>
+                          <span style={{ fontSize: '0.72rem', color: '#818cf8', fontFamily: 'monospace' }}>
+                            #{bk.booking_ref}
+                          </span>
+                          {bk.status === 'cancelled' ? (
+                            <span style={{ fontSize: '0.62rem', padding: '0.05rem 0.35rem', borderRadius: '3px', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', fontWeight: 700 }}>
+                              CANCELLED
+                            </span>
+                          ) : (
+                            <span style={{ fontSize: '0.62rem', padding: '0.05rem 0.35rem', borderRadius: '3px', background: 'rgba(16, 185, 129, 0.12)', color: '#6ee7b7' }}>
+                              CONFIRMED
+                            </span>
+                          )}
                         </div>
                       </td>
 
@@ -743,19 +783,46 @@ export default function ReservationsRiskMonitor({
 
                       {/* Actions */}
                       <td style={{ padding: '0.85rem 0.6rem', textAlign: 'right' }}>
-                        <button
-                          type="button"
-                          className="preset-btn"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onSelectBooking) onSelectBooking(bk);
-                          }}
-                          style={{ fontSize: '0.72rem', padding: '0.25rem 0.6rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
-                          title="Inspect AI Feature Drivers & SHAP"
-                        >
-                          <Eye size={12} />
-                          <span>AI Inspect</span>
-                        </button>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '0.4rem' }}>
+                          <button
+                            type="button"
+                            className="preset-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (onSelectBooking) onSelectBooking(bk);
+                            }}
+                            style={{ fontSize: '0.72rem', padding: '0.25rem 0.6rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}
+                            title="Inspect AI Feature Drivers & SHAP"
+                          >
+                            <Eye size={12} />
+                            <span>AI Inspect</span>
+                          </button>
+                          {onCancelReservation && bk.status !== 'cancelled' && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onCancelReservation(bk.booking_ref);
+                              }}
+                              style={{ 
+                                fontSize: '0.72rem', 
+                                padding: '0.25rem 0.55rem', 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                gap: '0.25rem',
+                                background: 'rgba(239, 68, 68, 0.12)',
+                                border: '1px solid rgba(239, 68, 68, 0.35)',
+                                color: '#fca5a5',
+                                borderRadius: '6px',
+                                cursor: 'pointer'
+                              }}
+                              title="Mark reservation as cancelled in MongoDB"
+                            >
+                              <Ban size={12} />
+                              <span>Cancel</span>
+                            </button>
+                          )}
+                        </div>
                       </td>
 
                     </tr>

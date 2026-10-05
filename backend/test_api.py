@@ -5,6 +5,7 @@ Verifies all endpoints: Health, Metadata, Single Prediction, Validation Errors, 
 
 import io
 import sys
+import time
 from pathlib import Path
 
 # Add project root directory to Python path
@@ -171,6 +172,72 @@ def test_customer_reservations_mongo():
     
     print(f"[PASS] POST /reservations & GET /reservations (MongoDB Storage): PASSED -> Ref {created['booking_ref']} saved with {created['prediction']['risk_band']}!")
 
+def test_auth_and_cancellation_tracking():
+    # 1. Admin login with pre-saved credentials (admin / admin123)
+    admin_login_res = client.post("/auth/login", json={"identifier": "admin", "password": "admin123"})
+    assert admin_login_res.status_code == 200
+    admin_data = admin_login_res.json()["user"]
+    assert admin_data["role"] == "admin"
+    print(f"[PASS] Admin Pre-Saved Login: PASSED -> User '{admin_data['username']}' Role: {admin_data['role']}")
+
+    # 2. Customer registration & login
+    new_user = {
+        "username": f"testguest_{int(time.time())}",
+        "email": f"test_{int(time.time())}@example.com",
+        "name": "Sarah Connor",
+        "password": "mypassword123",
+        "role": "customer"
+    }
+    reg_res = client.post("/auth/register", json=new_user)
+    assert reg_res.status_code == 200
+    cust_data = reg_res.json()["user"]
+    assert cust_data["role"] == "customer"
+
+    cust_login = client.post("/auth/login", json={"identifier": new_user["email"], "password": "mypassword123"})
+    assert cust_login.status_code == 200
+    print(f"[PASS] Customer Registration & Login: PASSED -> User '{cust_data['email']}'")
+
+    # 3. Create a reservation for this customer
+    ref_1 = f"AUR-TEST-HIST-{int(time.time()) % 10000}"
+    res_payload_1 = {
+        "booking_ref": ref_1,
+        "guest_name": new_user["name"],
+        "guest_email": new_user["email"],
+        "username": new_user["username"],
+        "hotel": "City Hotel",
+        "lead_time": 20,
+        "adr": 120.0
+    }
+    b1_res = client.post("/reservations", json=res_payload_1)
+    assert b1_res.status_code == 200
+    b1_data = b1_res.json()
+    # First booking: not repeated guest yet
+    assert b1_data["is_repeated_guest"] == 0
+
+    # 4. Cancel the reservation
+    cancel_res = client.post(f"/reservations/{ref_1}/cancel")
+    assert cancel_res.status_code == 200
+    print(f"[PASS] Reservation Cancellation: PASSED -> Ref {ref_1} marked as cancelled")
+
+    # 5. Make a 2nd reservation for the same customer -> system should detect previous cancellation!
+    ref_2 = f"AUR-TEST-HIST2-{int(time.time()) % 10000}"
+    res_payload_2 = {
+        "booking_ref": ref_2,
+        "guest_name": new_user["name"],
+        "guest_email": new_user["email"],
+        "username": new_user["username"],
+        "hotel": "City Hotel",
+        "lead_time": 20,
+        "adr": 120.0
+    }
+    b2_res = client.post("/reservations", json=res_payload_2)
+    assert b2_res.status_code == 200
+    b2_data = b2_res.json()
+    # Now user has history: is_repeated_guest=1, previous_cancellations=1!
+    assert b2_data["is_repeated_guest"] == 1
+    assert b2_data["previous_cancellations"] >= 1
+    print(f"[PASS] History Tracking (Repeated Guest & Previous Cancellation): PASSED -> is_repeated_guest={b2_data['is_repeated_guest']}, previous_cancellations={b2_data['previous_cancellations']} detected automatically!")
+
 if __name__ == "__main__":
     print("=" * 70)
     print("RUNNING BACKEND TEST SUITE (backend/test_api.py)")
@@ -183,6 +250,7 @@ if __name__ == "__main__":
     test_predict_validation_error()
     test_predict_batch_csv()
     test_customer_reservations_mongo()
+    test_auth_and_cancellation_tracking()
     print("=" * 70)
-    print("ALL BACKEND TESTS PASSED SUCCESSFULLY! (8/8)")
+    print("ALL BACKEND TESTS PASSED SUCCESSFULLY! (9/9)")
     print("=" * 70)

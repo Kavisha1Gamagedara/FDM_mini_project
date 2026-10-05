@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Building2, Calendar, Users, BedDouble, Utensils, 
   Car, Sparkles, CheckCircle2, ShieldCheck, MapPin, 
   ArrowRight, CreditCard, Lock, HeartHandshake, Eye,
-  Briefcase, Globe, Share2, Tag, Check, Layers, Info, Percent
+  Briefcase, Globe, Share2, Tag, Check, Layers, Info, Percent,
+  User, History, AlertCircle, Trash2, LogIn, ChevronDown, ChevronUp
 } from 'lucide-react';
 
 const MONTH_NAMES = [
@@ -138,7 +139,14 @@ const CHANNELS = {
   }
 };
 
-export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, metadata, apiBaseUrl = 'http://127.0.0.1:8000' }) {
+export default function CustomerPortal({ 
+  onBookingCreated, 
+  onSwitchToAdmin, 
+  metadata, 
+  apiBaseUrl = 'http://127.0.0.1:8000',
+  currentUser = null,
+  onOpenAuth
+}) {
   const today = new Date();
   const todayStr = formatDate(today);
   const defaultCheckIn = formatDate(addDays(today, 14));
@@ -169,11 +177,64 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
   const [specialRequests, setSpecialRequests] = useState(1);
   const [isReturningGuest, setIsReturningGuest] = useState(0);
 
-  // Guest Contact Form
-  const [guestName, setGuestName] = useState('Alexandra Miller');
-  const [guestEmail, setGuestEmail] = useState('alexandra.miller@example.com');
+  // Guest Contact Form & User History Tracking
+  const [guestName, setGuestName] = useState(currentUser?.name || 'Alexandra Miller');
+  const [guestEmail, setGuestEmail] = useState(currentUser?.email || 'alexandra.miller@example.com');
+  const [userHistory, setUserHistory] = useState(null);
+  const [showHistoryDrawer, setShowHistoryDrawer] = useState(false);
+  const [cancellingRef, setCancellingRef] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [confirmedBooking, setConfirmedBooking] = useState(null);
+
+  // Sync with logged in user & query MongoDB history
+  useEffect(() => {
+    if (currentUser) {
+      setGuestName(currentUser.name || currentUser.username);
+      setGuestEmail(currentUser.email || '');
+      fetchUserHistory(currentUser.email || currentUser.username);
+    } else {
+      setUserHistory(null);
+    }
+  }, [currentUser]);
+
+  const fetchUserHistory = async (identifier) => {
+    try {
+      const res = await fetch(`${apiBaseUrl}/auth/history/${identifier}`);
+      if (res.ok) {
+        const data = await res.json();
+        setUserHistory(data);
+        if (data.is_repeated_guest) {
+          setIsReturningGuest(1);
+        }
+      }
+    } catch (e) {
+      console.warn('Could not load user booking history:', e);
+    }
+  };
+
+  const handleCancelBooking = async (bookingRef) => {
+    if (!window.confirm(`Are you sure you want to cancel reservation #${bookingRef}? This cancellation will be recorded in your account history.`)) {
+      return;
+    }
+    setCancellingRef(bookingRef);
+    try {
+      const res = await fetch(`${apiBaseUrl}/reservations/${bookingRef}/cancel`, {
+        method: 'POST'
+      });
+      if (res.ok) {
+        if (currentUser) {
+          await fetchUserHistory(currentUser.email || currentUser.username);
+        }
+        alert(`Reservation #${bookingRef} successfully cancelled in MongoDB!`);
+      } else {
+        alert('Failed to cancel reservation.');
+      }
+    } catch (e) {
+      alert('Network error while cancelling reservation.');
+    } finally {
+      setCancellingRef(null);
+    }
+  };
 
   // Stay calculation
   const { weekendNights, weekNights } = computeStayNights(checkIn, checkOut);
@@ -200,6 +261,12 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
 
   const handleBookNow = async (e) => {
     e.preventDefault();
+    if (!currentUser) {
+      if (onOpenAuth) {
+        onOpenAuth('login', false);
+      }
+      return;
+    }
     setIsSubmitting(true);
 
     const arrivalDateObj = new Date(checkIn + 'T00:00:00');
@@ -209,6 +276,7 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
 
     const bookingPayload = {
       booking_ref: bookingRef,
+      username: currentUser ? currentUser.username : null,
       guest_name: guestName,
       guest_email: guestEmail,
       hotel: property,
@@ -229,9 +297,9 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
       customer_type: currentChannel.customer_type,
       agent: currentChannel.agent,
       company: bookingChannel === 'CORPORATE' ? (corporateCode || 'CORP-45') : null,
-      is_repeated_guest: Number(isReturningGuest),
-      previous_cancellations: 0,
-      previous_bookings_not_canceled: Number(isReturningGuest) ? 2 : 0,
+      is_repeated_guest: userHistory ? userHistory.is_repeated_guest : Number(isReturningGuest),
+      previous_cancellations: userHistory ? userHistory.previous_cancellations : 0,
+      previous_bookings_not_canceled: userHistory ? userHistory.previous_bookings_not_canceled : (Number(isReturningGuest) ? 2 : 0),
       reserved_room_type: roomType,
       deposit_type: depositOption,
       adr: adr,
@@ -240,6 +308,7 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
       booking_channel_name: currentChannel.name,
       corporate_code: bookingChannel === 'CORPORATE' ? corporateCode : null,
       room_count: effectiveRooms,
+      status: 'confirmed',
       created_at: new Date().toISOString()
     };
 
@@ -258,6 +327,9 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
           effectiveRooms,
           channelInfo: currentChannel
         });
+        if (currentUser) {
+          fetchUserHistory(currentUser.email || currentUser.username);
+        }
         if (onBookingCreated) {
           onBookingCreated(savedData);
         }
@@ -315,6 +387,194 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
           </p>
         </div>
       </div>
+
+      {/* Logged In Guest Loyalty & Account History Bar */}
+      {currentUser ? (
+        <div className="glass-panel" style={{ 
+          padding: '1.25rem 1.5rem', 
+          borderRadius: '16px', 
+          background: 'rgba(99,102,241,0.08)', 
+          border: '1px solid rgba(99,102,241,0.25)', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '1rem' 
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <User size={20} color="#818cf8" />
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <h4 style={{ fontSize: '1rem', color: '#fff', fontWeight: 700 }}>
+                    {currentUser.name}
+                  </h4>
+                  <span style={{ 
+                    fontSize: '0.68rem', 
+                    padding: '0.12rem 0.45rem', 
+                    borderRadius: '9999px', 
+                    background: userHistory?.has_ever_visited ? 'rgba(16,185,129,0.15)' : 'rgba(99,102,241,0.15)', 
+                    color: userHistory?.has_ever_visited ? '#34d399' : '#c7d2fe', 
+                    border: `1px solid ${userHistory?.has_ever_visited ? 'rgba(16,185,129,0.3)' : 'rgba(99,102,241,0.3)'}`, 
+                    fontWeight: 700 
+                  }}>
+                    {userHistory?.has_ever_visited ? '✨ Returning AuraStay Member' : '🌱 First-Time Guest'}
+                  </span>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                  {currentUser.email} • <strong>{userHistory ? userHistory.total_past_bookings : 0} Stays on File</strong> • 
+                  <span style={{ color: userHistory?.previous_cancellations > 0 ? '#fda4af' : '#6ee7b7', marginLeft: '0.25rem' }}>
+                    {userHistory ? userHistory.previous_cancellations : 0} Recorded Cancellations
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {userHistory && userHistory.total_past_bookings > 0 && (
+                <button
+                  type="button"
+                  className="preset-btn"
+                  onClick={() => setShowHistoryDrawer(!showHistoryDrawer)}
+                  style={{ fontSize: '0.78rem', padding: '0.4rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+                >
+                  <History size={14} />
+                  <span>{showHistoryDrawer ? 'Hide Stays' : `My Stays & Cancellations (${userHistory.total_past_bookings})`}</span>
+                  {showHistoryDrawer ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Collapsible History Drawer */}
+          {showHistoryDrawer && userHistory?.history && (
+            <div style={{ paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.06)', animation: 'fadeIn 0.25s ease' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+                  Your Account Reservation History in MongoDB:
+                </span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                  Cancelling an active reservation immediately updates your cancellation history in the AI engine.
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                {userHistory.history.map((bk, i) => {
+                  const isCancelled = bk.status === 'cancelled' || bk.deposit_type === 'Cancelled';
+                  return (
+                    <div 
+                      key={bk.booking_ref || i}
+                      style={{ 
+                        padding: '0.75rem 1rem', 
+                        background: 'rgba(255,255,255,0.03)', 
+                        borderRadius: '10px', 
+                        border: '1px solid var(--border-subtle)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '0.5rem'
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#fff' }}>
+                            {bk.hotel}
+                          </span>
+                          <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: '#818cf8' }}>
+                            #{bk.booking_ref}
+                          </span>
+                          <span style={{ 
+                            fontSize: '0.66rem', 
+                            padding: '0.1rem 0.4rem', 
+                            borderRadius: '4px',
+                            fontWeight: 700,
+                            background: isCancelled ? 'rgba(244,63,94,0.15)' : 'rgba(16,185,129,0.15)',
+                            color: isCancelled ? '#fda4af' : '#6ee7b7'
+                          }}>
+                            {isCancelled ? 'CANCELLED' : 'CONFIRMED'}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                          Dates: {bk.check_in_date || bk.arrival_date_month} • Rate: ${bk.adr}/nt • Segment: {bk.market_segment || 'Direct'}
+                        </div>
+                      </div>
+
+                      <div>
+                        {!isCancelled && (
+                          <button
+                            type="button"
+                            className="preset-btn"
+                            disabled={cancellingRef === bk.booking_ref}
+                            onClick={() => handleCancelBooking(bk.booking_ref)}
+                            style={{ 
+                              fontSize: '0.72rem', 
+                              padding: '0.25rem 0.65rem', 
+                              color: '#fda4af', 
+                              borderColor: 'rgba(244,63,94,0.3)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem'
+                            }}
+                          >
+                            <Trash2 size={12} />
+                            <span>{cancellingRef === bk.booking_ref ? 'Cancelling...' : 'Cancel Reservation'}</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="glass-panel" style={{ 
+          padding: '1.15rem 1.5rem', 
+          borderRadius: '16px', 
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(168,85,247,0.08) 100%)', 
+          border: '1px solid rgba(129,140,248,0.3)', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          flexWrap: 'wrap', 
+          gap: '0.85rem' 
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(99,102,241,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Lock size={17} color="#818cf8" />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>
+                Customer Sign In Required to Reserve Rooms
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.15rem' }}>
+                Explore properties and rates freely. Sign in or register as a guest to confirm reservations and record stay history.
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="preset-btn"
+            onClick={() => onOpenAuth && onOpenAuth('login')}
+            style={{ 
+              fontSize: '0.8rem', 
+              padding: '0.45rem 1rem', 
+              background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)', 
+              color: '#fff', 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '0.4rem',
+              fontWeight: 600,
+              boxShadow: '0 4px 12px rgba(99,102,241,0.3)'
+            }}
+          >
+            <LogIn size={14} />
+            <span>Sign In / Register as Customer</span>
+          </button>
+        </div>
+      )}
 
       {/* Confirmation View or Booking Form */}
       {confirmedBooking ? (
@@ -1020,32 +1280,101 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
               </div>
             </div>
 
-            {/* Guest Name & Email */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div className="input-group">
-                <label className="input-label" htmlFor="guest_name">Lead Guest Name</label>
-                <input 
-                  id="guest_name" 
-                  type="text" 
-                  className="input-field" 
-                  value={guestName} 
-                  onChange={(e) => setGuestName(e.target.value)} 
-                  required
-                />
-              </div>
+            {/* Guest Name & Email OR Sign-In Requirement */}
+            {!currentUser ? (
+              <div style={{
+                padding: '1.25rem',
+                background: 'linear-gradient(135deg, rgba(99,102,241,0.18) 0%, rgba(168,85,247,0.12) 100%)',
+                border: '1px solid rgba(129,140,248,0.4)',
+                borderRadius: '16px',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: 'rgba(99,102,241,0.25)',
+                  border: '1px solid rgba(129,140,248,0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto'
+                }}>
+                  <Lock size={18} color="#c7d2fe" />
+                </div>
+                <div>
+                  <h5 style={{ fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.25rem' }}>
+                    Customer Sign In Required
+                  </h5>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                    To finalize your room reservation, track stay history, and calculate cancellation risk, please sign in or register as a guest.
+                  </p>
+                </div>
 
-              <div className="input-group">
-                <label className="input-label" htmlFor="guest_email">Contact Email</label>
-                <input 
-                  id="guest_email" 
-                  type="email" 
-                  className="input-field" 
-                  value={guestEmail} 
-                  onChange={(e) => setGuestEmail(e.target.value)} 
-                  required
-                />
+                <button
+                  type="button"
+                  className="submit-btn"
+                  onClick={() => onOpenAuth && onOpenAuth('login', false)}
+                  style={{
+                    padding: '0.6rem 1rem',
+                    fontSize: '0.84rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.45rem',
+                    background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                    boxShadow: '0 4px 12px rgba(99,102,241,0.35)'
+                  }}
+                >
+                  <LogIn size={15} />
+                  <span>Sign In / Register as Customer</span>
+                </button>
               </div>
-            </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{
+                  padding: '0.65rem 0.85rem',
+                  borderRadius: '10px',
+                  background: 'rgba(16, 185, 129, 0.12)',
+                  border: '1px solid rgba(16, 185, 129, 0.35)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  fontSize: '0.78rem',
+                  color: '#6ee7b7'
+                }}>
+                  <CheckCircle2 size={16} color="#34d399" />
+                  <span>Authenticated Member: <strong>@{currentUser.username}</strong></span>
+                </div>
+
+                <div className="input-group">
+                  <label className="input-label" htmlFor="guest_name">Lead Guest Name</label>
+                  <input 
+                    id="guest_name" 
+                    type="text" 
+                    className="input-field" 
+                    value={guestName} 
+                    onChange={(e) => setGuestName(e.target.value)} 
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label className="input-label" htmlFor="guest_email">Contact Email</label>
+                  <input 
+                    id="guest_email" 
+                    type="email" 
+                    className="input-field" 
+                    value={guestEmail} 
+                    onChange={(e) => setGuestEmail(e.target.value)} 
+                    required
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Price Calculations */}
             <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -1075,20 +1404,41 @@ export default function CustomerPortal({ onBookingCreated, onSwitchToAdmin, meta
               </div>
             </div>
 
-            <button 
-              type="submit"
-              className="submit-btn"
-              disabled={isSubmitting || totalNights <= 0}
-            >
-              {isSubmitting ? (
-                <span>Confirming Booking & Saving to Database...</span>
-              ) : (
-                <>
-                  <span>Complete My Reservation</span>
-                  <ArrowRight size={18} />
-                </>
-              )}
-            </button>
+            {!currentUser ? (
+              <button 
+                type="button"
+                className="submit-btn"
+                onClick={() => onOpenAuth && onOpenAuth('login', false)}
+                style={{
+                  background: 'linear-gradient(135deg, rgba(99,102,241,0.4) 0%, rgba(168,85,247,0.3) 100%)',
+                  border: '1px solid rgba(129,140,248,0.5)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                <Lock size={16} />
+                <span>Sign In as Customer to Book (${estimatedTotal})</span>
+              </button>
+            ) : (
+              <button 
+                type="submit"
+                className="submit-btn"
+                disabled={isSubmitting || totalNights <= 0}
+              >
+                {isSubmitting ? (
+                  <span>Confirming Booking & Saving to Database...</span>
+                ) : (
+                  <>
+                    <CheckCircle2 size={18} />
+                    <span>Confirm & Reserve Room (${estimatedTotal})</span>
+                    <ArrowRight size={18} />
+                  </>
+                )}
+              </button>
+            )}
 
             <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'center' }}>
               🔒 256-bit SSL Encrypted • Direct PMS Synchronized
