@@ -413,6 +413,11 @@ class CustomerReservationInput(BaseModel):
     adr: float = Field(default=115.0, ge=0.0)
     required_car_parking_spaces: int = Field(default=0, ge=0)
     total_of_special_requests: int = Field(default=0, ge=0)
+    booking_channel_name: Optional[str] = "Hotel Direct Website"
+    corporate_code: Optional[str] = None
+    room_count: Optional[int] = 1
+    company: Optional[Union[float, int, str]] = None
+    agent: Optional[Union[float, int, str]] = None
     created_at: Optional[str] = None
 
 

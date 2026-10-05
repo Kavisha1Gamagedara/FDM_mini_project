@@ -179,15 +179,38 @@ export default function App() {
                           onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--primary-500)'}
                           onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border-subtle)'}
                         >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#fff' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {bk.guest_name}
                             </span>
-                            {bk.prediction && (
-                              <span className={`risk-band-pill ${bandClass}`} style={{ fontSize: '0.7rem', padding: '0.15rem 0.5rem' }}>
-                                {riskBand} ({probPct}%)
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
+                              <span style={{
+                                fontSize: '0.66rem',
+                                fontWeight: 700,
+                                padding: '0.12rem 0.45rem',
+                                borderRadius: '9999px',
+                                textTransform: 'uppercase',
+                                background: bk.market_segment === 'Direct' ? 'rgba(16,185,129,0.15)' :
+                                            bk.market_segment === 'Corporate' ? 'rgba(99,102,241,0.15)' :
+                                            bk.market_segment === 'Groups' ? 'rgba(192,132,252,0.15)' : 'rgba(251,191,36,0.15)',
+                                color: bk.market_segment === 'Direct' ? '#34d399' :
+                                       bk.market_segment === 'Corporate' ? '#818cf8' :
+                                       bk.market_segment === 'Groups' ? '#c084fc' : '#fbbf24',
+                                border: '1px solid ' + (
+                                  bk.market_segment === 'Direct' ? 'rgba(16,185,129,0.35)' :
+                                  bk.market_segment === 'Corporate' ? 'rgba(99,102,241,0.35)' :
+                                  bk.market_segment === 'Groups' ? 'rgba(192,132,252,0.35)' : 'rgba(251,191,36,0.35)'
+                                )
+                              }}>
+                                {bk.market_segment || 'Direct'}
+                                {bk.room_count && bk.room_count > 1 ? ` (${bk.room_count} rms)` : ''}
                               </span>
-                            )}
+                              {bk.prediction && (
+                                <span className={`risk-band-pill ${bandClass}`} style={{ fontSize: '0.68rem', padding: '0.12rem 0.45rem' }}>
+                                  {riskBand} ({probPct}%)
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
                             <span>{bk.hotel} • {bk.stays_in_weekend_nights + bk.stays_in_week_nights} nts</span>

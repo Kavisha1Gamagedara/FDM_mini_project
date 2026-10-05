@@ -195,6 +195,7 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
         is_repeated_guest: selectedCustomerBooking.is_repeated_guest ?? prev.is_repeated_guest,
         reserved_room_type: selectedCustomerBooking.reserved_room_type || prev.reserved_room_type,
         deposit_type: selectedCustomerBooking.deposit_type || prev.deposit_type,
+        customer_type: selectedCustomerBooking.customer_type || prev.customer_type,
         adr: selectedCustomerBooking.adr ?? prev.adr,
         required_car_parking_spaces: selectedCustomerBooking.required_car_parking_spaces ?? prev.required_car_parking_spaces,
         total_of_special_requests: selectedCustomerBooking.total_of_special_requests ?? prev.total_of_special_requests
