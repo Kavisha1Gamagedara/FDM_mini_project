@@ -113,12 +113,15 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
 }
 
-/* App Container */
+/* App Container - Edge-to-Edge Full Background */
 .app-container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 1.5rem 3rem 1.5rem;
   width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Glassmorphism Card Utility */
@@ -136,17 +139,216 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--border-medium);
 }
 
-/* Header & Navigation Bar */
-.navbar {
+/* ========================================================
+   FLOATING CAPSULE / PILL NAVIGATION BAR
+   (Matches reference design: blends with background, always fixed at top)
+   ======================================================== */
+.ostro-floating-nav-wrapper {
+  position: fixed;
+  top: 1.5rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.ostro-floating-nav {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 0.4rem 0.55rem 0.4rem 0.45rem;
+  background: rgba(18, 20, 26, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  box-shadow: 
+    0 16px 36px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: calc(100vw - 2.5rem);
+}
+
+.ostro-floating-nav:hover {
+  background: rgba(14, 16, 22, 0.94);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 20px 45px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Left Circular White Emblem Badge (Matches image logo circle) */
+.ostro-nav-circle-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem 2rem;
-  margin: 1rem 0 2rem 0;
-  background: rgba(14, 19, 31, 0.75);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ostro-nav-circle-logo:hover {
+  transform: scale(1.06) rotate(15deg);
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.35);
+}
+
+/* Navigation Links (Matches image: Work, About, Playground, Resource) */
+.ostro-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.ostro-nav-link {
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.ostro-nav-link:hover {
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.ostro-brand-text {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ostro-nav-link-accent {
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.ostro-nav-link-accent:hover {
+  color: #fbbf24;
+}
+
+/* Right White Capsule Button (Matches email pill in user image) */
+.ostro-nav-white-btn {
+  background: #ffffff;
+  color: #111827;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.55rem 1.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.18);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.ostro-nav-white-btn:hover {
+  background: #f3f4f6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.35);
+}
+
+/* Logged-In User Details in Pill */
+.ostro-user-pill-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ostro-logged-in-pill {
+  padding: 0.45rem 1rem;
+  font-size: 0.8rem;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ostro-user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ostro-logout-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #9ca3af;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ostro-logout-btn:hover {
+  background: rgba(244, 63, 94, 0.2);
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.4);
+}
+
+/* Admin Portal Toggle Button inside pill */
+.ostro-nav-admin-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.ostro-admin-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f3f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.ostro-admin-toggle-btn.active-admin {
+  background: rgba(244, 63, 94, 0.25);
+  border-color: rgba(244, 63, 94, 0.5);
+  color: #ffffff;
+}
+
+.ostro-admin-count {
+  background: #f43f5e;
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 0.08rem 0.4rem;
+  border-radius: 9999px;
+  font-weight: 800;
+}
+
+/* Responsive adjustment for floating nav on smaller screens */
+@media (max-width: 900px) {
+  .ostro-nav-links a:not(.ostro-brand-text):not(.ostro-nav-link-accent) {
+    display: none;
+  }
 }
 
 .brand-section {
@@ -857,3 +1059,204 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: space-between;
   }
 }
+
+/* ==============================================================================
+   OSTRO CLIFF HOTEL IN SALENTO - LUXURY EDITORIAL DESIGN SYSTEM
+   ============================================================================== */
+
+:root {
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --ostro-sand: #e6dfd5;
+  --ostro-sand-light: #f7f3ee;
+  --ostro-sand-muted: #b8ac9c;
+  --ostro-terracotta: #c87d55;
+  --ostro-terracotta-dark: #a85d35;
+  --ostro-terracotta-glow: rgba(200, 125, 85, 0.28);
+  --ostro-gold: #d4af37;
+  --ostro-gold-soft: #ecd38c;
+  --ostro-dark-sea: #070a0f;
+  --ostro-card: rgba(14, 19, 28, 0.85);
+  --ostro-border: rgba(230, 223, 213, 0.14);
+}
+
+.font-serif {
+  font-family: var(--font-serif) !important;
+}
+
+.font-sans {
+  font-family: var(--font-body) !important;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hero Section - Full Background, Zero Borders */
+.ostro-hero-container {
+  position: relative;
+  width: 100%;
+  min-height: 94vh;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 2rem 5rem 2rem;
+  margin: 0 !important;
+}
+
+.ostro-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+  filter: brightness(0.76) contrast(1.08);
+  transform: scale(1.01);
+  transition: transform 12s ease-out;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.ostro-hero-container:hover .ostro-hero-bg {
+  transform: scale(1.04);
+}
+
+.ostro-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg, 
+    rgba(7, 10, 15, 0.35) 0%, 
+    rgba(7, 10, 15, 0.45) 50%, 
+    rgba(7, 10, 15, 0.88) 85%,
+    rgba(7, 10, 15, 1) 100%
+  );
+  pointer-events: none;
+  border: none !important;
+}
+
+.ostro-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  background: rgba(200, 125, 85, 0.22);
+  border: 1px solid rgba(200, 125, 85, 0.45);
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f7f3ee;
+  backdrop-filter: blur(8px);
+}
+
+/* Floating Availability Bar */
+.ostro-quick-bar {
+  background: rgba(14, 19, 28, 0.88);
+  border: 1px solid rgba(230, 223, 213, 0.2);
+  backdrop-filter: blur(16px);
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+  gap: 1.25rem;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  margin-top: 2rem;
+}
+
+/* Interactive Suite & Dining Showcase Cards */
+.ostro-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(230, 223, 213, 0.12);
+  background: rgba(15, 20, 30, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ostro-card-hover:hover {
+  transform: translateY(-5px);
+  border-color: rgba(200, 125, 85, 0.45);
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(200, 125, 85, 0.2);
+}
+
+.ostro-img-wrapper {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.ostro-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.ostro-card-hover:hover .ostro-img-wrapper img {
+  transform: scale(1.06);
+}
+
+/* Primary Button with Terracotta / Gold Glow */
+.ostro-btn-gold {
+  background: linear-gradient(135deg, #c87d55 0%, #a85d35 100%);
+  color: #ffffff;
+  border: 1px solid rgba(230, 223, 213, 0.3);
+  padding: 0.65rem 1.4rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.86rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(200, 125, 85, 0.35);
+}
+
+.ostro-btn-gold:hover {
+  background: linear-gradient(135deg, #d98d65 0%, #b86d45 100%);
+  box-shadow: 0 6px 22px rgba(200, 125, 85, 0.55);
+  transform: translateY(-1px);
+}
+
+.ostro-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ostro-sand);
+  border: 1px solid rgba(230, 223, 213, 0.2);
+  padding: 0.65rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ostro-btn-secondary:hover {
+  background: rgba(230, 223, 213, 0.1);
+  border-color: rgba(230, 223, 213, 0.4);
+  color: #ffffff;
+}
+

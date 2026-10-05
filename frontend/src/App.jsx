@@ -7,7 +7,6 @@ import ModelIntelModal from './components/ModelIntelModal';
 import CustomerPortal from './components/CustomerPortal';
 import ReservationsRiskMonitor from './components/ReservationsRiskMonitor';
 import AuthModal from './components/AuthModal';
-import AdminLoginGate from './components/AdminLoginGate';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -187,7 +186,7 @@ export default function App() {
         activePortal={activePortal}
         onSelectPortal={(portal) => {
           if (portal === 'admin' && currentUser?.role !== 'admin') {
-            handleOpenAuth('admin', true);
+            handleOpenAuth('login', true);
           } else {
             setActivePortal(portal);
           }
@@ -201,26 +200,24 @@ export default function App() {
       {/* Main Content Render based on Active Portal */}
       <main>
         <ErrorBoundary>
-          {activePortal === 'customer' ? (
+          {activePortal === 'customer' || currentUser?.role !== 'admin' ? (
             <CustomerPortal 
               onBookingCreated={handleCustomerBookingCreated}
               onSwitchToAdmin={() => {
-                setActivePortal('admin');
+                if (currentUser?.role === 'admin') {
+                  setActivePortal('admin');
+                  setActiveTab('monitor');
+                } else {
+                  handleOpenAuth('login', true);
+                }
               }}
               metadata={metadata}
               apiBaseUrl={API_BASE_URL}
               currentUser={currentUser}
               onOpenAuth={handleOpenAuth}
             />
-          ) : currentUser?.role !== 'admin' ? (
-            <AdminLoginGate
-              apiBaseUrl={API_BASE_URL}
-              onAuthSuccess={handleAuthSuccess}
-              onCancel={() => setActivePortal('customer')}
-              currentUser={currentUser}
-            />
           ) : (
-            <div>
+            <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '6.5rem 1.5rem 3rem 1.5rem', width: '100%' }}>
               {/* Admin Primary Tab Navigation */}
               <nav className="tabs-nav" style={{ marginBottom: '1.75rem' }}>
                 <button
@@ -335,7 +332,7 @@ export default function App() {
 
       {/* Footer */}
       <footer style={{ marginTop: '3.5rem', textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-        <p>AuraStay AI Intelligence • Dual Guest & Staff Revenue Architecture • Stage 9 Operational Deployment</p>
+        <p>OSTRO Salento • Cliff Sanctuary & Predictive Hospitality • Operational Intelligence Engine</p>
       </footer>
     </div>
   );
