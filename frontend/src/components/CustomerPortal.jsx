@@ -94,7 +94,7 @@ const CHANNELS = {
     discountPct: 0,
     rateBadge: 'Best Rate Guarantee',
     cancellationBaseline: '15.3% Historical Churn (Lowest Risk Tier)',
-    rationale: 'Direct guest on official website. Highest commitment, zero third-party commission markups.'
+    rationale: 'Official direct reservation with best price guarantee, complimentary Puglia breakfast, and priority sanctuary room selection.'
   },
   CORPORATE: {
     id: 'CORPORATE',
@@ -114,7 +114,7 @@ const CHANNELS = {
     discountPct: 12,
     rateBadge: '12% Corporate Discount',
     cancellationBaseline: '18.7% Historical Churn (Reliable Business Demand)',
-    rationale: 'Guest enters company contract code. Tagged as Contract business travel with negotiated corporate pricing.'
+    rationale: 'Negotiated corporate partner pricing with dedicated workspace amenities, high-speed WiFi, and executive check-in priority.'
   },
   GROUPS: {
     id: 'GROUPS',
@@ -134,7 +134,7 @@ const CHANNELS = {
     discountPct: 10,
     rateBadge: '10% Group Volume Rate',
     cancellationBaseline: '61.1% Historical Churn (High Volatility Block)',
-    rationale: 'Large room block inquiry. Tagged as Groups. Carries high cancellation and attrition risk if unmonitored.'
+    rationale: 'Specialized group event coordination, customized banquet options, and dedicated concierge liaison for your group party.'
   },
   OTA: {
     id: 'OTA',
@@ -154,7 +154,7 @@ const CHANNELS = {
     discountPct: 0,
     rateBadge: 'OTA Partner Tariff',
     cancellationBaseline: '36.7% Historical Churn (2.4× Churn vs Direct)',
-    rationale: 'Synced via third-party channel manager. High shopping mobility and frequent mobile cancellations.'
+    rationale: 'Synced partner tariff honoring your preferred agency program with full access to OSTRO amenities and cove access.'
   }
 };
 
@@ -1037,40 +1037,24 @@ export default function CustomerPortal({
 
       {/* Logged In Guest Loyalty & Account History Bar */}
       {currentUser ? (
-        <div className="glass-panel" style={{ 
-          padding: '1.25rem 1.5rem', 
-          borderRadius: '16px', 
-          background: 'rgba(99,102,241,0.08)', 
-          border: '1px solid rgba(99,102,241,0.25)', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: '1rem' 
-        }}>
+        <div className="glass-panel customer-account-card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-              <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <User size={20} color="#818cf8" />
+              <div className="customer-avatar-wrap">
+                <User size={20} className="customer-avatar-icon" />
               </div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <h4 style={{ fontSize: '1rem', color: '#fff', fontWeight: 700 }}>
+                  <h4 className="customer-account-name">
                     {currentUser.name}
                   </h4>
-                  <span style={{ 
-                    fontSize: '0.68rem', 
-                    padding: '0.12rem 0.45rem', 
-                    borderRadius: '9999px', 
-                    background: userHistory?.has_ever_visited ? 'rgba(16,185,129,0.15)' : 'rgba(99,102,241,0.15)', 
-                    color: userHistory?.has_ever_visited ? '#34d399' : '#c7d2fe', 
-                    border: `1px solid ${userHistory?.has_ever_visited ? 'rgba(16,185,129,0.3)' : 'rgba(99,102,241,0.3)'}`, 
-                    fontWeight: 700 
-                  }}>
+                  <span className={`customer-badge-member ${userHistory?.has_ever_visited ? 'returning' : 'new'}`}>
                     {userHistory?.has_ever_visited ? '✨ Returning OSTRO Member' : '🌱 First-Time Guest'}
                   </span>
                 </div>
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                <p className="customer-account-meta">
                   {currentUser.email} • <strong>{userHistory ? userHistory.total_past_bookings : 0} Stays on File</strong> • 
-                  <span style={{ color: userHistory?.previous_cancellations > 0 ? '#fda4af' : '#6ee7b7', marginLeft: '0.25rem' }}>
+                  <span className={`customer-cancel-stat ${userHistory?.previous_cancellations > 0 ? 'has-cancels' : 'clean'}`} style={{ marginLeft: '0.25rem' }}>
                     {userHistory ? userHistory.previous_cancellations : 0} Recorded Cancellations
                   </span>
                 </p>
@@ -1081,9 +1065,8 @@ export default function CustomerPortal({
               {userHistory && userHistory.total_past_bookings > 0 && (
                 <button
                   type="button"
-                  className="preset-btn"
+                  className="preset-btn customer-history-toggle-btn"
                   onClick={() => setShowHistoryDrawer(!showHistoryDrawer)}
-                  style={{ fontSize: '0.78rem', padding: '0.4rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
                 >
                   <History size={14} />
                   <span>{showHistoryDrawer ? 'Hide Stays' : `My Stays & Cancellations (${userHistory.total_past_bookings})`}</span>
@@ -1095,12 +1078,12 @@ export default function CustomerPortal({
 
           {/* Collapsible History Drawer */}
           {showHistoryDrawer && userHistory?.history && (
-            <div style={{ paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.06)', animation: 'fadeIn 0.25s ease' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
+            <div className="customer-history-drawer">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <span className="customer-history-title">
                   Your Account Reservation History:
                 </span>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                <span className="customer-history-sub">
                   Manage existing reservations or submit cancellations in accordance with hotel terms.
                 </span>
               </div>
@@ -1111,39 +1094,22 @@ export default function CustomerPortal({
                   return (
                     <div 
                       key={bk.booking_ref || i}
-                      style={{ 
-                        padding: '0.75rem 1rem', 
-                        background: 'rgba(255,255,255,0.03)', 
-                        borderRadius: '10px', 
-                        border: '1px solid var(--border-subtle)',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        gap: '0.5rem'
-                      }}
+                      className="customer-stay-row"
                     >
                       <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#fff' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flexWrap: 'wrap' }}>
+                          <span className="customer-stay-hotel">
                             {bk.hotel}
                           </span>
-                          <span style={{ fontFamily: 'monospace', fontSize: '0.75rem', color: '#818cf8' }}>
+                          <span className="customer-stay-ref">
                             #{bk.booking_ref}
                           </span>
-                          <span style={{ 
-                            fontSize: '0.66rem', 
-                            padding: '0.1rem 0.4rem', 
-                            borderRadius: '4px',
-                            fontWeight: 700,
-                            background: isCancelled ? 'rgba(244,63,94,0.15)' : 'rgba(16,185,129,0.15)',
-                            color: isCancelled ? '#fda4af' : '#6ee7b7'
-                          }}>
+                          <span className={`customer-stay-status ${isCancelled ? 'cancelled' : 'confirmed'}`}>
                             {isCancelled ? 'CANCELLED' : 'CONFIRMED'}
                           </span>
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                          Dates: {bk.check_in_date || bk.arrival_date_month} • Rate: ${bk.adr}/nt • Segment: {bk.market_segment || 'Direct'}
+                        <div className="customer-stay-details">
+                          Dates: {bk.check_in_date || bk.arrival_date_month} • Rate: ${bk.adr}/nt • Suite {bk.reserved_room_type || 'A'}
                         </div>
                       </div>
 
@@ -1151,18 +1117,9 @@ export default function CustomerPortal({
                         {!isCancelled && (
                           <button
                             type="button"
-                            className="preset-btn"
+                            className="preset-btn customer-cancel-btn"
                             disabled={cancellingRef === bk.booking_ref}
                             onClick={() => handleCancelBooking(bk.booking_ref)}
-                            style={{ 
-                              fontSize: '0.72rem', 
-                              padding: '0.25rem 0.65rem', 
-                              color: '#fda4af', 
-                              borderColor: 'rgba(244,63,94,0.3)',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '0.35rem'
-                            }}
                           >
                             <Trash2 size={12} />
                             <span>{cancellingRef === bk.booking_ref ? 'Cancelling...' : 'Cancel Reservation'}</span>
@@ -1264,50 +1221,41 @@ export default function CustomerPortal({
             </div>
           </div>
 
-          {/* Machine Learning Classification Diagnostic Box */}
-          <div style={{ background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: '16px', padding: '1.25rem 1.5rem', marginBottom: '2rem', textAlign: 'left' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.6rem' }}>
-              <Layers size={18} color="#818cf8" />
-              <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#fff' }}>
-                Automated ML Feature Classifications Recorded to Database:
-              </span>
+          {/* Guest Guarantee & Inclusions Note */}
+          <div style={{ 
+            background: 'rgba(16,185,129,0.06)', 
+            border: '1px solid rgba(16,185,129,0.25)', 
+            borderRadius: '16px', 
+            padding: '1.25rem 1.75rem', 
+            marginBottom: '2rem', 
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.4rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#34d399', fontWeight: 700, fontSize: '0.95rem' }}>
+              <ShieldCheck size={19} />
+              <span>Direct Reservation Guaranteed & Confirmed</span>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.5rem' }}>
-              <span style={{ padding: '0.35rem 0.75rem', background: currentChannel.bgColor, border: `1px solid ${currentChannel.borderColor}`, borderRadius: '8px', fontSize: '0.8rem', color: currentChannel.color, fontWeight: 700 }}>
-                Channel: {currentChannel.name}
-              </span>
-              <span style={{ padding: '0.35rem 0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-subtle)', borderRadius: '8px', fontSize: '0.8rem', color: '#e2e8f0' }}>
-                market_segment: <strong>{confirmedBooking.market_segment}</strong>
-              </span>
-              <span style={{ padding: '0.35rem 0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-subtle)', borderRadius: '8px', fontSize: '0.8rem', color: '#e2e8f0' }}>
-                distribution_channel: <strong>{confirmedBooking.distribution_channel}</strong>
-              </span>
-              <span style={{ padding: '0.35rem 0.75rem', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-subtle)', borderRadius: '8px', fontSize: '0.8rem', color: '#e2e8f0' }}>
-                customer_type: <strong>{confirmedBooking.customer_type}</strong>
-              </span>
-              {confirmedBooking.prediction && (
-                <span style={{ padding: '0.35rem 0.75rem', background: confirmedBooking.prediction.risk_level === 'high' ? 'rgba(244,63,94,0.15)' : confirmedBooking.prediction.risk_level === 'medium' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)', border: '1px solid var(--border-subtle)', borderRadius: '8px', fontSize: '0.8rem', color: '#fff', fontWeight: 700 }}>
-                  AI Predicted Churn: {confirmedBooking.prediction.cancellation_probability_pct}% ({confirmedBooking.prediction.risk_band})
-                </span>
-              )}
-            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '580px', lineHeight: 1.5 }}>
+              Your stay is safely booked. A confirmation notice has been saved to your guest account. Complimentary Puglia breakfast, ocean view sanctuary access, and flexible check-in are included.
+            </p>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
             <button 
-              type="button"
-              className="preset-btn"
-              onClick={onSwitchToAdmin}
-              style={{ background: 'var(--primary-500)', color: '#fff', padding: '0.75rem 1.5rem', fontSize: '0.92rem' }}
-            >
-              <Eye size={18} />
-              <span>Inspect Staff AI Prediction & Operational Advice</span>
-            </button>
-            <button 
               type="button" 
               className="preset-btn"
               onClick={() => setConfirmedBooking(null)}
-              style={{ padding: '0.75rem 1.5rem', fontSize: '0.92rem' }}
+              style={{ 
+                padding: '0.8rem 2.25rem', 
+                fontSize: '0.95rem', 
+                fontWeight: 700,
+                background: 'var(--primary-500)', 
+                color: '#ffffff',
+                borderRadius: '12px'
+              }}
             >
               Create Another Reservation
             </button>
@@ -1398,12 +1346,12 @@ export default function CustomerPortal({
                   <span>2. Travel Purpose & Booking Channel</span>
                 </div>
                 <span style={{ fontSize: '0.72rem', color: '#6366f1', background: 'rgba(99,102,241,0.12)', padding: '0.2rem 0.6rem', borderRadius: '9999px', border: '1px solid rgba(99,102,241,0.3)', fontWeight: 600 }}>
-                  Auto-Infers ML Market Segment
+                  Tailored Guest Tariffs
                 </span>
               </div>
 
               <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
-                Select how this reservation originates. The system automatically classifies the market segment, distribution channel, and tariff structure for our AI cancellation prediction pipeline.
+                Select your travel category to unlock tailored hospitality amenities, exclusive member benefits, and optimal rate inclusions.
               </p>
 
               {/* 4 Interactive Channel Cards */}
@@ -1452,7 +1400,7 @@ export default function CustomerPortal({
                           {ch.rateBadge}
                         </span>
                         <span style={{ fontSize: '0.7rem', color: ch.color, fontWeight: 700 }}>
-                          {ch.market_segment}
+                          {ch.tag}
                         </span>
                       </div>
                     </div>

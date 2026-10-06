@@ -1986,6 +1986,230 @@ html {
   font-size: 0.74rem;
 }
 
+/* =========================================================================
+   Interactive KPI Metric Stat Cards & Live Cancellation Filter States
+   ========================================================================= */
+.mat-stat-clickable {
+  cursor: pointer !important;
+  position: relative;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.22s ease, 
+              border-color 0.22s ease,
+              background 0.22s ease !important;
+  user-select: none;
+}
+
+.mat-stat-clickable:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12) !important;
+}
+
+.mat-stat-clickable:active {
+  transform: translateY(-1px);
+}
+
+/* Active filter state classes on the cards (Light Mode) */
+.mat-stat-card.active-revenue {
+  border: 2px solid #10b981 !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.22) !important;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%) !important;
+}
+
+.mat-stat-card.active-stays {
+  border: 2px solid #0284c7 !important;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.22) !important;
+  background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%) !important;
+}
+
+.mat-stat-card.active-cancellations {
+  border: 2px solid #e11d48 !important;
+  box-shadow: 0 8px 26px rgba(225, 29, 72, 0.25) !important;
+  background: linear-gradient(180deg, #fff1f2 0%, #ffffff 100%) !important;
+}
+
+.mat-stat-card.active-rooms {
+  border: 2px solid #d97706 !important;
+  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.22) !important;
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%) !important;
+}
+
+/* Dark mode active states */
+[data-theme="dark"] .mat-stat-card.active-revenue {
+  border: 2px solid #10b981 !important;
+  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.3) !important;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.14) 0%, var(--mat-bg-card) 100%) !important;
+}
+
+[data-theme="dark"] .mat-stat-card.active-stays {
+  border: 2px solid #38bdf8 !important;
+  box-shadow: 0 8px 28px rgba(56, 189, 248, 0.3) !important;
+  background: linear-gradient(180deg, rgba(2, 132, 199, 0.14) 0%, var(--mat-bg-card) 100%) !important;
+}
+
+[data-theme="dark"] .mat-stat-card.active-cancellations {
+  border: 2px solid #f43f5e !important;
+  box-shadow: 0 8px 30px rgba(244, 63, 94, 0.35) !important;
+  background: linear-gradient(180deg, rgba(225, 29, 72, 0.15) 0%, var(--mat-bg-card) 100%) !important;
+}
+
+[data-theme="dark"] .mat-stat-card.active-rooms {
+  border: 2px solid #fbbf24 !important;
+  box-shadow: 0 8px 28px rgba(251, 191, 36, 0.3) !important;
+  background: linear-gradient(180deg, rgba(217, 119, 6, 0.15) 0%, var(--mat-bg-card) 100%) !important;
+}
+
+/* Pill badges inside cards */
+.mat-kpi-active-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+.pill-revenue {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+[data-theme="dark"] .pill-revenue {
+  color: #34d399;
+}
+
+.pill-stays {
+  background: rgba(2, 132, 199, 0.15);
+  color: #0284c7;
+  border: 1px solid rgba(2, 132, 199, 0.35);
+}
+[data-theme="dark"] .pill-stays {
+  color: #38bdf8;
+}
+
+.pill-cancellations {
+  background: rgba(225, 29, 72, 0.15);
+  color: #e11d48;
+  border: 1px solid rgba(225, 29, 72, 0.35);
+}
+[data-theme="dark"] .pill-cancellations {
+  color: #fb7185;
+}
+
+.pill-rooms {
+  background: rgba(217, 119, 6, 0.15);
+  color: #d97706;
+  border: 1px solid rgba(217, 119, 6, 0.35);
+}
+[data-theme="dark"] .pill-rooms {
+  color: #fbbf24;
+}
+
+.mat-kpi-click-hint {
+  font-size: 0.68rem;
+  color: #7b809a;
+  transition: color 0.15s ease;
+  font-weight: 600;
+}
+.mat-stat-clickable:hover .mat-kpi-click-hint {
+  color: #0284c7;
+}
+[data-theme="dark"] .mat-kpi-click-hint {
+  color: #94a3b8;
+}
+[data-theme="dark"] .mat-stat-clickable:hover .mat-kpi-click-hint {
+  color: #38bdf8;
+}
+
+/* Quick Action button inside card */
+.mat-kpi-intel-action {
+  border: none;
+  background: rgba(225, 29, 72, 0.12);
+  color: #e11d48;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.mat-kpi-intel-action:hover {
+  background: #e11d48;
+  color: #ffffff;
+  transform: scale(1.04);
+}
+[data-theme="dark"] .mat-kpi-intel-action {
+  background: rgba(244, 63, 94, 0.2);
+  color: #fb7185;
+}
+[data-theme="dark"] .mat-kpi-intel-action:hover {
+  background: #e11d48;
+  color: #ffffff;
+}
+
+/* Active Filter Banner above table */
+.mat-active-filter-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.85rem 1.15rem;
+  border-radius: 12px;
+}
+.mat-active-filter-banner.banner-cancellations {
+  background: rgba(225, 29, 72, 0.08);
+  border: 1.5px solid rgba(225, 29, 72, 0.3);
+}
+.mat-active-filter-banner.banner-rooms {
+  background: rgba(217, 119, 6, 0.08);
+  border: 1.5px solid rgba(217, 119, 6, 0.3);
+}
+.mat-active-filter-banner.banner-revenue {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1.5px solid rgba(16, 185, 129, 0.3);
+}
+.mat-active-filter-banner.banner-stays {
+  background: rgba(2, 132, 199, 0.08);
+  border: 1.5px solid rgba(2, 132, 199, 0.3);
+}
+
+[data-theme="dark"] .mat-active-filter-banner.banner-cancellations {
+  background: rgba(225, 29, 72, 0.15);
+  border-color: rgba(244, 63, 94, 0.4);
+}
+[data-theme="dark"] .mat-active-filter-banner.banner-rooms {
+  background: rgba(217, 119, 6, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+[data-theme="dark"] .mat-active-filter-banner.banner-revenue {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+}
+[data-theme="dark"] .mat-active-filter-banner.banner-stays {
+  background: rgba(2, 132, 199, 0.15);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.mat-badge-cancelled {
+  background: rgba(225, 29, 72, 0.15);
+  color: #e11d48;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  display: inline-block;
+}
+[data-theme="dark"] .mat-badge-cancelled {
+  color: #fb7185;
+}
+
+
+
 /* Material Clean White Card */
 .mat-card {
   background: #ffffff;
@@ -2033,6 +2257,44 @@ html {
   display: flex;
   align-items: center;
   gap: 0.45rem;
+}
+
+/* Near-Term Daily Risk Gauge Card */
+.mat-risk-gauge-card {
+  border: 2px solid #cbd5e1 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  --mat-tab-track-bg: #f1f5f9;
+  --mat-select-bg: #ffffff;
+  --mat-select-border: #cbd5e1;
+  --mat-subtle-box-bg: #f8fafc;
+  --mat-subtle-box-border: #e2e8f0;
+  --mat-chip-bg: #ffffff;
+  --mat-chip-border: #e2e8f0;
+  --mat-progress-bg: #e2e8f0;
+  --gauge-track-color: rgba(148, 163, 184, 0.22);
+  --gauge-inner-disc-bg: #ffffff;
+}
+
+.mat-risk-gauge-card:hover {
+  border-color: #94a3b8 !important;
+  box-shadow: 0 14px 38px -5px rgba(0, 0, 0, 0.08), 0 6px 16px rgba(0, 0, 0, 0.04) !important;
+}
+
+.room-type-impact-row {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.room-type-impact-row:hover {
+  transform: translateY(-1.5px);
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.gauge-horizon-pill:hover:not(.active) {
+  background: rgba(200, 125, 85, 0.08) !important;
+  color: #c87d55 !important;
 }
 
 .mat-cell-title {
@@ -3720,6 +3982,329 @@ html {
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.08);
 }
 
+/* ==========================================================================
+   Customer Portal: Guest Account Loyalty & Reservation History Drawer
+   ========================================================================== */
+
+.customer-account-card {
+  padding: 1.25rem 1.6rem !important;
+  border-radius: 18px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  transition: all 0.25s ease !important;
+}
+
+/* Light Theme (Default / [data-theme="light"]) */
+.customer-account-card {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+.customer-avatar-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.customer-avatar-icon {
+  color: #3b82f6;
+}
+
+.customer-account-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.customer-badge-member {
+  font-size: 0.72rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.customer-badge-member.returning {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.customer-badge-member.new {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.customer-account-meta {
+  font-size: 0.8rem;
+  color: #475569;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+.customer-account-meta strong {
+  color: #0f172a;
+}
+
+.customer-cancel-stat.clean {
+  color: #059669;
+  font-weight: 700;
+}
+
+.customer-cancel-stat.has-cancels {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.customer-history-toggle-btn {
+  font-size: 0.8rem !important;
+  padding: 0.45rem 0.95rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1 !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.customer-history-toggle-btn:hover {
+  background: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  color: #0f172a !important;
+}
+
+.customer-history-drawer {
+  padding-top: 1.1rem;
+  border-top: 1.5px solid #e2e8f0;
+  animation: fadeIn 0.25s ease;
+}
+
+.customer-history-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.customer-history-sub {
+  font-size: 0.76rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.customer-stay-row {
+  padding: 0.9rem 1.15rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  transition: all 0.2s ease;
+}
+
+.customer-stay-row:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.customer-stay-hotel {
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #0f172a;
+}
+
+.customer-stay-ref {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #4338ca;
+  background: #eef2ff;
+  padding: 0.12rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #c7d2fe;
+}
+
+.customer-stay-status {
+  font-size: 0.68rem;
+  padding: 0.14rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.customer-stay-status.confirmed {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.customer-stay-status.cancelled {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.customer-stay-details {
+  font-size: 0.78rem;
+  color: #475569;
+  margin-top: 0.3rem;
+  font-weight: 600;
+}
+
+.customer-cancel-btn {
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  padding: 0.35rem 0.75rem !important;
+  color: #dc2626 !important;
+  background: #fff1f2 !important;
+  border: 1px solid #fecaca !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.customer-cancel-btn:hover:not(:disabled) {
+  background: #fee2e2 !important;
+  border-color: #f87171 !important;
+  color: #b91c1c !important;
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] .customer-account-card {
+  background: rgba(30, 41, 59, 0.8) !important;
+  border: 1px solid rgba(99, 102, 241, 0.28) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35) !important;
+}
+
+[data-theme="dark"] .customer-avatar-wrap {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+[data-theme="dark"] .customer-avatar-icon {
+  color: #818cf8;
+}
+
+[data-theme="dark"] .customer-account-name {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .customer-badge-member.returning {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] .customer-badge-member.new {
+  background: rgba(99, 102, 241, 0.15);
+  color: #c7d2fe;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="dark"] .customer-account-meta {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .customer-account-meta strong {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .customer-cancel-stat.clean {
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .customer-cancel-stat.has-cancels {
+  color: #fda4af;
+}
+
+[data-theme="dark"] .customer-history-toggle-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+}
+
+[data-theme="dark"] .customer-history-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+[data-theme="dark"] .customer-history-drawer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .customer-history-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .customer-history-sub {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .customer-stay-row {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+}
+
+[data-theme="dark"] .customer-stay-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .customer-stay-hotel {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .customer-stay-ref {
+  color: #818cf8;
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+[data-theme="dark"] .customer-stay-status.confirmed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="dark"] .customer-stay-status.cancelled {
+  background: rgba(244, 63, 94, 0.15);
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.3);
+}
+
+[data-theme="dark"] .customer-stay-details {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .customer-cancel-btn {
+  color: #fda4af !important;
+  background: rgba(244, 63, 94, 0.08) !important;
+  border-color: rgba(244, 63, 94, 0.3) !important;
+}
+
+[data-theme="dark"] .customer-cancel-btn:hover:not(:disabled) {
+  background: rgba(244, 63, 94, 0.16) !important;
+}
+
 [data-theme="light"] .ostro-locked-sidebar-card h5 {
   color: #1e1b4b !important;
 }
@@ -4541,6 +5126,42 @@ html {
 }
 
 [data-theme="dark"] .mat-market-segment-card h4 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .mat-risk-gauge-card {
+  background: var(--mat-bg-card) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35) !important;
+  --mat-tab-track-bg: rgba(255, 255, 255, 0.04);
+  --mat-select-bg: #1e293b;
+  --mat-select-border: rgba(255, 255, 255, 0.15);
+  --mat-subtle-box-bg: rgba(255, 255, 255, 0.03);
+  --mat-subtle-box-border: rgba(255, 255, 255, 0.08);
+  --mat-chip-bg: rgba(255, 255, 255, 0.045);
+  --mat-chip-border: rgba(255, 255, 255, 0.085);
+  --mat-progress-bg: rgba(255, 255, 255, 0.1);
+  --gauge-track-color: rgba(255, 255, 255, 0.1);
+  --gauge-inner-disc-bg: rgba(15, 23, 42, 0.7);
+}
+
+[data-theme="dark"] .mat-risk-gauge-card:hover {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .mat-risk-gauge-card h4,
+[data-theme="dark"] .mat-risk-gauge-card h5 {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .room-type-impact-row:hover {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .gauge-horizon-pill:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.08) !important;
   color: #ffffff !important;
 }
 
