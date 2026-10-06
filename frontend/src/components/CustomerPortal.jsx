@@ -396,8 +396,8 @@ export default function CustomerPortal({
         />
         <div className="ostro-hero-overlay" />
 
-        {/* Content Box */}
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '880px', margin: '0 auto', textAlign: 'center' }}>
+        {/* Content Box (Expansive Widescreen Studio Layout) */}
+        <div style={{ position: 'relative', zIndex: 2, width: '100%', maxWidth: '1280px', margin: '0 auto', textAlign: 'center', padding: '0 1.5rem' }}>
           
           {/* Geographical & Architectural Crest */}
           <div style={{ 
@@ -432,7 +432,8 @@ export default function CustomerPortal({
             lineHeight: 1.12, 
             letterSpacing: '-0.01em', 
             color: '#ffffff',
-            marginBottom: '1.25rem',
+            maxWidth: '1000px',
+            margin: '0 auto 1.25rem auto',
             textShadow: '0 4px 30px rgba(0,0,0,0.85)'
           }}>
             Where Mediterranean Stone <br />
@@ -445,10 +446,10 @@ export default function CustomerPortal({
           <p style={{ 
             fontFamily: 'var(--font-serif)', 
             fontSize: 'clamp(1.1rem, 2vw, 1.35rem)', 
-            fontStyle: 'italic',
+            fontStyle: 'italic', 
             color: '#f5eee6', 
             lineHeight: 1.65, 
-            maxWidth: '740px',
+            maxWidth: '820px',
             margin: '0 auto 2.25rem auto',
             textShadow: '0 2px 14px rgba(0,0,0,0.8)'
           }}>
@@ -469,74 +470,63 @@ export default function CustomerPortal({
 
             <a 
               href="#suites"
-              className="ostro-btn-outline"
-              style={{ fontSize: '0.92rem', padding: '0.85rem 1.85rem', textDecoration: 'none' }}
+              className="ostro-btn-secondary"
+              style={{ fontSize: '0.92rem', padding: '0.85rem 1.85rem' }}
             >
-              <span>Explore Suites</span>
-              <ArrowRight size={16} />
+              <Sparkles size={16} />
+              <span>Explore Suites & Villas</span>
+              <ArrowRight size={15} />
             </a>
 
             <a 
               href="#philosophy"
-              className="ostro-btn-outline"
-              style={{ fontSize: '0.92rem', padding: '0.85rem 1.85rem', textDecoration: 'none' }}
+              className="ostro-btn-ghost"
+              style={{ fontSize: '0.92rem', padding: '0.85rem 1.85rem' }}
             >
+              <Compass size={15} />
               <span>The Sanctuary Ethos</span>
             </a>
           </div>
 
-          {/* Floating Quick Availability Console */}
-          <div style={{ 
-            background: 'rgba(17, 24, 39, 0.75)', 
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(245, 158, 11, 0.35)', 
-            borderRadius: '20px', 
-            padding: '1.25rem 1.75rem',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-            gap: '1rem',
-            alignItems: 'end',
-            textAlign: 'left'
-          }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ostro-sand)', marginBottom: '0.4rem', fontWeight: 600 }}>
-                Check-in Date
+          {/* Panoramic Luxury Booking Console (Expansive Horizontal Dock) */}
+          <div className="ostro-wide-dock">
+            <div className="ostro-dock-col">
+              <label className="ostro-dock-label">
+                <Calendar size={13} color="#f59e0b" />
+                <span>Check-in Date</span>
               </label>
               <input 
                 type="date"
-                className="input-field"
+                className="ostro-dock-input"
                 min={todayStr}
                 value={checkIn}
                 onChange={handleCheckInChange}
-                style={{ fontSize: '0.85rem', padding: '0.55rem 0.75rem' }}
               />
             </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ostro-sand)', marginBottom: '0.4rem', fontWeight: 600 }}>
-                Check-out Date
+            <div className="ostro-dock-col">
+              <label className="ostro-dock-label">
+                <Calendar size={13} color="#f59e0b" />
+                <span>Check-out Date</span>
               </label>
               <input 
                 type="date"
-                className="input-field"
+                className="ostro-dock-input"
                 min={checkIn}
                 value={checkOut}
                 onChange={handleCheckOutChange}
-                style={{ fontSize: '0.85rem', padding: '0.55rem 0.75rem' }}
               />
             </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ostro-sand)', marginBottom: '0.4rem', fontWeight: 600 }}>
-                Suite Category
+            <div className="ostro-dock-col">
+              <label className="ostro-dock-label">
+                <BedDouble size={13} color="#f59e0b" />
+                <span>Suite Category</span>
               </label>
               <select 
-                className="input-field"
+                className="ostro-dock-input"
                 value={roomType}
                 onChange={(e) => setRoomType(e.target.value)}
-                style={{ fontSize: '0.85rem', padding: '0.55rem 0.75rem' }}
               >
                 {ROOM_OPTIONS.map(r => (
                   <option key={r.code} value={r.code}>{r.name} (${r.baseRate}/nt)</option>
@@ -544,15 +534,15 @@ export default function CustomerPortal({
               </select>
             </div>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ostro-sand)', marginBottom: '0.4rem', fontWeight: 600 }}>
-                Guests & Adults
+            <div className="ostro-dock-col">
+              <label className="ostro-dock-label">
+                <Users size={13} color="#f59e0b" />
+                <span>Guests & Adults</span>
               </label>
               <select 
-                className="input-field"
+                className="ostro-dock-input"
                 value={adults}
                 onChange={(e) => setAdults(Number(e.target.value))}
-                style={{ fontSize: '0.85rem', padding: '0.55rem 0.75rem' }}
               >
                 <option value={1}>1 Solo Voyager</option>
                 <option value={2}>2 Adults</option>
@@ -561,15 +551,15 @@ export default function CustomerPortal({
               </select>
             </div>
 
-            <div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               <button 
                 type="button" 
                 className="ostro-btn-gold"
                 onClick={() => scrollToBooking(roomType)}
-                style={{ width: '100%', padding: '0.65rem 1rem', fontSize: '0.85rem', justifyContent: 'center' }}
+                style={{ width: '100%', padding: '0.85rem 1.6rem', fontSize: '0.88rem' }}
               >
                 <span>Check Live Rates</span>
-                <ArrowRight size={14} />
+                <ArrowRight size={15} />
               </button>
             </div>
           </div>
@@ -578,91 +568,138 @@ export default function CustomerPortal({
       </section>
 
       {/* ========================================================
-          MAIN CONTENT CONTAINER (SECTIONS 1 TO 6)
+          MAIN CONTENT CONTAINER (EXPANSIVE WIDESCREEN 1440PX)
           ======================================================== */}
-      <div style={{ maxWidth: '1300px', width: '100%', margin: '0 auto', padding: '4.5rem 1.5rem 3rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '4.5rem' }}>
+      <div style={{ maxWidth: '1440px', width: '100%', margin: '0 auto', padding: '5.5rem 2.5rem 4rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '5.5rem' }}>
 
       {/* ========================================================
-          SECTION 1: THE SANCTUARY PHILOSOPHY & PILLARS
+          SECTION 1: THE ARCHITECTURAL ETHOS & LOCATION (EDITORIAL SPREAD)
           ======================================================== */}
-      <section id="philosophy" style={{ scrollMarginTop: '100px' }}>
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 3rem auto' }}>
-          <span className="ostro-badge-gold" style={{ marginBottom: '1rem' }}>
-            ✦ ARCHITECTURAL ETHOS & LOCATION
-          </span>
-          <h2 style={{ 
-            fontFamily: 'var(--font-serif)', 
-            fontSize: 'clamp(2rem, 3.5vw, 3rem)', 
-            fontWeight: 400, 
-            letterSpacing: '-0.01em', 
-            color: '#fff',
-            marginBottom: '1rem'
+      <section id="philosophy" style={{ scrollMarginTop: '110px' }}>
+        <div className="ostro-editorial-spread">
+          {/* Left Column: Architectural Manifesto & Credential Specs */}
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'space-between',
+            background: 'linear-gradient(180deg, rgba(20, 26, 36, 0.85) 0%, rgba(13, 17, 24, 0.92) 100%)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '28px',
+            padding: '3rem 2.5rem',
+            position: 'relative',
+            overflow: 'hidden',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
           }}>
-            Carved from Salento Limestone, Shaped by Sea & Wind
-          </h2>
-          <p style={{ 
-            fontFamily: 'var(--font-serif)', 
-            fontSize: '1.15rem', 
-            fontStyle: 'italic', 
-            color: 'var(--ostro-sand)', 
-            lineHeight: 1.7 
-          }}>
-            Ostro takes its name from the southerly Mediterranean wind that warms the rocky shores of Otranto and Santa Cesarea Terme. Our architecture honors the raw authenticity of Puglia's natural stone while delivering quiet, unpretentious luxury.
-          </p>
-        </div>
-
-        {/* 4 Architectural Pillars Grid */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', 
-          gap: '1.5rem' 
-        }}>
-          <div className="glass-panel ostro-card-hover" style={{ padding: '2rem 1.75rem', borderRadius: '18px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(217, 119, 6, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
-              <Waves size={24} color="#f59e0b" />
+            <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '220px', height: '220px', background: 'radial-gradient(circle, rgba(200, 125, 85, 0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            
+            <div>
+              <span className="ostro-badge-gold" style={{ marginBottom: '1.5rem' }}>
+                ✦ ARCHITECTURAL MANIFESTO
+              </span>
+              <h2 style={{ 
+                fontFamily: 'var(--font-serif)', 
+                fontSize: 'clamp(2.1rem, 3.2vw, 3rem)', 
+                fontWeight: 400, 
+                lineHeight: 1.18, 
+                color: '#ffffff',
+                marginBottom: '1.5rem'
+              }}>
+                Carved into White Limestone, <br />
+                <span style={{ fontStyle: 'italic', color: 'var(--ostro-sand)' }}>
+                  Suspended in Marine Silence
+                </span>
+              </h2>
+              <p style={{ 
+                fontFamily: 'var(--font-serif)',
+                fontSize: '1.12rem', 
+                fontStyle: 'italic', 
+                color: '#e2d9cf', 
+                lineHeight: 1.7, 
+                marginBottom: '2rem' 
+              }}>
+                "Natura non facit saltus — We did not impose architecture upon the cliffs of Salento; we carved our sanctuary into them. Here, southerly winds, warm stone, and sea compose an uninterrupted dialogue."
+              </p>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
-              60m Above The Adriatic
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Perched high on dramatic cliff promontories. Every private suite features unobstructed sea views spanning the Strait of Otranto to the distant horizon.
-            </p>
+
+            {/* Architectural Credential Badges */}
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(2, 1fr)', 
+              gap: '1.5rem',
+              paddingTop: '2rem',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+            }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>60m</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Adriatic Cliff Elevation</div>
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>100%</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Direct Sea-Facing Orient</div>
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>24°C</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Passive Geothermal Inertia</div>
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>1860</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Olive Terraces Heritage</div>
+              </div>
+            </div>
           </div>
 
-          <div className="glass-panel ostro-card-hover" style={{ padding: '2rem 1.75rem', borderRadius: '18px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(217, 119, 6, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
-              <Compass size={24} color="#f59e0b" />
+          {/* Right Column: 4 Numbered Architectural Pillars */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(255, 255, 255, 0.09)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
+              <div className="ostro-editorial-num">01</div>
+              <div>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.45rem' }}>
+                  Pietra Leccese & Sun-Bleached Travertine
+                </h3>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                  Sculpted using indigenous coastal limestone with lime plasters that remain naturally cool beneath the Italian midday sun, honoring centuries of Salento stone craftsmanship.
+                </p>
+              </div>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
-              Pietra Leccese Stone
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Sculpted using indigenous sun-bleached coastal limestone, lime plasters, and brushed travertine that remain naturally cool beneath the midday Italian sun.
-            </p>
-          </div>
 
-          <div className="glass-panel ostro-card-hover" style={{ padding: '2rem 1.75rem', borderRadius: '18px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(217, 119, 6, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
-              <Utensils size={24} color="#f59e0b" />
+            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(255, 255, 255, 0.09)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
+              <div className="ostro-editorial-num">02</div>
+              <div>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.45rem' }}>
+                  Strait of Otranto Marine Horizons
+                </h3>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                  Perched on dramatic promontories where every private suite commands uninterrupted ocean sunrises and night moonpaths across the Adriatic Sea.
+                </p>
+              </div>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
-              Sea-to-Table Gastronomy
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Ristorante La Scogliera transforms fresh morning catch from Castro Marina and organic Salento olive groves into memorable cliffside dining experiences.
-            </p>
-          </div>
 
-          <div className="glass-panel ostro-card-hover" style={{ padding: '2rem 1.75rem', borderRadius: '18px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(217, 119, 6, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.25rem', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
-              <Sparkles size={24} color="#f59e0b" />
+            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(255, 255, 255, 0.09)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
+              <div className="ostro-editorial-num">03</div>
+              <div>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.45rem' }}>
+                  Sea-to-Table Gastronomy & Thermal Grotto
+                </h3>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                  Ristorante La Scogliera curates day-boat red prawns from Castro Marina, organic ancient grain pastas, and subterranean Roman sea salt baths carved in rock.
+                </p>
+              </div>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
-              AI Reservation Assurance
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-              Powered by advanced XGBoost predictive machine learning to guarantee rate transparency, prevent overbooking, and curate personalized arrival itineraries.
-            </p>
+
+            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(245, 158, 11, 0.3)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
+              <div className="ostro-editorial-num" style={{ color: 'rgba(245, 158, 11, 0.7)' }}>04</div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.35rem' }}>
+                  <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff' }}>
+                    Machine-Learning Reservation Integrity
+                  </h3>
+                  <span style={{ fontSize: '0.68rem', padding: '0.12rem 0.5rem', borderRadius: '9999px', background: 'rgba(245,158,11,0.2)', color: '#fde68a', fontWeight: 700 }}>XGBoost</span>
+                </div>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                  Proprietary algorithmic hospitality guarantees rate integrity, eliminates overbooking uncertainty, and curates bespoke arrival preparation based on real-time booking dynamics.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -699,37 +736,44 @@ export default function CustomerPortal({
           </button>
         </div>
 
-        {/* 3 Showcase Suite Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '2rem' }}>
+        {/* 3 Showcase Suite Cards (Expanded Widescreen Editorial Presentation) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '2rem' }}>
           
           {/* Card 1: Deluxe Limestone Suite (Room A) */}
-          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '22px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ height: '260px', position: 'relative', overflow: 'hidden' }}>
+          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', display: 'flex', flexDirection: 'column' }}>
+            <div className="ostro-img-wrapper" style={{ height: '270px' }}>
               <img 
                 src="/images/ostro_suite.jpg" 
                 alt="Deluxe Limestone Suite" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} 
               />
-              <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(8px)', padding: '0.35rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', color: '#fde68a', border: '1px solid rgba(245,158,11,0.3)', fontWeight: 600 }}>
-                Limestone Terrace • 48 m²
+              <div style={{ position: 'absolute', top: '1.25rem', left: '1.25rem', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.85rem', borderRadius: '9999px', fontSize: '0.74rem', color: '#fde68a', border: '1px solid rgba(245,158,11,0.3)', fontWeight: 600 }}>
+                SUITE 01 • LIMESTONE TERRACE (48 m²)
               </div>
-              <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(15,23,42,0.9)', backdropFilter: 'blur(8px)', padding: '0.35rem 0.85rem', borderRadius: '9999px', fontSize: '0.85rem', color: '#fff', fontWeight: 700 }}>
-                $145 <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
+              <div style={{ position: 'absolute', bottom: '1.25rem', right: '1.25rem', background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.95rem', borderRadius: '9999px', fontSize: '0.9rem', color: '#fff', fontWeight: 700, border: '1px solid rgba(255,255,255,0.1)' }}>
+                $145 <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
               </div>
             </div>
 
-            <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
+            <div style={{ padding: '2rem 1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
               <div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.45rem', fontWeight: 500, color: '#fff', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--ostro-sand-muted)', fontWeight: 700 }}>
+                    Ground Cliff Level • East Facing
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <Sparkles size={11} /> Best Direct Rate
+                  </span>
+                </div>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
                   Deluxe Limestone Suite
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
                   Carved local Tufo stone sanctuary with private sea-facing balcony, plush king bed, rainfall shower, and organic olive-oil amenities.
                 </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>King Featherbed</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Sea Balcony</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Rain Shower</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.75rem' }}>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>King Featherbed</span>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Sea Balcony</span>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Rain Shower</span>
                 </div>
               </div>
 
@@ -737,7 +781,7 @@ export default function CustomerPortal({
                 type="button" 
                 className="ostro-btn-gold"
                 onClick={() => scrollToBooking('A')}
-                style={{ width: '100%', justifyContent: 'center', fontSize: '0.85rem', padding: '0.65rem 1rem' }}
+                style={{ width: '100%', justifyContent: 'center', fontSize: '0.86rem', padding: '0.75rem 1rem' }}
               >
                 <span>Select & Configure Room A</span>
                 <ArrowRight size={15} />
@@ -746,33 +790,40 @@ export default function CustomerPortal({
           </div>
 
           {/* Card 2: Executive Adriatic Suite (Room D) */}
-          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '22px', overflow: 'hidden', border: '1px solid rgba(245,158,11,0.3)', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ height: '260px', position: 'relative', overflow: 'hidden' }}>
+          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(245,158,11,0.35)', display: 'flex', flexDirection: 'column' }}>
+            <div className="ostro-img-wrapper" style={{ height: '270px' }}>
               <img 
                 src="/images/ostro_hero.jpg" 
                 alt="Executive Adriatic Suite" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} 
               />
-              <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(8px)', padding: '0.35rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', color: '#fde68a', border: '1px solid rgba(245,158,11,0.3)', fontWeight: 600 }}>
-                Cliffside Edge • 68 m²
+              <div style={{ position: 'absolute', top: '1.25rem', left: '1.25rem', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.85rem', borderRadius: '9999px', fontSize: '0.74rem', color: '#fde68a', border: '1px solid rgba(245,158,11,0.3)', fontWeight: 600 }}>
+                SUITE 02 • CLIFFSIDE EDGE (68 m²)
               </div>
-              <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(15,23,42,0.9)', backdropFilter: 'blur(8px)', padding: '0.35rem 0.85rem', borderRadius: '9999px', fontSize: '0.85rem', color: '#fff', fontWeight: 700 }}>
-                $210 <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
+              <div style={{ position: 'absolute', bottom: '1.25rem', right: '1.25rem', background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.95rem', borderRadius: '9999px', fontSize: '0.9rem', color: '#fff', fontWeight: 700, border: '1px solid rgba(255,255,255,0.1)' }}>
+                $210 <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
               </div>
             </div>
 
-            <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
+            <div style={{ padding: '2rem 1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
               <div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.45rem', fontWeight: 500, color: '#fff', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--ostro-sand-muted)', fontWeight: 700 }}>
+                    Mid Promontory • Horizon Vista
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <Sparkles size={11} /> Most Requested
+                  </span>
+                </div>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
                   Executive Adriatic Suite
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
                   Panoramic cliffside suite with floor-to-ceiling glass, freestanding soaking stone tub overlooking the sea, and sunset ocean balcony.
                 </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Soaking Stone Tub</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Panoramic Glass</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Sunset Balcony</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.75rem' }}>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Soaking Stone Tub</span>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Panoramic Glass</span>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Sunset Balcony</span>
                 </div>
               </div>
 
@@ -780,7 +831,7 @@ export default function CustomerPortal({
                 type="button" 
                 className="ostro-btn-gold"
                 onClick={() => scrollToBooking('D')}
-                style={{ width: '100%', justifyContent: 'center', fontSize: '0.85rem', padding: '0.65rem 1rem' }}
+                style={{ width: '100%', justifyContent: 'center', fontSize: '0.86rem', padding: '0.75rem 1rem' }}
               >
                 <span>Select & Configure Room D</span>
                 <ArrowRight size={15} />
@@ -789,33 +840,40 @@ export default function CustomerPortal({
           </div>
 
           {/* Card 3: Presidential Cliff Penthouse (Room F) */}
-          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '22px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ height: '260px', position: 'relative', overflow: 'hidden' }}>
+          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', display: 'flex', flexDirection: 'column' }}>
+            <div className="ostro-img-wrapper" style={{ height: '270px' }}>
               <img 
                 src="/images/ostro_dining.jpg" 
                 alt="Presidential Cliff Penthouse" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} 
               />
-              <div style={{ position: 'absolute', top: '1rem', left: '1rem', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(8px)', padding: '0.35rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', color: '#fde68a', border: '1px solid rgba(245,158,11,0.3)', fontWeight: 600 }}>
-                Top Promontory • 120 m²
+              <div style={{ position: 'absolute', top: '1.25rem', left: '1.25rem', background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.85rem', borderRadius: '9999px', fontSize: '0.74rem', color: '#fde68a', border: '1px solid rgba(245,158,11,0.3)', fontWeight: 600 }}>
+                SUITE 03 • TOP PROMONTORY (120 m²)
               </div>
-              <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(15,23,42,0.9)', backdropFilter: 'blur(8px)', padding: '0.35rem 0.85rem', borderRadius: '9999px', fontSize: '0.85rem', color: '#fff', fontWeight: 700 }}>
-                $420 <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
+              <div style={{ position: 'absolute', bottom: '1.25rem', right: '1.25rem', background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.95rem', borderRadius: '9999px', fontSize: '0.9rem', color: '#fff', fontWeight: 700, border: '1px solid rgba(255,255,255,0.1)' }}>
+                $420 <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
               </div>
             </div>
 
-            <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
+            <div style={{ padding: '2rem 1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
               <div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.45rem', fontWeight: 500, color: '#fff', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--ostro-sand-muted)', fontWeight: 700 }}>
+                    Summit Crest • 270° Marine Vista
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: '#f59e0b', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                    ✦ VIP Concierge Included
+                  </span>
+                </div>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
                   Presidential Cliff Penthouse
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+                <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
                   Private cliff promontory, horizon seawater plunge pool, dedicated butler service, curated Salento wine cellar, and 270° marine vista.
                 </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Plunge Pool</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Cliff Butler</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.25rem 0.55rem', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', color: '#cbd5e1' }}>Private Solarium</span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.75rem' }}>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Plunge Pool</span>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Cliff Butler</span>
+                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Private Solarium</span>
                 </div>
               </div>
 
@@ -823,7 +881,7 @@ export default function CustomerPortal({
                 type="button" 
                 className="ostro-btn-gold"
                 onClick={() => scrollToBooking('F')}
-                style={{ width: '100%', justifyContent: 'center', fontSize: '0.85rem', padding: '0.65rem 1rem' }}
+                style={{ width: '100%', justifyContent: 'center', fontSize: '0.86rem', padding: '0.75rem 1rem' }}
               >
                 <span>Select & Configure Room F</span>
                 <ArrowRight size={15} />
@@ -1232,7 +1290,7 @@ export default function CustomerPortal({
           </div>
         </div>
       ) : (
-        <form onSubmit={handleBookNow} style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
+        <form onSubmit={handleBookNow} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 400px', gap: '2.5rem', alignItems: 'start' }}>
           
           {/* Main Booking Controls */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
@@ -1783,7 +1841,7 @@ export default function CustomerPortal({
           </div>
 
           {/* Sidebar Booking Summary & Order Checkout */}
-          <div className="glass-panel" style={{ padding: '1.75rem', position: 'sticky', top: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div className="glass-panel" style={{ padding: '1.75rem', position: 'sticky', top: '6rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <h3 style={{ fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <Lock size={18} color="var(--primary-400)" />
               <span>Reservation Summary</span>

@@ -1162,44 +1162,98 @@ html {
   backdrop-filter: blur(8px);
 }
 
-/* Floating Availability Bar */
-.ostro-quick-bar {
-  background: rgba(14, 19, 28, 0.88);
-  border: 1px solid rgba(230, 223, 213, 0.2);
-  backdrop-filter: blur(16px);
-  border-radius: 18px;
-  padding: 1.25rem 1.5rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+/* Ultra-Wide Luxury Availability Dock (Architectural Resort Style) */
+.ostro-wide-dock {
+  width: 100%;
+  max-width: 1240px;
+  background: rgba(11, 15, 23, 0.86);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 24px;
+  padding: 1.25rem 1.75rem;
+  box-shadow: 
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+  grid-template-columns: 1.1fr 1.1fr 1.4fr 1.1fr auto;
   gap: 1.25rem;
   align-items: center;
   position: relative;
   z-index: 2;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.ostro-wide-dock:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 30px 75px rgba(0, 0, 0, 0.75), 0 0 30px rgba(245, 158, 11, 0.15);
+}
+
+.ostro-dock-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-right: 1.25rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.ostro-dock-col:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.ostro-dock-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ostro-sand-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ostro-dock-input {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  padding: 0.2rem 0;
+}
+
+.ostro-dock-input option {
+  background: #111827;
+  color: #ffffff;
 }
 
 /* Interactive Suite & Dining Showcase Cards */
 .ostro-card-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(230, 223, 213, 0.12);
-  background: rgba(15, 20, 30, 0.7);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(15, 20, 30, 0.65);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .ostro-card-hover:hover {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
   border-color: rgba(200, 125, 85, 0.45);
-  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(200, 125, 85, 0.2);
+  box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.75), 0 0 30px rgba(200, 125, 85, 0.2);
 }
 
 .ostro-img-wrapper {
   position: relative;
-  height: 220px;
+  height: 240px;
   overflow: hidden;
 }
 
@@ -1207,56 +1261,157 @@ html {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .ostro-card-hover:hover .ostro-img-wrapper img {
   transform: scale(1.06);
 }
 
-/* Primary Button with Terracotta / Gold Glow */
+/* Luxury Editorial Action Buttons */
 .ostro-btn-gold {
   background: linear-gradient(135deg, #c87d55 0%, #a85d35 100%);
   color: #ffffff;
-  border: 1px solid rgba(230, 223, 213, 0.3);
-  padding: 0.65rem 1.4rem;
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.75rem 1.65rem;
+  border-radius: 9999px;
   font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 24px rgba(200, 125, 85, 0.4);
+  white-space: nowrap;
+}
+
+.ostro-btn-gold:hover {
+  background: linear-gradient(135deg, #d98d65 0%, #b86d45 100%);
+  box-shadow: 0 12px 32px rgba(200, 125, 85, 0.6);
+  transform: translateY(-2px);
+}
+
+.ostro-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.75rem 1.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
   font-size: 0.86rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(200, 125, 85, 0.35);
+  white-space: nowrap;
 }
 
-.ostro-btn-gold:hover {
-  background: linear-gradient(135deg, #d98d65 0%, #b86d45 100%);
-  box-shadow: 0 6px 22px rgba(200, 125, 85, 0.55);
-  transform: translateY(-1px);
+.ostro-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-.ostro-btn-secondary {
-  background: rgba(255, 255, 255, 0.04);
+.ostro-btn-ghost {
+  background: transparent;
   color: var(--ostro-sand);
-  border: 1px solid rgba(230, 223, 213, 0.2);
-  padding: 0.65rem 1.25rem;
-  border-radius: 12px;
-  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.75rem 1.4rem;
+  border-radius: 9999px;
+  font-weight: 500;
   font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.2s ease;
 }
 
-.ostro-btn-secondary:hover {
-  background: rgba(230, 223, 213, 0.1);
-  border-color: rgba(230, 223, 213, 0.4);
+.ostro-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.35);
   color: #ffffff;
+  transform: translateY(-1px);
 }
+
+.ostro-btn-outline {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.75rem 1.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.86rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.ostro-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Magazine Editorial Numbers & Accents */
+.ostro-editorial-num {
+  font-family: var(--font-serif);
+  font-size: 2.4rem;
+  font-weight: 300;
+  color: rgba(200, 125, 85, 0.65);
+  line-height: 1;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+
+.ostro-editorial-spread {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(360px, 1.35fr);
+  gap: 3.5rem;
+  align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+  .ostro-wide-dock {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .ostro-dock-col {
+    border-right: none;
+    padding-right: 0;
+  }
+  .ostro-editorial-spread {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .ostro-wide-dock {
+    grid-template-columns: 1fr;
+  }
+}
+
 
