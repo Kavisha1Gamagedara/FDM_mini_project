@@ -61,6 +61,7 @@ export default function AdminManualBookingForm({
   const [guestEmail, setGuestEmail] = useState('');
   const [guestPhone, setGuestPhone] = useState('');
   const [country, setCountry] = useState('ITA');
+  const [hotel, setHotel] = useState('City Hotel');
 
   const [checkIn, setCheckIn] = useState(defaultCheckIn);
   const [checkOut, setCheckOut] = useState(defaultCheckOut);
@@ -191,7 +192,7 @@ export default function AdminManualBookingForm({
         booking_ref: `OST-${randomRefNum}`,
         guest_name: guestName.trim(),
         guest_email: guestEmail.trim().toLowerCase(),
-        hotel: 'City Hotel',
+        hotel: hotel,
         lead_time: leadTime,
         arrival_date_month: arrivalMonth,
         arrival_date_week_number: arrivalWeek,
@@ -217,6 +218,8 @@ export default function AdminManualBookingForm({
         check_out_date: checkOut,
         booking_channel_name: bookingChannelNote,
         room_count: Number(roomCount),
+        agent: distributionChannel === 'TA/TO' ? 9.0 : 'Direct',
+        company: (marketSegment === 'Corporate' || distributionChannel === 'Corporate') ? 'CORP-01' : null,
         status: 'confirmed',
         created_at: new Date().toISOString()
       };
@@ -497,6 +500,50 @@ export default function AdminManualBookingForm({
                 <h4 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#1e293b' }}>
                   2. Stay Dates & Room Configuration
                 </h4>
+              </div>
+
+              <div style={{ marginBottom: '1.25rem' }}>
+                <label style={{ display: 'block', fontSize: '0.78rem', fontWeight: 700, color: '#475569', marginBottom: '0.4rem' }}>
+                  Hotel Property Destination *
+                </label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => setHotel('City Hotel')}
+                    style={{
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '8px',
+                      border: hotel === 'City Hotel' ? '2px solid #0284c7' : '1.5px solid #cbd5e1',
+                      background: hotel === 'City Hotel' ? '#f0f9ff' : '#fff',
+                      color: hotel === 'City Hotel' ? '#0369a1' : '#475569',
+                      fontWeight: 700,
+                      fontSize: '0.84rem',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <div>City Hotel</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 400 }}>OSTRO Palazzo Lecce</div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setHotel('Resort Hotel')}
+                    style={{
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '8px',
+                      border: hotel === 'Resort Hotel' ? '2px solid #f59e0b' : '1.5px solid #cbd5e1',
+                      background: hotel === 'Resort Hotel' ? '#fffbeb' : '#fff',
+                      color: hotel === 'Resort Hotel' ? '#b45309' : '#475569',
+                      fontWeight: 700,
+                      fontSize: '0.84rem',
+                      cursor: 'pointer',
+                      textAlign: 'left'
+                    }}
+                  >
+                    <div>Resort Hotel</div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 400 }}>OSTRO Cliff Sanctuary Salento</div>
+                  </button>
+                </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>

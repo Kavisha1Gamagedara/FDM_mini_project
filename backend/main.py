@@ -555,10 +555,21 @@ def create_customer_reservation(payload: CustomerReservationInput):
             data["previous_cancellations"] = history["previous_cancellations"]
             data["previous_bookings_not_canceled"] = history["previous_bookings_not_canceled"]
         else:
-            data["is_repeated_guest"] = 0
-            data["previous_cancellations"] = 0
-            data["previous_bookings_not_canceled"] = 0
+            # If guest is not found in MongoDB yet, retain values if explicitly supplied (e.g. admin manual entry)
+            data["is_repeated_guest"] = int(data.get("is_repeated_guest") or 0)
+            data["previous_cancellations"] = int(data.get("previous_cancellations") or 0)
+            data["previous_bookings_not_canceled"] = int(data.get("previous_bookings_not_canceled") or 0)
             
+        # Ensure agent & company are properly aligned if omitted
+        if not data.get("agent"):
+            if data.get("distribution_channel") == "TA/TO":
+                data["agent"] = 9.0
+            else:
+                data["agent"] = "Direct"
+                
+        if not data.get("company") and (data.get("market_segment") == "Corporate" or data.get("distribution_channel") == "Corporate"):
+            data["company"] = data.get("corporate_code") or "CORP-01"
+
         # Run AI prediction on booking features
         ai_assessment = pipeline.predict_booking(data)
         data["prediction"] = ai_assessment

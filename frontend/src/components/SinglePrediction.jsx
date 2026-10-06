@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Building2, Calendar, Clock, UserCheck, CreditCard, Sparkles, 
-  RotateCcw, AlertTriangle, CheckCircle, Info, ChevronRight,
+  RotateCcw, AlertTriangle, AlertOctagon, CheckCircle2, Info, ChevronRight,
   TrendingUp, Compass, Award, ShieldAlert
 } from 'lucide-react';
 import RiskGauge from './RiskGauge';
@@ -417,9 +417,9 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
   return (
     <div>
       {/* Presets and Quick Actions */}
-      <div className="presets-bar glass-panel">
+      <div className="presets-bar">
         <div className="preset-title">
-          <Sparkles size={16} color="var(--primary-400)" />
+          <Sparkles size={17} color="#4f46e5" />
           <span>Quick Scenario Presets:</span>
         </div>
         <div className="preset-buttons">
@@ -458,12 +458,12 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
 
       <div className="single-grid">
         {/* Reservation Inputs Form */}
-        <form className="glass-panel form-card" onSubmit={handleSubmit}>
+        <form className="form-card" onSubmit={handleSubmit}>
           
           {/* SECTION 1: Hotel & Stay Duration */}
           <div>
             <div className="form-section-title">
-              <Building2 size={18} color="var(--primary-400)" />
+              <Building2 size={20} color="#4f46e5" />
               <span>1. Property & Stay Duration (Calendar Synced)</span>
             </div>
 
@@ -653,7 +653,7 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
           {/* SECTION 2: Guest Profile & History */}
           <div>
             <div className="form-section-title">
-              <UserCheck size={18} color="var(--primary-400)" />
+              <UserCheck size={20} color="#4f46e5" />
               <span>2. Guest Profile & Booking History</span>
             </div>
 
@@ -726,8 +726,8 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
             </div>
 
             {/* Informational Callout on Dataset Age Demographics */}
-            <div style={{ marginTop: '0.85rem', padding: '0.65rem 0.9rem', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.55rem', fontSize: '0.78rem', color: '#cbd5e1' }}>
-              <Info size={16} color="#818cf8" style={{ flexShrink: 0 }} />
+            <div style={{ marginTop: '0.95rem', padding: '0.85rem 1.15rem', background: '#eef2ff', border: '1.5px solid #c7d2fe', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.82rem', color: '#312e81' }}>
+              <Info size={18} color="#4f46e5" style={{ flexShrink: 0 }} />
               <span>
                 <strong>Dataset Demographic Policy:</strong> <strong>Babies (Infants)</strong> are guests aged &lt; 2 years (stay in baby crib/cot, typically free of charge). <strong>Children</strong> are minors aged 2 to 17 years (utilize standard/extra bedding and child meal packages). In the ML pipeline, having any children or babies automatically triggers the <code>is_family</code> indicator flag.
               </span>
@@ -785,7 +785,7 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
           {/* SECTION 3: Booking Channels & Financials */}
           <div>
             <div className="form-section-title">
-              <CreditCard size={18} color="var(--primary-400)" />
+              <CreditCard size={20} color="#4f46e5" />
               <span>3. Financials & Channel Details</span>
             </div>
 
@@ -902,8 +902,8 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
             </div>
 
             {form.deposit_type === 'Non Refund' && (
-              <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: 'rgba(244,63,94,0.1)', border: '1px solid rgba(244,63,94,0.3)', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.8rem', color: '#fda4af' }}>
-                <AlertTriangle size={18} />
+              <div style={{ marginTop: '1.1rem', padding: '0.85rem 1.15rem', background: '#fff1f2', border: '1.5px solid #fecdd3', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.84rem', color: '#9f1239', fontWeight: 600 }}>
+                <AlertTriangle size={18} color="#e11d48" style={{ flexShrink: 0 }} />
                 <span>Notice: Empirical cancellation rate for Non-Refundable reservations exceeds 90% due to historical group booking practices.</span>
               </div>
             )}
@@ -936,14 +936,14 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
         </form>
 
         {/* Real-time ML Prediction Results Card */}
-        <div className="glass-panel results-card">
+        <div className="results-card">
           <div className="results-header">
             <h3 className="results-title">
-              <Award size={20} color="var(--primary-400)" />
+              <Award size={22} color="#4f46e5" />
               <span>Risk Assessment</span>
             </h3>
             {prediction && (
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>
                 Response: {prediction.timestamp?.split('T')[1]?.substring(0, 8)}
               </span>
             )}
@@ -961,30 +961,48 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
               {/* Prescribed Operational Advice */}
               <div className={`recommendation-box ${prediction.risk_level}`}>
                 <div className="recommendation-header">
-                  <ShieldAlert size={16} />
+                  <ShieldAlert size={17} />
                   <span>Revenue Management Protocol</span>
                 </div>
                 <p className="recommendation-text">
-                  {prediction.recommendation}
+                  {prediction.suggested_action || prediction.recommendation}
                 </p>
               </div>
 
               {/* Key Risk Drivers Breakdown */}
               <div>
-                <h4 style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '0.6rem', letterSpacing: '0.04em' }}>
+                <h4 style={{ fontSize: '0.88rem', color: '#0f172a', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.04em' }}>
                   Top Risk Drivers (Feature Influence)
                 </h4>
                 <div className="drivers-list">
                   {prediction.key_risk_drivers && prediction.key_risk_drivers.length > 0 ? (
-                    prediction.key_risk_drivers.map((driver, idx) => (
-                      <div key={idx} className="driver-item">
-                        <ChevronRight size={14} color="var(--primary-400)" />
-                        <span>{driver}</span>
-                      </div>
-                    ))
+                    prediction.key_risk_drivers.map((driver, idx) => {
+                      const isRisk = driver.includes('historically correlated') || 
+                                     driver.includes('hazard') || 
+                                     driver.includes('Zero special requests') || 
+                                     driver.includes('cancellation(s)') ||
+                                     driver.includes('Extended lead time') ||
+                                     driver.includes('Non-Refundable');
+                      const isPositive = driver.includes('positive') || 
+                                         driver.includes('intent to stay') || 
+                                         driver.includes('commitment') || 
+                                         driver.includes('parking') || 
+                                         driver.includes('special request(s)');
+                      const badgeClass = isRisk ? 'driver-item risk' : isPositive ? 'driver-item positive' : 'driver-item neutral';
+                      const Icon = isRisk ? AlertOctagon : isPositive ? CheckCircle2 : Info;
+                      const iconColor = isRisk ? '#e11d48' : isPositive ? '#059669' : '#2563eb';
+
+                      return (
+                        <div key={idx} className={badgeClass}>
+                          <Icon size={16} color={iconColor} style={{ flexShrink: 0 }} />
+                          <span>{driver}</span>
+                        </div>
+                      );
+                    })
                   ) : (
-                    <div className="driver-item">
-                      <span>No adverse risk drivers detected. Standard profile.</span>
+                    <div className="driver-item neutral">
+                      <Info size={16} color="#2563eb" style={{ flexShrink: 0 }} />
+                      <span>Standard reservation profile without adverse risk indicators.</span>
                     </div>
                   )}
                 </div>
@@ -992,13 +1010,13 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
             </>
           ) : (
             <div className="empty-results">
-              <Compass size={48} strokeWidth={1.5} color="var(--primary-400)" />
+              <Compass size={48} strokeWidth={1.5} color="#4f46e5" />
               <div>
-                <p style={{ fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
+                <p style={{ fontWeight: 700, color: '#0f172a', marginBottom: '0.35rem', fontSize: '1.05rem' }}>
                   No Prediction Run Yet
                 </p>
-                <p style={{ fontSize: '0.82rem' }}>
-                  Select a preset above or customize the booking details and click <strong>"Analyze Cancellation Risk"</strong>.
+                <p style={{ fontSize: '0.86rem', color: '#64748b', lineHeight: 1.5 }}>
+                  Select a preset above or customize the booking details and click <strong style={{ color: '#4f46e5' }}>"Analyze Cancellation Risk"</strong>.
                 </p>
               </div>
             </div>

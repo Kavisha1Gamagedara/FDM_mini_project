@@ -362,31 +362,31 @@ export default function AdminMaterialDashboard({
             onGoToMonitor={() => setActiveTab('monitor')}
           />
         ) : activeTab === 'single' ? (
-          <div className="mat-card" style={{ padding: '2rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {selectedCustomerBooking && (
               <div style={{ 
                 padding: '0.85rem 1.25rem', 
-                marginBottom: '1.5rem', 
-                borderRadius: '12px', 
-                background: 'rgba(2, 132, 199, 0.08)', 
-                border: '1px solid rgba(2, 132, 199, 0.25)',
+                borderRadius: '14px', 
+                background: '#f0f9ff', 
+                border: '1.5px solid #bae6fd',
+                boxShadow: '0 2px 10px rgba(2, 132, 199, 0.05)',
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
                 gap: '0.75rem'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.86rem', color: '#0369a1' }}>
-                  <Sparkles size={16} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.88rem', color: '#0369a1' }}>
+                  <Sparkles size={17} />
                   <span>
-                    Currently Inspecting Live Reservation: <strong>{selectedCustomerBooking.guest_name}</strong> (#{selectedCustomerBooking.booking_ref})
+                    Currently Inspecting Live Reservation: <strong style={{ color: '#0c4a6e' }}>{selectedCustomerBooking.guest_name}</strong> (#{selectedCustomerBooking.booking_ref})
                   </span>
                 </div>
                 <button 
                   type="button" 
                   className="mat-action-pill"
                   onClick={() => setActiveTab('monitor')}
-                  style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem' }}
+                  style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem', background: '#ffffff', border: '1.5px solid #cbd5e1', color: '#334155' }}
                 >
                   ← Back to Dashboard
                 </button>
@@ -399,9 +399,7 @@ export default function AdminMaterialDashboard({
             />
           </div>
         ) : activeTab === 'batch' ? (
-          <div className="mat-card" style={{ padding: '2rem' }}>
-            <BatchPrediction apiBaseUrl={apiBaseUrl} />
-          </div>
+          <BatchPrediction apiBaseUrl={apiBaseUrl} />
         ) : (
           /* =========================================================================
              TAB: MONITOR / DASHBOARD (Exact Creative Tim Material 3 Layout)

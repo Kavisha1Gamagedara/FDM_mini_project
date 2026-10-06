@@ -1622,7 +1622,7 @@ export default function CustomerPortal({
                 </div>
               )}
 
-              {/* Dynamic Automated Classification Ribbon */}
+              {/* Channel Terms Ribbon */}
               <div style={{ 
                 padding: '0.9rem 1.15rem', 
                 borderRadius: '10px', 
@@ -1633,26 +1633,15 @@ export default function CustomerPortal({
                 gap: '0.4rem' 
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    🎯 Active Machine Learning Feature Mapping:
+                  <span style={{ fontSize: '0.82rem', color: '#fff', fontWeight: 700 }}>
+                    ✦ {currentChannel.name} • Terms & Inclusions
                   </span>
                   <span style={{ fontSize: '0.74rem', color: currentChannel.color, fontWeight: 600 }}>
-                    {currentChannel.cancellationBaseline}
+                    {currentChannel.rateBadge}
                   </span>
                 </div>
-                <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', fontSize: '0.78rem' }}>
-                  <span style={{ background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-                    market_segment: <strong style={{ color: currentChannel.color }}>"{currentChannel.market_segment}"</strong>
-                  </span>
-                  <span style={{ background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-                    distribution_channel: <strong style={{ color: '#fff' }}>"{currentChannel.distribution_channel}"</strong>
-                  </span>
-                  <span style={{ background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
-                    customer_type: <strong style={{ color: '#fff' }}>"{currentChannel.customer_type}"</strong>
-                  </span>
-                </div>
-                <p style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                  💡 {currentChannel.rationale}
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.5 }}>
+                  {currentChannel.rationale}
                 </p>
               </div>
 
