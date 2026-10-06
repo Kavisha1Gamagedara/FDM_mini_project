@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   CalendarCheck, User, Mail, Phone, Globe, BedDouble, 
   DollarSign, Users, Calendar, Clock, CreditCard, Sparkles, 

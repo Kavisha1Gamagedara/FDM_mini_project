@@ -237,18 +237,6 @@ export default function AdminMaterialDashboard({
               </button>
             </li>
 
-            <li>
-              <button 
-                type="button"
-                className="mat-nav-item"
-                onClick={onOpenIntel}
-              >
-                <div className="mat-nav-icon">
-                  <Sparkles size={17} />
-                </div>
-                <span>Model Intelligence</span>
-              </button>
-            </li>
           </ul>
 
           <div className="mat-section-title" style={{ marginTop: '1.5rem' }}>ACCOUNT & SESSION</div>

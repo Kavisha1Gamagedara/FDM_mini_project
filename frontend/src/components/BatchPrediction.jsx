@@ -134,7 +134,7 @@ export default function BatchPrediction({ apiBaseUrl }) {
   return (
     <div className="batch-container">
       {/* Upload Box & Actions */}
-      <div className="glass-panel" style={{ padding: '2rem' }}>
+      <div className="mat-card" style={{ padding: '2.5rem', background: '#ffffff', border: '1.5px solid #e2e8f0', borderRadius: '18px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
         <div 
           className="upload-dropzone"
           onDrop={handleDrop}
@@ -257,17 +257,17 @@ export default function BatchPrediction({ apiBaseUrl }) {
           </div>
 
           {/* Interactive Results Table */}
-          <div className="glass-panel table-card">
+          <div className="table-card">
             <div className="table-toolbar">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-input)', padding: '0.4rem 0.8rem', borderRadius: '8px', border: '1px solid var(--border-subtle)', width: '240px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', background: '#ffffff', padding: '0.45rem 0.85rem', borderRadius: '10px', border: '1.5px solid #cbd5e1', width: '260px' }}>
                   <Search size={16} color="var(--text-muted)" style={{ marginRight: '0.5rem' }} />
                   <input 
                     type="text" 
                     placeholder="Search hotel, country..." 
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.85rem', width: '100%', outline: 'none' }}
+                    style={{ background: 'transparent', border: 'none', color: '#0f172a', fontSize: '0.85rem', width: '100%', outline: 'none' }}
                   />
                 </div>
 
