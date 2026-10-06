@@ -1903,7 +1903,7 @@ export default function CustomerPortal({
               </div>
             </div>
 
-            {/* Guest Name & Email OR Sign-In Requirement */}
+            {/* Guest Name & Email OR Sign-In / Locked State */}
             {!currentUser ? (
               <div style={{
                 padding: '1.25rem',
@@ -1930,10 +1930,10 @@ export default function CustomerPortal({
                 </div>
                 <div>
                   <h5 style={{ fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.25rem' }}>
-                    Customer Sign In Required
+                    Customer Account Required to Reserve
                   </h5>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-                    To finalize your room reservation, track stay history, and calculate cancellation risk, please sign in or register as a guest.
+                    Reservations are reserved exclusively for customer accounts. Please sign in or register to unlock the reservation engine.
                   </p>
                 </div>
 
@@ -1956,6 +1956,24 @@ export default function CustomerPortal({
                   <span>Sign In / Register as Customer</span>
                 </button>
               </div>
+            ) : currentUser.role === 'admin' ? (
+              <div style={{
+                padding: '1.15rem',
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1.5px solid rgba(239, 68, 68, 0.35)',
+                borderRadius: '14px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.6rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#f87171', fontWeight: 700, fontSize: '0.85rem' }}>
+                  <Lock size={16} />
+                  <span>Administrator Account: Reservation Locked</span>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: '#fca5a5', lineHeight: 1.45 }}>
+                  Public guest reservations can only be created by customer accounts. As an administrator, please use the <strong>Manual Reservation Desk</strong> in the Admin Dashboard to register bookings for guests.
+                </p>
+              </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{
@@ -1970,7 +1988,7 @@ export default function CustomerPortal({
                   color: '#6ee7b7'
                 }}>
                   <CheckCircle2 size={16} color="#34d399" />
-                  <span>Authenticated Member: <strong>@{currentUser.username}</strong></span>
+                  <span>Authenticated Customer: <strong>@{currentUser.username}</strong></span>
                 </div>
 
                 <div className="input-group">
@@ -2027,14 +2045,15 @@ export default function CustomerPortal({
               </div>
             </div>
 
+            {/* Final Action Button: Locked for Non-Customers or Admins */}
             {!currentUser ? (
               <button 
                 type="button"
                 className="submit-btn"
                 onClick={() => onOpenAuth && onOpenAuth('login', false)}
                 style={{
-                  background: 'linear-gradient(135deg, rgba(99,102,241,0.4) 0%, rgba(168,85,247,0.3) 100%)',
-                  border: '1px solid rgba(129,140,248,0.5)',
+                  background: 'linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(168,85,247,0.2) 100%)',
+                  border: '1px solid rgba(129,140,248,0.4)',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -2043,7 +2062,26 @@ export default function CustomerPortal({
                 }}
               >
                 <Lock size={16} />
-                <span>Sign In as Customer to Book (${estimatedTotal})</span>
+                <span>🔒 Reservation Locked — Sign In as Customer to Book</span>
+              </button>
+            ) : currentUser.role === 'admin' ? (
+              <button 
+                type="button"
+                className="submit-btn"
+                disabled={true}
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  color: 'var(--text-muted)',
+                  cursor: 'not-allowed',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem'
+                }}
+              >
+                <Lock size={16} />
+                <span>🔒 Reservation Locked (Customer Accounts Only)</span>
               </button>
             ) : (
               <button 

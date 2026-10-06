@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, LogIn, LogOut, User, Crown, ChevronRight, Info } from 'lucide-react';
+import { Compass, LogIn, LogOut, User, Crown, ChevronRight, Info, Lock } from 'lucide-react';
 
 export default function Header({ 
   backendHealth, 
@@ -29,7 +29,7 @@ export default function Header({
           <Compass size={20} color="#111827" strokeWidth={2.2} />
         </button>
 
-        {/* Center Navigation Links (Matches image: Work, About, Playground, Resource) */}
+        {/* Center Navigation Links */}
         <nav className="ostro-nav-links">
           <a 
             href="#" 
@@ -47,36 +47,33 @@ export default function Header({
           <a href="#dining" className="ostro-nav-link">
             Gastronomy
           </a>
-          <a href="#booking-engine" className="ostro-nav-link ostro-nav-link-accent">
-            Reserve
-          </a>
+          {currentUser?.role === 'admin' ? (
+            <span 
+              className="ostro-nav-link" 
+              style={{ opacity: 0.6, cursor: 'not-allowed', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }} 
+              title="Reservations locked for administrator accounts. Use Admin Dashboard to create manual bookings."
+            >
+              <Lock size={12} />
+              <span>Reserve (Locked)</span>
+            </span>
+          ) : (
+            <a href="#booking-engine" className="ostro-nav-link ostro-nav-link-accent">
+              Reserve
+            </a>
+          )}
         </nav>
 
-        {/* Admin Portal Toggle (Only shown when Admin is logged in) */}
+        {/* Admin Portal Return Button (Only shown when Admin is logged in) */}
         {currentUser?.role === 'admin' && (
           <div className="ostro-nav-admin-toggle">
             <button
               type="button"
-              onClick={() => onSelectPortal(activePortal === 'admin' ? 'customer' : 'admin')}
-              className={`ostro-admin-toggle-btn ${activePortal === 'admin' ? 'active-admin' : ''}`}
+              onClick={() => onSelectPortal('admin')}
+              className="ostro-admin-toggle-btn"
+              title="Return to Admin Dashboard"
             >
-              {activePortal === 'admin' ? '🛎️ Guest View' : '🛡️ Admin Portal'}
-              {customerBookingsCount > 0 && activePortal !== 'admin' && (
-                <span className="ostro-admin-count">{customerBookingsCount}</span>
-              )}
+              🛡️ Admin Dashboard
             </button>
-            {activePortal === 'admin' && onOpenIntel && (
-              <button
-                type="button"
-                onClick={onOpenIntel}
-                className="ostro-admin-toggle-btn"
-                title="Model Intel"
-                style={{ marginLeft: '0.35rem' }}
-              >
-                <Info size={13} color="#818cf8" />
-                <span>Intel</span>
-              </button>
-            )}
           </div>
         )}
 

@@ -6,12 +6,13 @@ import {
   DollarSign, Users, TrendingDown, BedDouble, CheckCircle2, 
   Clock, ShieldAlert, ArrowUpRight, ArrowDownRight, RefreshCw, 
   Building2, CreditCard, Mail, Trash2, ChevronRight, Filter, 
-  Compass, Flame, FileText, Check, Maximize2, Minimize2
+  Compass, Flame, FileText, Check, Maximize2, Minimize2, PlusCircle
 } from 'lucide-react';
 import MonthlyCancellationLineChart from './MonthlyCancellationLineChart';
 import DailyCancellationInspector from './DailyCancellationInspector';
 import SinglePrediction from './SinglePrediction';
 import BatchPrediction from './BatchPrediction';
+import AdminManualBookingForm from './AdminManualBookingForm';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -200,6 +201,19 @@ export default function AdminMaterialDashboard({
             <li>
               <button 
                 type="button"
+                className={`mat-nav-item ${activeTab === 'manual-booking' ? 'active' : ''}`}
+                onClick={() => setActiveTab('manual-booking')}
+              >
+                <div className="mat-nav-icon">
+                  <PlusCircle size={17} />
+                </div>
+                <span>Manual Reservation Desk</span>
+              </button>
+            </li>
+
+            <li>
+              <button 
+                type="button"
                 className={`mat-nav-item ${activeTab === 'single' ? 'active' : ''}`}
                 onClick={() => setActiveTab('single')}
               >
@@ -237,25 +251,11 @@ export default function AdminMaterialDashboard({
             </li>
           </ul>
 
-          <div className="mat-section-title" style={{ marginTop: '1.5rem' }}>GUEST & ACCOUNT PAGES</div>
+          <div className="mat-section-title" style={{ marginTop: '1.5rem' }}>ACCOUNT & SESSION</div>
           <ul className="mat-nav-list">
             <li>
               <button 
-                type="button"
-                className="mat-nav-item"
-                onClick={onSwitchToCustomer}
-                style={{ color: '#0284c7' }}
-              >
-                <div className="mat-nav-icon" style={{ background: 'rgba(2, 132, 199, 0.1)', color: '#0284c7' }}>
-                  <ExternalLink size={16} />
-                </div>
-                <span style={{ fontWeight: 600 }}>Return to Guest Sanctuary</span>
-              </button>
-            </li>
-
-            <li>
-              <button 
-                type="button"
+                type="button" 
                 className="mat-nav-item"
                 onClick={onLogout}
                 style={{ color: '#e11d48' }}
@@ -269,7 +269,7 @@ export default function AdminMaterialDashboard({
           </ul>
         </div>
 
-        {/* Sidebar Footer Card (Matches "Documentation / Upgrade to Pro" in screenshot) */}
+        {/* Sidebar Footer Card */}
         <div className="mat-sidebar-footer-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
             <ShieldCheck size={16} color="#34d399" />
@@ -277,17 +277,9 @@ export default function AdminMaterialDashboard({
               ML Model Health: 100%
             </span>
           </div>
-          <p style={{ fontSize: '0.72rem', color: '#7b809a', lineHeight: 1.4, marginBottom: '0.75rem' }}>
+          <p style={{ fontSize: '0.72rem', color: '#7b809a', lineHeight: 1.4 }}>
             XGBoost Champion active with MongoDB automated session sync.
           </p>
-          <button 
-            type="button" 
-            className="mat-sidebar-btn"
-            onClick={onSwitchToCustomer}
-          >
-            <span>Preview Guest Experience</span>
-            <ArrowRight size={13} />
-          </button>
         </div>
 
       </aside>
@@ -304,16 +296,19 @@ export default function AdminMaterialDashboard({
               <span>Pages</span>
               <span>/</span>
               <strong style={{ color: '#344767' }}>
-                {activeTab === 'monitor' ? 'Dashboard' : activeTab === 'single' ? 'Single AI Inspector' : 'Batch Portfolio'}
+                {activeTab === 'monitor' ? 'Dashboard' : activeTab === 'manual-booking' ? 'Manual Reservation Desk' : activeTab === 'single' ? 'Single AI Inspector' : 'Batch Portfolio'}
               </strong>
             </div>
             <h2 className="mat-page-title">
               {activeTab === 'monitor' && 'Executive Cancellation Dashboard'}
+              {activeTab === 'manual-booking' && 'Manual Reservation Desk'}
               {activeTab === 'single' && 'Single Reservation Feature Inspector'}
               {activeTab === 'batch' && 'Batch Portfolio CSV Risk Analyzer'}
             </h2>
             <p style={{ fontSize: '0.84rem', color: '#7b809a', marginTop: '0.15rem' }}>
-              Check reservation risk, upcoming cancellations, and room churn forecasts by arrival date.
+              {activeTab === 'manual-booking' 
+                ? 'Create on-demand reservations requested directly by customers with automated XGBoost risk scoring and MongoDB sync.'
+                : 'Check reservation risk, upcoming cancellations, and room churn forecasts by arrival date.'}
             </p>
           </div>
 
@@ -342,16 +337,6 @@ export default function AdminMaterialDashboard({
               <span>Sync Database ({reservations.length})</span>
             </button>
 
-            {/* Switch to Guest View Pill */}
-            <button 
-              type="button"
-              className="mat-action-pill mat-action-accent"
-              onClick={onSwitchToCustomer}
-            >
-              <ExternalLink size={14} />
-              <span>Guest View</span>
-            </button>
-
             {/* User Profile Pill */}
             <div className="mat-user-badge">
               <div className="mat-user-avatar">A</div>
@@ -364,9 +349,19 @@ export default function AdminMaterialDashboard({
         </header>
 
         {/* =========================================================================
-            ACTIVE VIEW RENDER (DASHBOARD vs SINGLE vs BATCH)
+            ACTIVE VIEW RENDER (DASHBOARD vs MANUAL BOOKING vs SINGLE vs BATCH)
             ========================================================================= */}
-        {activeTab === 'single' ? (
+        {activeTab === 'manual-booking' ? (
+          <AdminManualBookingForm 
+            apiBaseUrl={apiBaseUrl}
+            onRefresh={onRefresh}
+            onSelectBooking={(bk) => {
+              if (onSelectBooking) onSelectBooking(bk);
+              setActiveTab('single');
+            }}
+            onGoToMonitor={() => setActiveTab('monitor')}
+          />
+        ) : activeTab === 'single' ? (
           <div className="mat-card" style={{ padding: '2rem' }}>
             {selectedCustomerBooking && (
               <div style={{ 
