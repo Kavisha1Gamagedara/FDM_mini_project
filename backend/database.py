@@ -244,21 +244,43 @@ def get_user_booking_history(email: str, username: Optional[str] = None) -> Dict
     clean_email = (email or "").strip().lower()
     clean_username = (username or "").strip().lower()
 
-    if db is not None and clean_email:
+    # If identifier maps to a registered user, resolve both their canonical email & username
+    user = None
+    if clean_email:
+        user = get_user_by_identifier(clean_email)
+    if not user and clean_username:
+        user = get_user_by_identifier(clean_username)
+
+    if user:
+        if user.get("email"):
+            clean_email = user.get("email").strip().lower()
+        if user.get("username"):
+            clean_username = user.get("username").strip().lower()
+
+    if db is not None:
         try:
             col = db[COLLECTION_NAME]
-            or_filters = [{"guest_email": {"$regex": f"^{clean_email}$", "$options": "i"}}]
+            or_filters = []
+            if clean_email:
+                or_filters.extend([
+                    {"guest_email": {"$regex": f"^{clean_email}$", "$options": "i"}},
+                    {"email": {"$regex": f"^{clean_email}$", "$options": "i"}}
+                ])
             if clean_username:
                 or_filters.append({"username": clean_username})
-            cursor = col.find({"$or": or_filters}, {"_id": 0}).sort("created_at", pymongo.DESCENDING)
-            records = list(cursor)
+
+            if or_filters:
+                cursor = col.find({"$or": or_filters}, {"_id": 0}).sort("created_at", pymongo.DESCENDING)
+                records = list(cursor)
         except Exception as e:
             print(f"[MongoDB Error] get_user_booking_history: {e}")
     else:
         for r in _in_memory_reservations:
-            r_email = (r.get("guest_email") or "").strip().lower()
+            r_email = (r.get("guest_email") or r.get("email") or "").strip().lower()
             r_uname = (r.get("username") or "").strip().lower()
-            if r_email == clean_email or (clean_username and r_uname == clean_username):
+            match_email = bool(clean_email and (r_email == clean_email))
+            match_uname = bool(clean_username and (r_uname == clean_username))
+            if match_email or match_uname:
                 records.append(r)
 
     total_past = len(records)

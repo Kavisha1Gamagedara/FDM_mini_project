@@ -82,11 +82,41 @@ export default function AdminManualBookingForm({
   const [specialRequests, setSpecialRequests] = useState(1);
   const [isReturningGuest, setIsReturningGuest] = useState(0);
   const [prevCancellations, setPrevCancellations] = useState(0);
+  const [guestHistory, setGuestHistory] = useState(null);
+  const [isLookingUpHistory, setIsLookingUpHistory] = useState(false);
 
   // Status
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [createdBooking, setCreatedBooking] = useState(null);
+
+  // Automatically check MongoDB for prior reservations and cancellations when admin enters guest email
+  useEffect(() => {
+    const email = guestEmail.trim().toLowerCase();
+    if (email && email.includes('@') && email.length > 5) {
+      setIsLookingUpHistory(true);
+      const timer = setTimeout(async () => {
+        try {
+          const res = await fetch(`${apiBaseUrl}/auth/history/${encodeURIComponent(email)}`);
+          if (res.ok) {
+            const data = await res.json();
+            setGuestHistory(data);
+            if (data.total_past_bookings > 0) {
+              setIsReturningGuest(data.is_repeated_guest);
+              setPrevCancellations(data.previous_cancellations);
+            }
+          }
+        } catch (e) {
+          console.warn('Admin guest lookup error:', e);
+        } finally {
+          setIsLookingUpHistory(false);
+        }
+      }, 400);
+      return () => clearTimeout(timer);
+    } else {
+      setGuestHistory(null);
+    }
+  }, [guestEmail, apiBaseUrl]);
 
   // When room changes, auto-update custom ADR to default rate
   const handleRoomChange = (code) => {
@@ -400,6 +430,32 @@ export default function AdminManualBookingForm({
                     onChange={(e) => setGuestEmail(e.target.value)}
                     style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '8px', border: '1.5px solid #cbd5e1', fontSize: '0.86rem', outline: 'none' }}
                   />
+                  {isLookingUpHistory && (
+                    <div style={{ fontSize: '0.72rem', color: '#0284c7', marginTop: '0.3rem' }}>
+                      Checking MongoDB for past reservations...
+                    </div>
+                  )}
+                  {guestHistory && (
+                    <div style={{
+                      marginTop: '0.35rem',
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '6px',
+                      fontSize: '0.72rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      background: guestHistory.previous_cancellations > 0 ? '#fff1f2' : guestHistory.total_past_bookings > 0 ? '#ecfdf5' : '#f8fafc',
+                      border: `1px solid ${guestHistory.previous_cancellations > 0 ? '#fecdd3' : guestHistory.total_past_bookings > 0 ? '#a7f3d0' : '#e2e8f0'}`,
+                      color: guestHistory.previous_cancellations > 0 ? '#be123c' : guestHistory.total_past_bookings > 0 ? '#047857' : '#64748b'
+                    }}>
+                      <span>●</span>
+                      <span>
+                        {guestHistory.total_past_bookings > 0 
+                          ? `Database record: ${guestHistory.total_past_bookings} prior stay(s) · ${guestHistory.previous_cancellations} cancellation(s) (Auto-populated)`
+                          : `New Guest Profile: 0 prior reservations in database`}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 

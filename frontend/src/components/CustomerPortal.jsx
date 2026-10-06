@@ -4,7 +4,7 @@ import {
   Car, Sparkles, CheckCircle2, ShieldCheck, MapPin, 
   ArrowRight, CreditCard, Lock, HeartHandshake, Eye,
   Briefcase, Globe, Share2, Tag, Check, Layers, Info, Percent,
-  User, History, AlertCircle, Trash2, LogIn, ChevronDown, ChevronUp,
+  User, History, AlertCircle, Trash2, LogIn, ChevronDown, ChevronUp, UserCheck,
   Waves, Compass, Star, Award, Coffee, Anchor, Quote
 } from 'lucide-react';
 
@@ -176,9 +176,8 @@ export default function CustomerPortal({
   const [depositOption, setDepositOption] = useState('No Deposit');
   const [parking, setParking] = useState(0);
   const [specialRequests, setSpecialRequests] = useState(1);
-  const [isReturningGuest, setIsReturningGuest] = useState(0);
 
-  // Guest Contact Form & User History Tracking
+  // Guest Contact Form & Automated History Verification
   const [guestName, setGuestName] = useState(currentUser?.name || 'Alexandra Miller');
   const [guestEmail, setGuestEmail] = useState(currentUser?.email || 'alexandra.miller@example.com');
   const [userHistory, setUserHistory] = useState(null);
@@ -187,7 +186,21 @@ export default function CustomerPortal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [confirmedBooking, setConfirmedBooking] = useState(null);
 
-  // Sync with logged in user & query MongoDB history
+  // Auto-query guest stay and cancellation history from MongoDB
+  const fetchUserHistory = async (identifier) => {
+    if (!identifier) return;
+    try {
+      const res = await fetch(`${apiBaseUrl}/auth/history/${encodeURIComponent(identifier)}`);
+      if (res.ok) {
+        const data = await res.json();
+        setUserHistory(data);
+      }
+    } catch (e) {
+      console.warn('Could not load user booking history:', e);
+    }
+  };
+
+  // Sync with logged in user
   useEffect(() => {
     if (currentUser) {
       setGuestName(currentUser.name || currentUser.username);
@@ -198,20 +211,16 @@ export default function CustomerPortal({
     }
   }, [currentUser]);
 
-  const fetchUserHistory = async (identifier) => {
-    try {
-      const res = await fetch(`${apiBaseUrl}/auth/history/${identifier}`);
-      if (res.ok) {
-        const data = await res.json();
-        setUserHistory(data);
-        if (data.is_repeated_guest) {
-          setIsReturningGuest(1);
-        }
-      }
-    } catch (e) {
-      console.warn('Could not load user booking history:', e);
+  // Dynamically auto-check MongoDB history whenever guest email or username changes
+  useEffect(() => {
+    const ident = (guestEmail || currentUser?.email || currentUser?.username || '').trim();
+    if (ident && (ident.includes('@') || ident.length >= 3)) {
+      const timer = setTimeout(() => {
+        fetchUserHistory(ident);
+      }, 400);
+      return () => clearTimeout(timer);
     }
-  };
+  }, [guestEmail]);
 
   const handleCancelBooking = async (bookingRef) => {
     if (!window.confirm(`Are you sure you want to cancel reservation #${bookingRef}? This cancellation will be recorded in your account history.`)) {
@@ -307,9 +316,9 @@ export default function CustomerPortal({
       customer_type: currentChannel.customer_type,
       agent: currentChannel.agent,
       company: bookingChannel === 'CORPORATE' ? (corporateCode || 'CORP-45') : null,
-      is_repeated_guest: userHistory ? userHistory.is_repeated_guest : Number(isReturningGuest),
-      previous_cancellations: userHistory ? userHistory.previous_cancellations : 0,
-      previous_bookings_not_canceled: userHistory ? userHistory.previous_bookings_not_canceled : (Number(isReturningGuest) ? 2 : 0),
+      is_repeated_guest: userHistory?.is_repeated_guest ? 1 : 0,
+      previous_cancellations: userHistory?.previous_cancellations || 0,
+      previous_bookings_not_canceled: userHistory?.previous_bookings_not_canceled || 0,
       reserved_room_type: roomType,
       deposit_type: depositOption,
       adr: adr,
@@ -1763,7 +1772,7 @@ export default function CustomerPortal({
 
               <div className="form-row" style={{ marginTop: '1.25rem' }}>
                 <div className="input-group">
-                  <label className="input-label" htmlFor="parking">Vehicle Parking</label>
+                  <label className="input-label" htmlFor="parking">Vehicle Parking & Valet</label>
                   <select 
                     id="parking" 
                     className="select-field" 
@@ -1776,16 +1785,175 @@ export default function CustomerPortal({
                 </div>
 
                 <div className="input-group">
-                  <label className="input-label" htmlFor="returning">Guest Membership</label>
-                  <select 
-                    id="returning" 
-                    className="select-field" 
-                    value={isReturningGuest} 
-                    onChange={(e) => setIsReturningGuest(e.target.value)}
-                  >
-                    <option value={0}>First Time Guest</option>
-                    <option value={1}>Returning OSTRO Member (Prior Stays)</option>
-                  </select>
+                  <label className="input-label">Account Loyalty & History Status</label>
+                  <div style={{
+                    padding: '0.62rem 0.85rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--border-subtle)',
+                    background: 'rgba(255,255,255,0.03)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    minHeight: '44px'
+                  }}>
+                    <span style={{ fontSize: '0.84rem', color: '#fff', fontWeight: 600 }}>
+                      {userHistory?.is_repeated_guest ? 'Recognized Member Profile' : 'First-Time Guest Profile'}
+                    </span>
+                    <span style={{
+                      fontSize: '0.68rem',
+                      fontWeight: 700,
+                      padding: '0.15rem 0.5rem',
+                      borderRadius: '9999px',
+                      background: userHistory?.previous_cancellations > 0 ? 'rgba(244,63,94,0.18)' : userHistory?.is_repeated_guest ? 'rgba(16,185,129,0.18)' : 'rgba(99,102,241,0.18)',
+                      color: userHistory?.previous_cancellations > 0 ? '#fda4af' : userHistory?.is_repeated_guest ? '#6ee7b7' : '#c7d2fe',
+                      border: `1px solid ${userHistory?.previous_cancellations > 0 ? 'rgba(244,63,94,0.35)' : userHistory?.is_repeated_guest ? 'rgba(16,185,129,0.35)' : 'rgba(99,102,241,0.35)'}`
+                    }}>
+                      {userHistory?.previous_cancellations > 0 
+                        ? `${userHistory.previous_cancellations} Cancellation(s)` 
+                        : userHistory?.is_repeated_guest ? '0 Cancellations' : 'New Account'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Automated Guest Stay & Cancellation History Card */}
+              <div style={{
+                marginTop: '1.25rem',
+                padding: '1.25rem 1.35rem',
+                borderRadius: '14px',
+                background: userHistory?.previous_cancellations > 0 
+                  ? 'linear-gradient(135deg, rgba(244,63,94,0.08) 0%, rgba(30,15,25,0.4) 100%)'
+                  : userHistory?.is_repeated_guest 
+                    ? 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(10,35,25,0.4) 100%)'
+                    : 'linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(20,20,40,0.4) 100%)',
+                border: userHistory?.previous_cancellations > 0 
+                  ? '1px solid rgba(244,63,94,0.35)'
+                  : userHistory?.is_repeated_guest 
+                    ? '1px solid rgba(16,185,129,0.35)'
+                    : '1px solid rgba(99,102,241,0.25)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.85rem'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <ShieldCheck size={18} color={userHistory?.previous_cancellations > 0 ? '#fda4af' : userHistory?.is_repeated_guest ? '#34d399' : '#818cf8'} />
+                    <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>
+                      Automated Stay & Cancellation History
+                    </span>
+                    <span style={{
+                      fontSize: '0.66rem',
+                      padding: '0.12rem 0.45rem',
+                      borderRadius: '9999px',
+                      fontWeight: 700,
+                      background: 'rgba(255,255,255,0.06)',
+                      color: 'var(--text-secondary)',
+                      border: '1px solid rgba(255,255,255,0.1)'
+                    }}>
+                      ● Live Database Verified
+                    </span>
+                  </div>
+
+                  <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                    Guest Profile: <strong style={{ color: '#e2e8f0' }}>{guestEmail || currentUser?.email || 'guest@ostro.it'}</strong>
+                  </span>
+                </div>
+
+                {/* Live Metrics Row */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
+                  <div style={{ padding: '0.65rem 0.85rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Prior Reservations
+                    </div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', marginTop: '0.15rem' }}>
+                      {userHistory ? userHistory.total_past_bookings : 0} {userHistory?.total_past_bookings === 1 ? 'Stay' : 'Stays'}
+                    </div>
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                      {userHistory?.is_repeated_guest ? 'Returning Guest' : 'First-Time Guest'}
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '0.65rem 0.85rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Completed Stays
+                    </div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#34d399', marginTop: '0.15rem' }}>
+                      {userHistory ? userHistory.previous_bookings_not_canceled : 0} Kept
+                    </div>
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                      Fulfilled bookings
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '0.65rem 0.85rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', border: userHistory?.previous_cancellations > 0 ? '1px solid rgba(244,63,94,0.3)' : '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ fontSize: '0.7rem', color: userHistory?.previous_cancellations > 0 ? '#fda4af' : 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Prior Cancellations
+                    </div>
+                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: userHistory?.previous_cancellations > 0 ? '#fb7185' : '#e2e8f0', marginTop: '0.15rem' }}>
+                      {userHistory ? userHistory.previous_cancellations : 0} Cancelled
+                    </div>
+                    <div style={{ fontSize: '0.68rem', color: userHistory?.previous_cancellations > 0 ? '#fca5a5' : 'var(--text-muted)' }}>
+                      {userHistory?.previous_cancellations > 0 ? 'Factors into AI Risk' : 'Clean History'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Status Notification Banner */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.65rem 0.85rem',
+                  borderRadius: '8px',
+                  fontSize: '0.78rem',
+                  background: userHistory?.previous_cancellations > 0 
+                    ? 'rgba(244,63,94,0.1)'
+                    : userHistory?.is_repeated_guest 
+                      ? 'rgba(16,185,129,0.1)'
+                      : 'rgba(99,102,241,0.08)',
+                  color: userHistory?.previous_cancellations > 0 
+                    ? '#fecdd3'
+                    : userHistory?.is_repeated_guest 
+                      ? '#a7f3d0'
+                      : '#c7d2fe',
+                  border: `1px dashed ${userHistory?.previous_cancellations > 0 ? 'rgba(244,63,94,0.35)' : userHistory?.is_repeated_guest ? 'rgba(16,185,129,0.35)' : 'rgba(99,102,241,0.3)'}`
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                    {userHistory?.previous_cancellations > 0 ? (
+                      <AlertCircle size={15} color="#fb7185" />
+                    ) : userHistory?.is_repeated_guest ? (
+                      <CheckCircle2 size={15} color="#34d399" />
+                    ) : (
+                      <UserCheck size={15} color="#818cf8" />
+                    )}
+                    <span>
+                      {userHistory?.previous_cancellations > 0
+                        ? `Historical Signal: ${userHistory.previous_cancellations} previous cancellation(s) recorded on this profile. Our AI model automatically factors your historical cancellation rate into predictive cancellation scoring.`
+                        : userHistory?.is_repeated_guest
+                          ? `Verified Returning Guest: 0 previous cancellations on record. Your loyalty history rewards your reservation with a low cancellation probability baseline.`
+                          : `First-Time Guest Record: No past reservations on file. Your reservation begins with clean first-time guest baseline prediction features.`}
+                    </span>
+                  </div>
+
+                  {userHistory && userHistory.total_past_bookings > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowHistoryDrawer(!showHistoryDrawer)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#38bdf8',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        fontSize: '0.74rem',
+                        fontWeight: 600,
+                        whiteSpace: 'nowrap',
+                        marginLeft: '0.5rem'
+                      }}
+                    >
+                      {showHistoryDrawer ? 'Hide Stays' : `View ${userHistory.total_past_bookings} Past Reservation(s)`}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
