@@ -35,3 +35,14 @@ This repository contains the Exploratory Data Analysis (EDA), Data Preprocessing
 The raw dataset `hotel_bookings.csv` is publicly available on Kaggle / ScienceDirect:
 > Antonio, N., de Almeida, A., & Nunes, L. (2019). *Hotel booking demand datasets*. Data in Brief, 22, 41-49.
 Place `hotel_bookings.csv` in the root directory before running the pipeline.
+
+## Running the Platform
+From the root directory, simply run:
+```bash
+start system
+```
+This launches:
+- **FastAPI Backend:** `http://127.0.0.1:8000` (API Docs: `http://127.0.0.1:8000/docs`)
+- **React Frontend:** `http://localhost:5173`
+- Automatically opens the frontend portal in your default browser.
+
