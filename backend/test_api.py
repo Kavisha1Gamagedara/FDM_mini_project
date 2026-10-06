@@ -31,7 +31,7 @@ def test_health_endpoint():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "healthy"
-    assert data["champion_model"] == "XGBoost Classifier"
+    assert data["champion_model"] == "Predictive Classifier"
     assert data["total_features_aligned"] == 93
     print("[PASS] GET /health: PASSED")
 

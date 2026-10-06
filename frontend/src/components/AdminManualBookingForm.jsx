@@ -266,13 +266,13 @@ export default function AdminManualBookingForm({
               Manual Reservation Registration
             </h3>
             <p style={{ fontSize: '0.84rem', color: '#64748b', marginTop: '0.2rem', maxWidth: '750px' }}>
-              Create on-demand reservations requested directly by customers via telephone or reception desk. Each reservation is automatically evaluated by the champion XGBoost model and synchronized directly into MongoDB.
+              Create on-demand reservations requested directly by customers via telephone or reception desk. Each reservation is automatically evaluated by the predictive cancellation risk engine and synchronized directly into the database.
             </p>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <span style={{ fontSize: '0.78rem', color: '#16a34a', background: 'rgba(22, 163, 74, 0.1)', padding: '0.35rem 0.75rem', borderRadius: '8px', fontWeight: 700, border: '1px solid rgba(22, 163, 74, 0.25)' }}>
-              ● Live MongoDB Sync Active
+              ● Live Database Sync Active
             </span>
           </div>
         </div>
@@ -300,7 +300,7 @@ export default function AdminManualBookingForm({
                   Booking #{createdBooking.booking_ref} Confirmed & Scored
                 </h3>
                 <p style={{ fontSize: '0.84rem', color: '#4b5563', marginTop: '0.25rem' }}>
-                  Guest <strong>{createdBooking.guest_name}</strong> has been registered in MongoDB with live XGBoost predictive risk scores.
+                  Guest <strong>{createdBooking.guest_name}</strong> has been registered in the database with live predictive cancellation risk scores.
                 </p>
               </div>
             </div>
@@ -315,7 +315,7 @@ export default function AdminManualBookingForm({
                 textAlign: 'right'
               }}>
                 <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#4b5563', textTransform: 'uppercase' }}>
-                  XGBoost Churn Assessment
+                  Predictive Churn Assessment
                 </span>
                 <div style={{ fontSize: '1.25rem', fontWeight: 800, color: createdBooking.prediction.risk_level === 'high' ? '#b91c1c' : createdBooking.prediction.risk_level === 'medium' ? '#b45309' : '#15803d' }}>
                   {createdBooking.prediction.cancellation_probability_pct}% Risk ({createdBooking.prediction.risk_level.toUpperCase()})
@@ -810,7 +810,7 @@ export default function AdminManualBookingForm({
                 {isSubmitting ? (
                   <>
                     <RefreshCw size={16} className="spin" />
-                    <span>Synchronizing with MongoDB & XGBoost...</span>
+                    <span>Synchronizing with Database...</span>
                   </>
                 ) : (
                   <>
@@ -821,7 +821,7 @@ export default function AdminManualBookingForm({
               </button>
 
               <p style={{ fontSize: '0.72rem', color: '#94a3b8', textAlign: 'center', marginTop: '0.75rem' }}>
-                ⚡ Runs champion XGBoost pipeline & commits to MongoDB database
+                ⚡ Runs predictive cancellation risk assessment & synchronizes reservation
               </p>
             </div>
 

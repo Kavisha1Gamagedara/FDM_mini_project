@@ -16,9 +16,9 @@ export default function ModelIntelModal({ isOpen, onClose }) {
             <Cpu size={22} color="#ffffff" />
           </div>
           <div>
-            <h2 style={{ fontSize: '1.25rem' }}>Stage 9: Operational Machine Learning Architecture</h2>
+            <h2 style={{ fontSize: '1.25rem' }}>Operational Machine Learning Intelligence</h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-              Hotel Cancellation Risk Deployment (Section 10 System Proposal)
+              Hotel Cancellation Risk Prediction & Revenue Optimization Architecture
             </p>
           </div>
         </div>
@@ -27,7 +27,7 @@ export default function ModelIntelModal({ isOpen, onClose }) {
         <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', border: '1px solid var(--border-subtle)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
             <BarChart2 size={16} color="var(--primary-400)" />
-            <h4 style={{ fontSize: '0.9rem', color: '#fff' }}>Champion Model Benchmark: XGBoost Classifier</h4>
+            <h4 style={{ fontSize: '0.9rem', color: '#fff' }}>Production Model Performance Benchmark</h4>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', textAlign: 'center' }}>
             <div style={{ padding: '0.6rem', background: 'var(--bg-card)', borderRadius: '8px' }}>

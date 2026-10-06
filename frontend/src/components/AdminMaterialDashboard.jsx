@@ -246,7 +246,7 @@ export default function AdminMaterialDashboard({
                 <div className="mat-nav-icon">
                   <Sparkles size={17} />
                 </div>
-                <span>XGBoost Architecture</span>
+                <span>Model Intelligence</span>
               </button>
             </li>
           </ul>
@@ -278,7 +278,7 @@ export default function AdminMaterialDashboard({
             </span>
           </div>
           <p style={{ fontSize: '0.72rem', color: '#7b809a', lineHeight: 1.4 }}>
-            XGBoost Champion active with MongoDB automated session sync.
+            Predictive AI Model active with automated database sync.
           </p>
         </div>
 
@@ -307,7 +307,7 @@ export default function AdminMaterialDashboard({
             </h2>
             <p style={{ fontSize: '0.84rem', color: '#7b809a', marginTop: '0.15rem' }}>
               {activeTab === 'manual-booking' 
-                ? 'Create on-demand reservations requested directly by customers with automated XGBoost risk scoring and MongoDB sync.'
+                ? 'Create on-demand reservations requested directly by customers with automated risk scoring and database sync.'
                 : 'Check reservation risk, upcoming cancellations, and room churn forecasts by arrival date.'}
             </p>
           </div>
@@ -520,7 +520,7 @@ export default function AdminMaterialDashboard({
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                       <span style={{ fontSize: '0.72rem', color: '#0284c7', background: 'rgba(2, 132, 199, 0.1)', border: '1px solid rgba(2, 132, 199, 0.25)', padding: '0.25rem 0.65rem', borderRadius: '9999px', fontWeight: 700 }}>
-                        ● XGBoost Model Live
+                        ● Predictive Model Live
                       </span>
                       <button
                         type="button"
@@ -665,7 +665,7 @@ export default function AdminMaterialDashboard({
 
                 <div style={{ paddingTop: '0.75rem', borderTop: '1px solid #f0f2f5', fontSize: '0.76rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                   <Clock size={14} color="#64748b" />
-                  <span>Calculated dynamically from live XGBoost risk probability outputs</span>
+                  <span>Calculated dynamically from real-time predictive risk outputs</span>
                 </div>
               </div>
 
@@ -697,7 +697,7 @@ export default function AdminMaterialDashboard({
                       Active Reservations & Risk Roster ({filteredBookings.length})
                     </h4>
                     <p style={{ fontSize: '0.78rem', color: '#7b809a', marginTop: '0.15rem' }}>
-                      Filtered PMS records with live XGBoost probability assessment.
+                      Filtered PMS records with live cancellation risk assessment.
                     </p>
                   </div>
 

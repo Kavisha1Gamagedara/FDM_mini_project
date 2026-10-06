@@ -8,6 +8,24 @@ import {
   Waves, Compass, Star, Award, Coffee, Anchor, Quote
 } from 'lucide-react';
 
+const COUNTRIES = [
+  { code: 'ITA', name: 'Italy (ITA)' },
+  { code: 'GBR', name: 'United Kingdom (GBR)' },
+  { code: 'FRA', name: 'France (FRA)' },
+  { code: 'DEU', name: 'Germany (DEU)' },
+  { code: 'ESP', name: 'Spain (ESP)' },
+  { code: 'USA', name: 'United States (USA)' },
+  { code: 'CHE', name: 'Switzerland (CHE)' },
+  { code: 'PRT', name: 'Portugal (PRT)' },
+  { code: 'NLD', name: 'Netherlands (NLD)' },
+  { code: 'BEL', name: 'Belgium (BEL)' },
+  { code: 'IRL', name: 'Ireland (IRL)' },
+  { code: 'BRA', name: 'Brazil (BRA)' },
+  { code: 'AUT', name: 'Austria (AUT)' },
+  { code: 'SWE', name: 'Sweden (SWE)' },
+  { code: 'POL', name: 'Poland (POL)' }
+];
+
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
@@ -172,7 +190,7 @@ export default function CustomerPortal({
   const [children, setChildren] = useState(0);
   const [babies, setBabies] = useState(0);
   const [mealPlan, setMealPlan] = useState('BB');
-  const [country, setCountry] = useState('PRT');
+  const [country, setCountry] = useState('ITA');
   const [depositOption, setDepositOption] = useState('No Deposit');
   const [parking, setParking] = useState(0);
   const [specialRequests, setSpecialRequests] = useState(1);
@@ -700,12 +718,12 @@ export default function CustomerPortal({
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.35rem' }}>
                   <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff' }}>
-                    Machine-Learning Reservation Integrity
+                    Guaranteed Reservation & Stay Integrity
                   </h3>
-                  <span style={{ fontSize: '0.68rem', padding: '0.12rem 0.5rem', borderRadius: '9999px', background: 'rgba(245,158,11,0.2)', color: '#fde68a', fontWeight: 700 }}>XGBoost</span>
+                  <span style={{ fontSize: '0.68rem', padding: '0.12rem 0.5rem', borderRadius: '9999px', background: 'rgba(245,158,11,0.2)', color: '#fde68a', fontWeight: 700 }}>Direct Assurance</span>
                 </div>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                  Proprietary algorithmic hospitality guarantees rate integrity, eliminates overbooking uncertainty, and curates bespoke arrival preparation based on real-time booking dynamics.
+                  Guaranteed arrival concierge, eliminating overbooking uncertainty and curating bespoke arrival preparation tailored to your sanctuary.
                 </p>
               </div>
             </div>
@@ -1015,7 +1033,7 @@ export default function CustomerPortal({
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <span style={{ fontSize: '0.75rem', padding: '0.35rem 0.75rem', borderRadius: '9999px', background: 'rgba(16,185,129,0.15)', color: '#34d399', border: '1px solid rgba(16,185,129,0.3)', fontWeight: 600 }}>
-              ● Live XGBoost Risk Engine Active
+              ● Best Rate Guarantee & Direct Booking Concierge
             </span>
           </div>
         </div>
@@ -1083,10 +1101,10 @@ export default function CustomerPortal({
             <div style={{ paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.06)', animation: 'fadeIn 0.25s ease' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                 <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff' }}>
-                  Your Account Reservation History in MongoDB:
+                  Your Account Reservation History:
                 </span>
                 <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                  Cancelling an active reservation immediately updates your cancellation history in the AI engine.
+                  Manage existing reservations or submit cancellations in accordance with hotel terms.
                 </span>
               </div>
 
@@ -1772,6 +1790,20 @@ export default function CustomerPortal({
 
               <div className="form-row" style={{ marginTop: '1.25rem' }}>
                 <div className="input-group">
+                  <label className="input-label" htmlFor="country">Country of Residence / Nationality</label>
+                  <select 
+                    id="country" 
+                    className="select-field" 
+                    value={country} 
+                    onChange={(e) => setCountry(e.target.value)}
+                  >
+                    {COUNTRIES.map(c => (
+                      <option key={c.code} value={c.code}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="input-group">
                   <label className="input-label" htmlFor="parking">Vehicle Parking & Valet</label>
                   <select 
                     id="parking" 
@@ -1782,37 +1814,6 @@ export default function CustomerPortal({
                     <option value={0}>No Parking Required</option>
                     <option value={1}>1 Secured Valet Space (Complimentary)</option>
                   </select>
-                </div>
-
-                <div className="input-group">
-                  <label className="input-label">Account Loyalty & History Status</label>
-                  <div style={{
-                    padding: '0.62rem 0.85rem',
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-subtle)',
-                    background: 'rgba(255,255,255,0.03)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    minHeight: '44px'
-                  }}>
-                    <span style={{ fontSize: '0.84rem', color: '#fff', fontWeight: 600 }}>
-                      {userHistory?.is_repeated_guest ? 'Recognized Member Profile' : 'First-Time Guest Profile'}
-                    </span>
-                    <span style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 700,
-                      padding: '0.15rem 0.5rem',
-                      borderRadius: '9999px',
-                      background: userHistory?.previous_cancellations > 0 ? 'rgba(244,63,94,0.18)' : userHistory?.is_repeated_guest ? 'rgba(16,185,129,0.18)' : 'rgba(99,102,241,0.18)',
-                      color: userHistory?.previous_cancellations > 0 ? '#fda4af' : userHistory?.is_repeated_guest ? '#6ee7b7' : '#c7d2fe',
-                      border: `1px solid ${userHistory?.previous_cancellations > 0 ? 'rgba(244,63,94,0.35)' : userHistory?.is_repeated_guest ? 'rgba(16,185,129,0.35)' : 'rgba(99,102,241,0.35)'}`
-                    }}>
-                      {userHistory?.previous_cancellations > 0 
-                        ? `${userHistory.previous_cancellations} Cancellation(s)` 
-                        : userHistory?.is_repeated_guest ? '0 Cancellations' : 'New Account'}
-                    </span>
-                  </div>
                 </div>
               </div>
 
@@ -1850,7 +1851,7 @@ export default function CustomerPortal({
                       color: 'var(--text-secondary)',
                       border: '1px solid rgba(255,255,255,0.1)'
                     }}>
-                      ● Live Database Verified
+                      ● Verified Guest Profile
                     </span>
                   </div>
 
@@ -1869,7 +1870,7 @@ export default function CustomerPortal({
                       {userHistory ? userHistory.total_past_bookings : 0} {userHistory?.total_past_bookings === 1 ? 'Stay' : 'Stays'}
                     </div>
                     <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                      {userHistory?.is_repeated_guest ? 'Returning Guest' : 'First-Time Guest'}
+                      {userHistory?.is_repeated_guest ? 'Returning Member' : 'First-Time Guest'}
                     </div>
                   </div>
 
@@ -1881,19 +1882,19 @@ export default function CustomerPortal({
                       {userHistory ? userHistory.previous_bookings_not_canceled : 0} Kept
                     </div>
                     <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
-                      Fulfilled bookings
+                      Honored bookings
                     </div>
                   </div>
 
                   <div style={{ padding: '0.65rem 0.85rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', border: userHistory?.previous_cancellations > 0 ? '1px solid rgba(244,63,94,0.3)' : '1px solid rgba(255,255,255,0.05)' }}>
                     <div style={{ fontSize: '0.7rem', color: userHistory?.previous_cancellations > 0 ? '#fda4af' : 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Prior Cancellations
+                      Past Cancellations
                     </div>
                     <div style={{ fontSize: '1.05rem', fontWeight: 800, color: userHistory?.previous_cancellations > 0 ? '#fb7185' : '#e2e8f0', marginTop: '0.15rem' }}>
                       {userHistory ? userHistory.previous_cancellations : 0} Cancelled
                     </div>
                     <div style={{ fontSize: '0.68rem', color: userHistory?.previous_cancellations > 0 ? '#fca5a5' : 'var(--text-muted)' }}>
-                      {userHistory?.previous_cancellations > 0 ? 'Factors into AI Risk' : 'Clean History'}
+                      {userHistory?.previous_cancellations > 0 ? 'On Account File' : 'Clean Record'}
                     </div>
                   </div>
                 </div>
@@ -1928,10 +1929,10 @@ export default function CustomerPortal({
                     )}
                     <span>
                       {userHistory?.previous_cancellations > 0
-                        ? `Historical Signal: ${userHistory.previous_cancellations} previous cancellation(s) recorded on this profile. Our AI model automatically factors your historical cancellation rate into predictive cancellation scoring.`
+                        ? `Account Record: You have ${userHistory.previous_cancellations} previous cancellation(s) recorded on file. Your reservation details will be processed automatically.`
                         : userHistory?.is_repeated_guest
-                          ? `Verified Returning Guest: 0 previous cancellations on record. Your loyalty history rewards your reservation with a low cancellation probability baseline.`
-                          : `First-Time Guest Record: No past reservations on file. Your reservation begins with clean first-time guest baseline prediction features.`}
+                          ? `Recognized Returning Member: Welcome back! You have 0 past cancellations on file. We look forward to hosting you again.`
+                          : `Welcome to OSTRO Salento! This reservation will be automatically registered to your new guest account.`}
                     </span>
                   </div>
 
@@ -2069,6 +2070,10 @@ export default function CustomerPortal({
                   {depositOption === 'Non Refund' ? 'Non-Refundable (15% Off)' : 'Flexible Free Cancel'}
                 </span>
               </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Country of Origin:</span>
+                <span style={{ fontWeight: 600, color: '#e2e8f0' }}>{COUNTRIES.find(c => c.code === country)?.name || country}</span>
+              </div>
             </div>
 
             {/* Guest Name & Email OR Sign-In / Locked State */}
@@ -2181,6 +2186,20 @@ export default function CustomerPortal({
                     onChange={(e) => setGuestEmail(e.target.value)} 
                     required
                   />
+                </div>
+
+                <div className="input-group">
+                  <label className="input-label" htmlFor="sidebar_country">Country of Residence / Nationality</label>
+                  <select 
+                    id="sidebar_country" 
+                    className="select-field" 
+                    value={country} 
+                    onChange={(e) => setCountry(e.target.value)}
+                  >
+                    {COUNTRIES.map(c => (
+                      <option key={c.code} value={c.code}>{c.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             )}
@@ -2386,7 +2405,7 @@ export default function CustomerPortal({
             © {new Date().getFullYear()} OSTRO Salento S.r.l. • Inspired by Behance OSTRO Architectural Concept.
           </div>
           <div>
-            Powered by XGBoost Machine Learning Predictive Hospitality • Stage 9 Active
+            OSTRO Luxury Sanctuaries • All Rights Reserved.
           </div>
         </div>
       </footer>

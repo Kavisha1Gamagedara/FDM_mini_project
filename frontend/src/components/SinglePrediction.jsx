@@ -924,7 +924,7 @@ export default function SinglePrediction({ metadata, apiBaseUrl, selectedCustome
             {loading ? (
               <>
                 <div className="animate-spin" style={{ width: '20px', height: '20px', border: '2px solid #ffffff', borderTopColor: 'transparent', borderRadius: '50%' }}></div>
-                <span>Running XGBoost ML Inference...</span>
+                <span>Evaluating Cancellation Risk...</span>
               </>
             ) : (
               <>

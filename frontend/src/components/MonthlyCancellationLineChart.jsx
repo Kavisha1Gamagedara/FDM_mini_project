@@ -251,7 +251,7 @@ export default function MonthlyCancellationLineChart({
           <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.01em', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span>Upcoming Months Predicted Cancellations</span>
             <span style={{ fontSize: '0.75rem', padding: '0.15rem 0.6rem', borderRadius: '9999px', background: 'rgba(99, 102, 241, 0.2)', color: '#c7d2fe', border: '1px solid rgba(99, 102, 241, 0.4)', fontWeight: 600 }}>
-              XGBoost Projections
+              AI Predictive Forecast
             </span>
           </h3>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.84rem', marginTop: '0.2rem' }}>

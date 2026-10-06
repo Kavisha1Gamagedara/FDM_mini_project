@@ -54,7 +54,7 @@ app = FastAPI(
     description=(
         "Production ML REST API for predicting hotel reservation cancellation probabilities, "
         "risk banding (Low, Medium, High), and prescribed revenue management interventions. "
-        "Powered by an optimized XGBoost champion model."
+        "Powered by an optimized predictive machine learning model."
     ),
     version="1.0.0",
     docs_url="/docs",
@@ -231,7 +231,7 @@ def read_root():
         "service": "Hotel Booking Cancellation Prediction API",
         "version": "1.0.0",
         "documentation": "/docs",
-        "champion_algorithm": "XGBoost (Tuned Ensemble, scale_pos_weight=1.72)",
+        "champion_algorithm": "Tuned Predictive Ensemble (Cost-Sensitive)",
         "status": "Operational"
     }
 
@@ -243,7 +243,7 @@ def health_check():
     """
     return {
         "status": "healthy",
-        "champion_model": "XGBoost Classifier",
+        "champion_model": "Predictive Classifier",
         "roc_auc_test_score": 0.9426,
         "total_features_aligned": len(pipeline.feature_columns),
         "uptime_seconds": round(time.time() - START_TIME, 1)
