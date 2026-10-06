@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, LogIn, LogOut, User, Crown, ChevronRight, Info, Lock } from 'lucide-react';
+import { Compass, LogIn, LogOut, User, Crown, ChevronRight, Info, Lock, Sun, Moon } from 'lucide-react';
 
 export default function Header({ 
   backendHealth, 
@@ -9,7 +9,9 @@ export default function Header({
   customerBookingsCount = 0,
   currentUser = null,
   onOpenAuth,
-  onLogout
+  onLogout,
+  theme = 'dark',
+  onToggleTheme
 }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -19,14 +21,14 @@ export default function Header({
     <header className="ostro-floating-nav-wrapper">
       <div className="ostro-floating-nav">
         
-        {/* Left Circular White Emblem Badge (Matches image logo circle) */}
+        {/* Left Circular Emblem Badge */}
         <button 
           type="button" 
           onClick={scrollToTop}
           className="ostro-nav-circle-logo"
           title="OSTRO Salento • Cliff Sanctuary"
         >
-          <Compass size={20} color="#111827" strokeWidth={2.2} />
+          <Compass size={20} strokeWidth={2.2} />
         </button>
 
         {/* Center Navigation Links */}
@@ -57,7 +59,7 @@ export default function Header({
               <span>Reserve (Locked)</span>
             </span>
           ) : (
-            <a href="#booking-engine" className="ostro-nav-link ostro-nav-link-accent">
+            <a href="#booking-engine" className="ostro-nav-link-accent">
               Reserve
             </a>
           )}
@@ -77,38 +79,58 @@ export default function Header({
           </div>
         )}
 
-        {/* Right White Capsule Button (Matches email pill in user image: ihyaet@gmail.com) */}
-        {currentUser ? (
-          <div className="ostro-user-pill-wrap">
-            <div className="ostro-nav-white-btn ostro-logged-in-pill">
-              {currentUser.role === 'admin' ? (
-                <Crown size={15} color="#e11d48" />
-              ) : (
-                <User size={15} color="#4f46e5" />
-              )}
-              <span className="ostro-user-name">
-                {currentUser.email || currentUser.name || currentUser.username}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={onLogout}
-              className="ostro-logout-btn"
-              title="Sign Out"
-            >
-              <LogOut size={14} />
-            </button>
-          </div>
-        ) : (
+        {/* Right Section: Theme Toggle Button & User Capsule */}
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.55rem' }}>
+          
+          {/* Theme Toggle (Light / Dark) */}
           <button
             type="button"
-            onClick={() => onOpenAuth('login')}
-            className="ostro-nav-white-btn"
+            onClick={onToggleTheme}
+            className="ostro-theme-toggle-btn"
+            title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
           >
-            <span>Sign In / Register</span>
-            <ChevronRight size={15} color="#111827" />
+            {theme === 'dark' ? (
+              <Sun size={17} className="theme-toggle-icon sun-icon" />
+            ) : (
+              <Moon size={17} className="theme-toggle-icon moon-icon" />
+            )}
           </button>
-        )}
+
+          {/* Right White Capsule Button (Matches email pill in user image) */}
+          {currentUser ? (
+            <div className="ostro-user-pill-wrap">
+              <div className="ostro-nav-white-btn ostro-logged-in-pill">
+                {currentUser.role === 'admin' ? (
+                  <Crown size={15} color="#e11d48" />
+                ) : (
+                  <User size={15} color="#4f46e5" />
+                )}
+                <span className="ostro-user-name">
+                  {currentUser.email || currentUser.name || currentUser.username}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="ostro-logout-btn"
+                title="Sign Out"
+              >
+                <LogOut size={14} />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onOpenAuth('login')}
+              className="ostro-nav-white-btn"
+            >
+              <span>Sign In / Register</span>
+              <ChevronRight size={15} />
+            </button>
+          )}
+
+        </div>
 
       </div>
     </header>

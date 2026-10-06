@@ -258,7 +258,7 @@ export default function AdminManualBookingForm({
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
       
       {/* Header Banner */}
-      <div className="mat-card" style={{ padding: '1.75rem 2rem', background: '#ffffff', border: '1.5px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+      <div className="mat-card" style={{ padding: '1.75rem 2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.25rem 0.65rem', borderRadius: '9999px', background: 'rgba(2, 132, 199, 0.08)', color: '#0284c7', fontSize: '0.74rem', fontWeight: 700, marginBottom: '0.4rem' }}>

@@ -71,6 +71,30 @@ export default function App() {
     }
   });
 
+  // Theme State: 'dark' | 'light' (Defaults to luxury dark sanctuary, persisted in localStorage)
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('aurastay_theme') || localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+      return 'dark';
+    } catch (e) {
+      return 'dark';
+    }
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('aurastay_theme', theme);
+      localStorage.setItem('theme', theme);
+    } catch (e) {}
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   const [activeTab, setActiveTab] = useState('monitor'); // 'monitor' | 'single' | 'batch'
   const [backendHealth, setBackendHealth] = useState(null);
   const [metadata, setMetadata] = useState(null);
@@ -197,6 +221,8 @@ export default function App() {
           currentUser={currentUser}
           onOpenAuth={handleOpenAuth}
           onLogout={handleLogout}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
       )}
 
@@ -238,6 +264,8 @@ export default function App() {
               onLogout={handleLogout}
               onSwitchToCustomer={() => setActivePortal('customer')}
               onOpenIntel={() => setIntelOpen(true)}
+              theme={theme}
+              onToggleTheme={toggleTheme}
             />
           )}
         </ErrorBoundary>

@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { 
   TrendingDown, TrendingUp, AlertTriangle, ShieldAlert, 
   Calendar, DollarSign, Users, Sparkles, Filter, 
-  ChevronRight, Info, CheckCircle2, ArrowUpRight, BarChart2
+  ChevronRight, Info, CheckCircle2, ArrowUpRight, BarChart2,
+  Maximize2, Minimize2
 } from 'lucide-react';
 
 const MONTH_NAMES = [
@@ -33,7 +34,9 @@ function getUpcomingMonthList(startDate, count = 6) {
 export default function MonthlyCancellationLineChart({ 
   reservations = [], 
   onSelectMonth,
-  selectedMonthFilter = 'all'
+  selectedMonthFilter = 'all',
+  isExpanded = false,
+  onToggleExpand
 }) {
   const [horizon, setHorizon] = useState(6); // 6 or 12 months
   const [activeSeries, setActiveSeries] = useState({
@@ -230,11 +233,9 @@ export default function MonthlyCancellationLineChart({
   const activeHoverPoint = hoveredIndex !== null ? points[hoveredIndex] : null;
 
   return (
-    <div className="glass-panel" style={{ 
+    <div className="glass-panel monthly-chart-card" style={{ 
       padding: '1.75rem', 
       borderRadius: '20px', 
-      border: '1px solid rgba(244, 63, 94, 0.25)', 
-      background: 'linear-gradient(135deg, rgba(20, 24, 34, 0.95) 0%, rgba(28, 18, 24, 0.9) 100%)',
       display: 'flex',
       flexDirection: 'column',
       gap: '1.5rem',
@@ -244,13 +245,13 @@ export default function MonthlyCancellationLineChart({
       {/* Header Bar with Title, Range Selector & Series Toggles */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', padding: '0.25rem 0.75rem', background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.35)', borderRadius: '9999px', fontSize: '0.74rem', color: '#fda4af', fontWeight: 600, marginBottom: '0.45rem' }}>
-            <TrendingDown size={13} color="#f43f5e" />
+          <div className="chart-trajectory-pill">
+            <TrendingDown size={13} />
             <span>EXECUTIVE ML CANCELLATION FORECAST • UPCOMING MONTHS TRAJECTORY</span>
           </div>
-          <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.01em', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.01em', display: 'flex', alignItems: 'center', gap: '0.6rem', marginTop: '0.25rem' }}>
             <span>Upcoming Months Predicted Cancellations</span>
-            <span style={{ fontSize: '0.75rem', padding: '0.15rem 0.6rem', borderRadius: '9999px', background: 'rgba(99, 102, 241, 0.2)', color: '#c7d2fe', border: '1px solid rgba(99, 102, 241, 0.4)', fontWeight: 600 }}>
+            <span className="chart-ai-pill">
               AI Predictive Forecast
             </span>
           </h3>
@@ -259,45 +260,52 @@ export default function MonthlyCancellationLineChart({
           </p>
         </div>
 
-        {/* Horizon Toggle & Series Legend */}
+        {/* Horizon Toggle, Expand & Series Legend */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.65rem' }}>
           
-          {/* Horizon Toggle */}
-          <div style={{ display: 'inline-flex', background: 'rgba(255, 255, 255, 0.05)', padding: '0.2rem', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-            <button
-              type="button"
-              onClick={() => setHorizon(6)}
-              style={{
-                background: horizon === 6 ? 'var(--primary-500)' : 'transparent',
-                color: horizon === 6 ? '#fff' : 'var(--text-secondary)',
-                border: 'none',
-                padding: '0.3rem 0.75rem',
-                borderRadius: '8px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              Next 6 Months
-            </button>
-            <button
-              type="button"
-              onClick={() => setHorizon(12)}
-              style={{
-                background: horizon === 12 ? 'var(--primary-500)' : 'transparent',
-                color: horizon === 12 ? '#fff' : 'var(--text-secondary)',
-                border: 'none',
-                padding: '0.3rem 0.75rem',
-                borderRadius: '8px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              Next 12 Months
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            <span className="chart-live-badge">
+              ● Predictive Model Live
+            </span>
+
+            {onToggleExpand && (
+              <button
+                type="button"
+                onClick={onToggleExpand}
+                className="chart-expand-btn"
+                title={isExpanded ? "Collapse to standard view" : "Expand chart to full width"}
+              >
+                {isExpanded ? (
+                  <>
+                    <Minimize2 size={13} color="currentColor" />
+                    <span>Standard View</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 size={13} color="currentColor" />
+                    <span>Full-Width View</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {/* Horizon Toggle */}
+            <div className="chart-horizon-box">
+              <button
+                type="button"
+                onClick={() => setHorizon(6)}
+                className={`chart-horizon-btn ${horizon === 6 ? 'active' : ''}`}
+              >
+                Next 6 Months
+              </button>
+              <button
+                type="button"
+                onClick={() => setHorizon(12)}
+                className={`chart-horizon-btn ${horizon === 12 ? 'active' : ''}`}
+              >
+                Next 12 Months
+              </button>
+            </div>
           </div>
 
           {/* Series Toggle Pills */}
@@ -305,63 +313,27 @@ export default function MonthlyCancellationLineChart({
             <button
               type="button"
               onClick={() => setActiveSeries(prev => ({ ...prev, predicted: !prev.predicted }))}
-              style={{
-                background: activeSeries.predicted ? 'rgba(244, 63, 94, 0.2)' : 'rgba(255,255,255,0.03)',
-                color: activeSeries.predicted ? '#fda4af' : 'var(--text-muted)',
-                border: `1px solid ${activeSeries.predicted ? '#f43f5e' : 'var(--border-subtle)'}`,
-                padding: '0.2rem 0.6rem',
-                borderRadius: '9999px',
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                cursor: 'pointer'
-              }}
+              className={`chart-series-pill series-predicted ${activeSeries.predicted ? 'active' : ''}`}
             >
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f43f5e', boxShadow: '0 0 6px #f43f5e' }} />
+              <span className="series-dot" />
               <span>Predicted Cancellations</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveSeries(prev => ({ ...prev, scheduled: !prev.scheduled }))}
-              style={{
-                background: activeSeries.scheduled ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
-                color: activeSeries.scheduled ? '#7dd3fc' : 'var(--text-muted)',
-                border: `1px solid ${activeSeries.scheduled ? '#38bdf8' : 'var(--border-subtle)'}`,
-                padding: '0.2rem 0.6rem',
-                borderRadius: '9999px',
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                cursor: 'pointer'
-              }}
+              className={`chart-series-pill series-scheduled ${activeSeries.scheduled ? 'active' : ''}`}
             >
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#38bdf8' }} />
+              <span className="series-dot" />
               <span>Total Scheduled Stays</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveSeries(prev => ({ ...prev, highRisk: !prev.highRisk }))}
-              style={{
-                background: activeSeries.highRisk ? 'rgba(245, 158, 11, 0.18)' : 'rgba(255,255,255,0.03)',
-                color: activeSeries.highRisk ? '#fde68a' : 'var(--text-muted)',
-                border: `1px solid ${activeSeries.highRisk ? '#f59e0b' : 'var(--border-subtle)'}`,
-                padding: '0.2rem 0.6rem',
-                borderRadius: '9999px',
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                cursor: 'pointer'
-              }}
+              className={`chart-series-pill series-highrisk ${activeSeries.highRisk ? 'active' : ''}`}
             >
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b' }} />
+              <span className="series-dot" />
               <span>High Risk (≥60%)</span>
             </button>
           </div>
@@ -370,76 +342,68 @@ export default function MonthlyCancellationLineChart({
       </div>
 
       {/* KPI Highlight Strip */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', 
-        gap: '0.85rem',
-        padding: '0.85rem 1.25rem',
-        background: 'rgba(255, 255, 255, 0.02)',
-        borderRadius: '14px',
-        border: '1px solid rgba(255, 255, 255, 0.05)'
-      }}>
+      <div className="chart-kpi-strip">
         <div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <span className="chart-kpi-label">
             Forecast Horizon ({horizon} Mo)
           </span>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginTop: '0.15rem' }}>
-            <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#f43f5e' }}>
+            <span className="chart-kpi-val danger" style={{ fontSize: '1.35rem', fontWeight: 800 }}>
               ~{totals.totalPredictedCancels}
             </span>
             <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
               predicted cancels
             </span>
           </div>
-          <span style={{ fontSize: '0.7rem', color: '#fda4af' }}>
+          <span className="chart-kpi-sub danger">
             {totals.avgRate}% avg projected churn
           </span>
         </div>
 
         <div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <span className="chart-kpi-label">
             On-The-Books Stays
           </span>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginTop: '0.15rem' }}>
-            <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#38bdf8' }}>
+            <span className="chart-kpi-val primary" style={{ fontSize: '1.35rem', fontWeight: 800 }}>
               {totals.totalScheduledBookings}
             </span>
             <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>
               confirmed bookings
             </span>
           </div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+          <span className="chart-kpi-sub muted">
             Across {monthlyData.length} upcoming months
           </span>
         </div>
 
         <div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <span className="chart-kpi-label">
             Projected Revenue Exposure
           </span>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginTop: '0.15rem' }}>
-            <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff' }}>
+            <span className="chart-kpi-val contrast" style={{ fontSize: '1.35rem', fontWeight: 800 }}>
               ${totals.totalRevenueAtRisk.toLocaleString()}
             </span>
-            <span style={{ fontSize: '0.76rem', color: '#fda4af' }}>
+            <span className="chart-kpi-tag-danger">
               at risk
             </span>
           </div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+          <span className="chart-kpi-sub muted">
             Weighted by ML cancellation prob
           </span>
         </div>
 
         <div>
-          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <span className="chart-kpi-label">
             Peak Cancellation Risk Month
           </span>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginTop: '0.15rem' }}>
-            <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f59e0b' }}>
+            <span className="chart-kpi-val warning" style={{ fontSize: '1.15rem', fontWeight: 800 }}>
               {peakMonth ? `${peakMonth.monthName} ${peakMonth.year}` : 'None'}
             </span>
           </div>
-          <span style={{ fontSize: '0.7rem', color: '#fde68a' }}>
+          <span className="chart-kpi-sub warning">
             {peakMonth ? `~${peakMonth.predictedCancellations} cancels (${peakMonth.cancellationRatePct}% churn)` : 'No risk detected'}
           </span>
         </div>
@@ -483,6 +447,7 @@ export default function MonthlyCancellationLineChart({
                   y1={y} 
                   x2={width - padding.right} 
                   y2={y} 
+                  className="chart-grid-line"
                   stroke="rgba(255, 255, 255, 0.09)" 
                   strokeDasharray="5 5" 
                 />
@@ -665,7 +630,7 @@ export default function MonthlyCancellationLineChart({
                   x={pt.x} 
                   y={padding.top + chartH + 26} 
                   textAnchor="middle" 
-                  fill={isHovered ? '#ffffff' : (isSelected ? '#34d399' : 'var(--text-secondary)')} 
+                  fill={isHovered ? 'var(--text-primary)' : (isSelected ? '#059669' : 'var(--text-secondary)')} 
                   fontSize={isHovered ? '13' : '12'} 
                   fontWeight={isHovered || isSelected ? '700' : '600'}
                   letterSpacing="0.02em"
@@ -690,24 +655,13 @@ export default function MonthlyCancellationLineChart({
         {/* Floating Tooltip Card */}
         {activeHoverPoint && (
           <div 
+            className="chart-tooltip-box"
             style={{
-              position: 'absolute',
-              top: '15px',
               left: `${Math.min(Math.max(activeHoverPoint.x - 120, 10), width - 260)}px`,
-              pointerEvents: 'none',
-              background: 'rgba(15, 23, 42, 0.96)',
-              backdropFilter: 'blur(16px)',
-              border: '1px solid rgba(244, 63, 94, 0.4)',
-              borderRadius: '12px',
-              padding: '0.85rem 1.15rem',
-              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.7)',
-              zIndex: 10,
-              minWidth: '240px',
-              animation: 'fadeIn 0.15s ease'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.35rem' }}>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                 {activeHoverPoint.data.monthName} {activeHoverPoint.data.year}
               </span>
               <span style={{ 
@@ -724,21 +678,21 @@ export default function MonthlyCancellationLineChart({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.78rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#fda4af', fontWeight: 600 }}>● Predicted Cancellations:</span>
+                <span className="chart-tip-label-pred" style={{ fontWeight: 600 }}>● Predicted Cancellations:</span>
                 <span style={{ fontWeight: 800, color: '#f43f5e' }}>
                   {activeHoverPoint.data.predictedCancellations} Stays
                 </span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#7dd3fc' }}>● Total Scheduled Stays:</span>
-                <span style={{ fontWeight: 700, color: '#fff' }}>
+                <span className="chart-tip-label-sched" style={{ fontWeight: 600 }}>● Total Scheduled Stays:</span>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
                   {activeHoverPoint.data.totalBookings} Bookings
                 </span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#fde68a' }}>● High Risk Alerts (≥60%):</span>
+                <span className="chart-tip-label-risk" style={{ fontWeight: 600 }}>● High Risk Alerts (≥60%):</span>
                 <span style={{ fontWeight: 700, color: '#fbbf24' }}>
                   {activeHoverPoint.data.highRiskCount} Reservations
                 </span>
@@ -746,7 +700,7 @@ export default function MonthlyCancellationLineChart({
 
               <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.25rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Revenue Exposure:</span>
-                <span style={{ fontWeight: 700, color: '#fff' }}>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
                   ${activeHoverPoint.data.revenueAtRisk.toLocaleString()}
                 </span>
               </div>
@@ -777,20 +731,12 @@ export default function MonthlyCancellationLineChart({
       }}>
         
         {/* Action Card 1: Adaptive Overbooking Buffer */}
-        <div style={{
-          padding: '1.15rem 1.25rem',
-          borderRadius: '14px',
-          background: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid rgba(244, 63, 94, 0.25)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.45rem'
-        }}>
+        <div className="chart-playbook-card" style={{ border: '1px solid rgba(244, 63, 94, 0.25)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(244,63,94,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <TrendingUp size={15} color="#f43f5e" />
             </div>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
+            <span className="chart-playbook-title">
               Adaptive Overbooking Buffer
             </span>
           </div>
@@ -802,20 +748,12 @@ export default function MonthlyCancellationLineChart({
         </div>
 
         {/* Action Card 2: Deposit & Pre-Authorization Policy */}
-        <div style={{
-          padding: '1.15rem 1.25rem',
-          borderRadius: '14px',
-          background: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid rgba(245, 158, 11, 0.25)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.45rem'
-        }}>
+        <div className="chart-playbook-card" style={{ border: '1px solid rgba(245, 158, 11, 0.25)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(245,158,11,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <ShieldAlert size={15} color="#f59e0b" />
             </div>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
+            <span className="chart-playbook-title">
               Deposit & Tariff Enforcement
             </span>
           </div>
@@ -825,20 +763,12 @@ export default function MonthlyCancellationLineChart({
         </div>
 
         {/* Action Card 3: Automated Concierge Pre-Arrival Cadence */}
-        <div style={{
-          padding: '1.15rem 1.25rem',
-          borderRadius: '14px',
-          background: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid rgba(52, 211, 153, 0.25)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.45rem'
-        }}>
+        <div className="chart-playbook-card" style={{ border: '1px solid rgba(52, 211, 153, 0.25)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(52,211,153,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <CheckCircle2 size={15} color="#34d399" />
             </div>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#fff' }}>
+            <span className="chart-playbook-title">
               Pre-Arrival Concierge Outreach
             </span>
           </div>

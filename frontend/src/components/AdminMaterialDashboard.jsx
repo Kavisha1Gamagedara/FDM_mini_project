@@ -6,7 +6,8 @@ import {
   DollarSign, Users, TrendingDown, BedDouble, CheckCircle2, 
   Clock, ShieldAlert, ArrowUpRight, ArrowDownRight, RefreshCw, 
   Building2, CreditCard, Mail, Trash2, ChevronRight, Filter, 
-  Compass, Flame, FileText, Check, Maximize2, Minimize2, PlusCircle
+  Compass, Flame, FileText, Check, Maximize2, Minimize2, PlusCircle,
+  Sun, Moon
 } from 'lucide-react';
 import MonthlyCancellationLineChart from './MonthlyCancellationLineChart';
 import DailyCancellationInspector from './DailyCancellationInspector';
@@ -33,7 +34,9 @@ export default function AdminMaterialDashboard({
   currentUser,
   onLogout,
   onSwitchToCustomer,
-  onOpenIntel
+  onOpenIntel,
+  theme = 'dark',
+  onToggleTheme
 }) {
   // Local Filter States for Reservations Table
   const [tableSearch, setTableSearch] = useState('');
@@ -261,7 +264,7 @@ export default function AdminMaterialDashboard({
         <div className="mat-sidebar-footer-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
             <ShieldCheck size={16} color="#34d399" />
-            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#344767' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700 }}>
               ML Model Health: 100%
             </span>
           </div>
@@ -283,7 +286,7 @@ export default function AdminMaterialDashboard({
             <div className="mat-breadcrumbs">
               <span>Pages</span>
               <span>/</span>
-              <strong style={{ color: '#344767' }}>
+              <strong>
                 {activeTab === 'monitor' ? 'Dashboard' : activeTab === 'manual-booking' ? 'Manual Reservation Desk' : activeTab === 'single' ? 'Single AI Inspector' : 'Batch Portfolio'}
               </strong>
             </div>
@@ -325,10 +328,31 @@ export default function AdminMaterialDashboard({
               <span>Sync Database ({reservations.length})</span>
             </button>
 
+            {/* Theme Toggle Button (Light & Dark Mode) */}
+            <button
+              type="button"
+              className="mat-action-pill mat-theme-toggle-pill"
+              onClick={onToggleTheme}
+              title={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+              aria-label={theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun size={14} color="#f59e0b" className="theme-toggle-icon sun-icon" />
+                  <span>Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={14} color="#6366f1" className="theme-toggle-icon moon-icon" />
+                  <span>Dark Mode</span>
+                </>
+              )}
+            </button>
+
             {/* User Profile Pill */}
             <div className="mat-user-badge">
               <div className="mat-user-avatar">A</div>
-              <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#344767' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>
                 {currentUser?.email || 'admin@aurastay.com'}
               </span>
             </div>
@@ -491,98 +515,32 @@ export default function AdminMaterialDashboard({
               alignItems: 'start' 
             }}>
               
-              {/* Chart Card 1: Upcoming Months Cancellation Line Chart (Significantly Increased Visual Scale) */}
-              <div className="mat-card" style={{ padding: 0, overflow: 'hidden', border: '1.5px solid #e2e8f0', boxShadow: '0 6px 25px rgba(0,0,0,0.05)' }}>
-                <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #f0f2f5', background: '#fafbfc' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-                    <div>
-                      <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#1e293b', letterSpacing: '-0.01em' }}>
-                        Upcoming Months Cancellation Forecast
-                      </h4>
-                      <p style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.15rem' }}>
-                        Multi-series trajectory: Predicted Churn, Scheduled Stays & High Risk Alerts across upcoming horizon.
-                      </p>
-                    </div>
-                    
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      <span style={{ fontSize: '0.72rem', color: '#0284c7', background: 'rgba(2, 132, 199, 0.1)', border: '1px solid rgba(2, 132, 199, 0.25)', padding: '0.25rem 0.65rem', borderRadius: '9999px', fontWeight: 700 }}>
-                        ● Predictive Model Live
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setChartExpanded(prev => !prev)}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.35rem',
-                          background: '#ffffff',
-                          border: '1.5px solid #cbd5e1',
-                          borderRadius: '8px',
-                          padding: '0.35rem 0.75rem',
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          color: '#334155',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
-                        }}
-                        title={chartExpanded ? "Collapse to standard view" : "Expand chart to full width"}
-                      >
-                        {chartExpanded ? (
-                          <>
-                            <Minimize2 size={14} color="#0284c7" />
-                            <span>Standard View</span>
-                          </>
-                        ) : (
-                          <>
-                            <Maximize2 size={14} color="#0284c7" />
-                            <span>Full-Width View</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              {/* Chart Card 1: Upcoming Months Cancellation Line Chart */}
+              <MonthlyCancellationLineChart 
+                reservations={reservations}
+                onSelectMonth={(m) => {
+                  setSelectedMonth(m);
+                  setSelectedDateFilter('');
+                }}
+                selectedMonthFilter={selectedMonth}
+                isExpanded={chartExpanded}
+                onToggleExpand={() => setChartExpanded(prev => !prev)}
+              />
 
-                <div style={{ padding: '1.25rem' }}>
-                  <MonthlyCancellationLineChart 
-                    reservations={reservations}
-                    onSelectMonth={(m) => {
-                      setSelectedMonth(m);
-                      setSelectedDateFilter('');
-                    }}
-                    selectedMonthFilter={selectedMonth}
-                  />
-                </div>
-
-                <div style={{ padding: '0.85rem 1.5rem', borderTop: '1px solid #f0f2f5', background: '#fafbfc', fontSize: '0.76rem', color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <Clock size={14} color="#0284c7" />
-                    <span>Real-time inference computed on MongoDB PMS reservation ledger</span>
-                  </div>
-                  <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                    Click any month node to drill into active bookings
-                  </span>
-                </div>
-              </div>
-
-              {/* Chart Card 2: Market Segment Churn Risk Breakdown (Widened High-Definition Border) */}
+              {/* Chart Card 2: Market Segment Churn Risk Breakdown */}
               <div 
                 className="mat-card mat-market-segment-card" 
                 style={{ 
                   display: 'flex', 
                   flexDirection: 'column', 
                   gap: '1.35rem',
-                  border: '2.5px solid #cbd5e1', // Widened border requested by user
                   borderRadius: '18px',
-                  padding: '1.75rem 2rem',
-                  boxShadow: '0 8px 30px rgba(0, 0, 0, 0.06)',
-                  background: '#ffffff'
+                  padding: '1.75rem 2rem'
                 }}
               >
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-                    <h4 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#1e293b', letterSpacing: '-0.01em' }}>
+                    <h4 className="mat-card-title" style={{ fontSize: '1.15rem', fontWeight: 800, letterSpacing: '-0.01em' }}>
                       Market Segment Risk Distribution
                     </h4>
                     <span style={{ fontSize: '0.72rem', color: '#16a34a', background: 'rgba(22, 163, 74, 0.1)', border: '1px solid rgba(22, 163, 74, 0.25)', padding: '0.2rem 0.65rem', borderRadius: '9999px', fontWeight: 700 }}>
@@ -600,11 +558,10 @@ export default function AdminMaterialDashboard({
                     return (
                       <div 
                         key={seg.name} 
+                        className="mat-segment-row"
                         style={{ 
                           padding: '0.85rem 1.15rem', 
                           borderRadius: '12px', 
-                          background: '#f8fafc', 
-                          border: '1.5px solid #e2e8f0',
                           display: 'flex', 
                           flexDirection: 'column', 
                           gap: '0.55rem',
@@ -612,7 +569,7 @@ export default function AdminMaterialDashboard({
                         }}
                       >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.84rem' }}>
-                          <span style={{ fontWeight: 700, color: '#1e293b' }}>{seg.name}</span>
+                          <span className="mat-segment-name" style={{ fontWeight: 700 }}>{seg.name}</span>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span style={{ color: '#64748b', fontSize: '0.78rem' }}>{seg.count} bookings</span>
                             <span style={{ 
@@ -630,7 +587,7 @@ export default function AdminMaterialDashboard({
                         </div>
 
                         {/* Widened High-Clarity Progress Bar */}
-                        <div style={{ width: '100%', height: '10px', borderRadius: '9999px', background: '#e2e8f0', overflow: 'hidden' }}>
+                        <div className="mat-progress-track" style={{ width: '100%', height: '10px', borderRadius: '9999px', overflow: 'hidden' }}>
                           <div style={{ 
                             width: `${Math.min(seg.rate, 100)}%`, 
                             height: '100%', 
@@ -649,8 +606,8 @@ export default function AdminMaterialDashboard({
                   })}
                 </div>
 
-                <div style={{ paddingTop: '0.75rem', borderTop: '1px solid #f0f2f5', fontSize: '0.76rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                  <Clock size={14} color="#64748b" />
+                <div className="mat-segment-footer">
+                  <Clock size={14} />
                   <span>Calculated dynamically from real-time predictive risk outputs</span>
                 </div>
               </div>
@@ -658,18 +615,16 @@ export default function AdminMaterialDashboard({
             </div>
 
             {/* ROW 3: TARGET DATE CANCELLATION & ROOM INVENTORY INSPECTOR */}
-            <div className="mat-card" style={{ padding: '1.5rem' }}>
-              <DailyCancellationInspector 
-                reservations={reservations}
-                selectedDate={selectedDateFilter}
-                onSelectDate={(d) => setSelectedDateFilter(d)}
-                onInspectBooking={(bk) => {
-                  onSelectBooking(bk);
-                  setActiveTab('single');
-                }}
-                onCancelReservation={onCancelReservation}
-              />
-            </div>
+            <DailyCancellationInspector 
+              reservations={reservations}
+              selectedDate={selectedDateFilter}
+              onSelectDate={(d) => setSelectedDateFilter(d)}
+              onInspectBooking={(bk) => {
+                onSelectBooking(bk);
+                setActiveTab('single');
+              }}
+              onCancelReservation={onCancelReservation}
+            />
 
             {/* ROW 4: BOTTOM OPERATIONAL DATA & HIGH-RISK TIMELINE (Matches Projects & Orders in Screenshot) */}
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.45fr) minmax(320px, 1fr)', gap: '1.5rem', alignItems: 'start' }}>
@@ -679,7 +634,7 @@ export default function AdminMaterialDashboard({
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
                   <div>
-                    <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#344767' }}>
+                    <h4 className="mat-card-title" style={{ fontSize: '1.15rem', fontWeight: 700 }}>
                       Active Reservations & Risk Roster ({filteredBookings.length})
                     </h4>
                     <p style={{ fontSize: '0.78rem', color: '#7b809a', marginTop: '0.15rem' }}>
@@ -725,7 +680,7 @@ export default function AdminMaterialDashboard({
                           <tr key={bk.booking_ref || Math.random()}>
                             <td>
                               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                <strong style={{ color: '#344767', fontSize: '0.86rem' }}>
+                                <strong className="mat-cell-title" style={{ fontSize: '0.86rem' }}>
                                   {bk.guest_name || 'Guest'}
                                 </strong>
                                 <span style={{ fontSize: '0.72rem', color: '#7b809a', fontFamily: 'monospace' }}>
@@ -735,13 +690,13 @@ export default function AdminMaterialDashboard({
                             </td>
 
                             <td>
-                              <span style={{ fontSize: '0.82rem', color: '#344767' }}>
+                              <span className="mat-cell-sub" style={{ fontSize: '0.82rem' }}>
                                 {bk.room_count || 1} Room(s) • Suite {bk.reserved_room_type || 'A'}
                               </span>
                             </td>
 
                             <td>
-                              <span style={{ fontSize: '0.82rem', color: '#344767' }}>
+                              <span className="mat-cell-sub" style={{ fontSize: '0.82rem' }}>
                                 {bk.check_in_date || bk.arrival_date_month || '2026-10'}
                               </span>
                             </td>
@@ -753,7 +708,7 @@ export default function AdminMaterialDashboard({
                             </td>
 
                             <td>
-                              <strong style={{ color: '#344767', fontSize: '0.86rem' }}>
+                              <strong className="mat-cell-title" style={{ fontSize: '0.86rem' }}>
                                 ${(bk.adr || 145) * ((bk.stays_in_weekend_nights || 0) + (bk.stays_in_week_nights || 1)) * (bk.room_count || 1)}
                               </strong>
                             </td>
@@ -793,7 +748,7 @@ export default function AdminMaterialDashboard({
               {/* Right Card: High-Risk Prior Warning Timeline (Matches "Orders overview" in screenshot) */}
               <div className="mat-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                 <div>
-                  <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#344767' }}>
+                  <h4 className="mat-card-title" style={{ fontSize: '1.15rem', fontWeight: 700 }}>
                     High-Risk Orders Overview
                   </h4>
                   <p style={{ fontSize: '0.78rem', color: '#7b809a', marginTop: '0.15rem' }}>
@@ -813,14 +768,14 @@ export default function AdminMaterialDashboard({
                         </div>
                         <div className="mat-timeline-content">
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <strong style={{ fontSize: '0.84rem', color: '#344767' }}>
+                            <strong className="mat-cell-title" style={{ fontSize: '0.84rem' }}>
                               ${(item.adr || 145) * ((item.stays_in_weekend_nights || 0) + (item.stays_in_week_nights || 1))}, {item.guest_name}
                             </strong>
                             <span style={{ fontSize: '0.72rem', color: '#e11d48', fontWeight: 700 }}>
                               {probPct}% Risk
                             </span>
                           </div>
-                          <span style={{ fontSize: '0.74rem', color: '#7b809a' }}>
+                          <span className="mat-cell-sub" style={{ fontSize: '0.74rem' }}>
                             Arrival: {item.check_in_date || item.arrival_date_month} • {item.market_segment}
                           </span>
                         </div>
@@ -829,24 +784,14 @@ export default function AdminMaterialDashboard({
                   })}
                 </div>
 
-                <div style={{ paddingTop: '0.5rem', borderTop: '1px solid #f0f2f5' }}>
+                <div style={{ paddingTop: '0.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
                   <button
                     type="button"
+                    className="mat-view-all-btn"
                     onClick={() => {
                       setSelectedRiskTier('high');
                       const el = document.querySelector('.mat-table');
                       if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '0.6rem',
-                      background: '#f8f9fa',
-                      border: '1px solid #e9ecef',
-                      borderRadius: '8px',
-                      color: '#344767',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
-                      cursor: 'pointer'
                     }}
                   >
                     View All High-Risk Bookings

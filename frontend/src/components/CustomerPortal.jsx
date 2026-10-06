@@ -452,7 +452,7 @@ export default function CustomerPortal({
           </div>
 
           {/* Editorial Headline */}
-          <h1 style={{ 
+          <h1 className="ostro-hero-title" style={{ 
             fontFamily: 'var(--font-serif)', 
             fontSize: 'clamp(2.5rem, 5.2vw, 4.4rem)', 
             fontWeight: 400, 
@@ -464,7 +464,7 @@ export default function CustomerPortal({
             textShadow: '0 4px 30px rgba(0,0,0,0.85)'
           }}>
             Where Mediterranean Stone <br />
-            <span style={{ fontStyle: 'italic', fontWeight: 300, color: 'var(--ostro-sand)' }}>
+            <span style={{ fontStyle: 'italic', fontWeight: 300, color: '#fde68a' }}>
               Meets Adriatic Horizons
             </span>
           </h1>
@@ -605,17 +605,14 @@ export default function CustomerPortal({
       <section id="philosophy" style={{ scrollMarginTop: '110px' }}>
         <div className="ostro-editorial-spread">
           {/* Left Column: Architectural Manifesto & Credential Specs */}
-          <div style={{ 
+          <div className="ostro-manifesto-card" style={{ 
             display: 'flex', 
             flexDirection: 'column', 
             justifyContent: 'space-between',
-            background: 'linear-gradient(180deg, rgba(20, 26, 36, 0.85) 0%, rgba(13, 17, 24, 0.92) 100%)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
             borderRadius: '28px',
             padding: '3rem 2.5rem',
             position: 'relative',
-            overflow: 'hidden',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+            overflow: 'hidden'
           }}>
             <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '220px', height: '220px', background: 'radial-gradient(circle, rgba(200, 125, 85, 0.18) 0%, transparent 70%)', pointerEvents: 'none' }} />
             
@@ -628,11 +625,11 @@ export default function CustomerPortal({
                 fontSize: 'clamp(2.1rem, 3.2vw, 3rem)', 
                 fontWeight: 400, 
                 lineHeight: 1.18, 
-                color: '#ffffff',
+                color: 'var(--text-primary)',
                 marginBottom: '1.5rem'
               }}>
                 Carved into White Limestone, <br />
-                <span style={{ fontStyle: 'italic', color: 'var(--ostro-sand)' }}>
+                <span style={{ fontStyle: 'italic', color: 'var(--ostro-terracotta)' }}>
                   Suspended in Marine Silence
                 </span>
               </h2>
@@ -640,7 +637,7 @@ export default function CustomerPortal({
                 fontFamily: 'var(--font-serif)',
                 fontSize: '1.12rem', 
                 fontStyle: 'italic', 
-                color: '#e2d9cf', 
+                color: 'var(--text-secondary)', 
                 lineHeight: 1.7, 
                 marginBottom: '2rem' 
               }}>
@@ -654,33 +651,33 @@ export default function CustomerPortal({
               gridTemplateColumns: 'repeat(2, 1fr)', 
               gap: '1.5rem',
               paddingTop: '2rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+              borderTop: '1px solid var(--border-subtle)'
             }}>
               <div>
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>60m</div>
-                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Adriatic Cliff Elevation</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Adriatic Cliff Elevation</div>
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>100%</div>
-                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Direct Sea-Facing Orient</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Direct Sea-Facing Orient</div>
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>24°C</div>
-                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Passive Geothermal Inertia</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Passive Geothermal Inertia</div>
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', color: '#f59e0b', fontWeight: 300 }}>1860</div>
-                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--ostro-sand-muted)', marginTop: '0.2rem' }}>Olive Terraces Heritage</div>
+                <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Olive Terraces Heritage</div>
               </div>
             </div>
           </div>
 
           {/* Right Column: 4 Numbered Architectural Pillars */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(255, 255, 255, 0.09)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
+            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid var(--border-subtle)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
               <div className="ostro-editorial-num">01</div>
               <div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.45rem' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '0.45rem' }}>
                   Pietra Leccese & Sun-Bleached Travertine
                 </h3>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
@@ -689,10 +686,10 @@ export default function CustomerPortal({
               </div>
             </div>
 
-            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(255, 255, 255, 0.09)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
+            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid var(--border-subtle)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
               <div className="ostro-editorial-num">02</div>
               <div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.45rem' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '0.45rem' }}>
                   Strait of Otranto Marine Horizons
                 </h3>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
@@ -701,10 +698,10 @@ export default function CustomerPortal({
               </div>
             </div>
 
-            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(255, 255, 255, 0.09)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
+            <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid var(--border-subtle)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
               <div className="ostro-editorial-num">03</div>
               <div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff', marginBottom: '0.45rem' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '0.45rem' }}>
                   Sea-to-Table Gastronomy & Thermal Grotto
                 </h3>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
@@ -714,13 +711,13 @@ export default function CustomerPortal({
             </div>
 
             <div className="glass-panel ostro-card-hover" style={{ padding: '1.85rem 2rem', borderRadius: '22px', border: '1px solid rgba(245, 158, 11, 0.3)', display: 'flex', gap: '1.75rem', alignItems: 'flex-start' }}>
-              <div className="ostro-editorial-num" style={{ color: 'rgba(245, 158, 11, 0.7)' }}>04</div>
+              <div className="ostro-editorial-num" style={{ color: 'var(--ostro-gold)' }}>04</div>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.35rem' }}>
-                  <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: '#fff' }}>
+                  <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', fontWeight: 500, color: 'var(--text-primary)' }}>
                     Guaranteed Reservation & Stay Integrity
                   </h3>
-                  <span style={{ fontSize: '0.68rem', padding: '0.12rem 0.5rem', borderRadius: '9999px', background: 'rgba(245,158,11,0.2)', color: '#fde68a', fontWeight: 700 }}>Direct Assurance</span>
+                  <span style={{ fontSize: '0.68rem', padding: '0.12rem 0.5rem', borderRadius: '9999px', background: 'rgba(245,158,11,0.15)', color: '#b45309', fontWeight: 700, border: '1px solid rgba(245,158,11,0.3)' }}>Direct Assurance</span>
                 </div>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
                   Guaranteed arrival concierge, eliminating overbooking uncertainty and curating bespoke arrival preparation tailored to your sanctuary.
@@ -744,11 +741,11 @@ export default function CustomerPortal({
               fontFamily: 'var(--font-serif)', 
               fontSize: 'clamp(2rem, 3.2vw, 2.8rem)', 
               fontWeight: 400, 
-              color: '#fff' 
+              color: 'var(--text-primary)' 
             }}>
               Suites Suspended Above the Sea
             </h2>
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontStyle: 'italic', color: 'var(--ostro-sand)', marginTop: '0.35rem' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontStyle: 'italic', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
               Every residence features floor-to-ceiling Adriatic panoramas, private stone terraces, and Italian linen.
             </p>
           </div>
@@ -767,7 +764,7 @@ export default function CustomerPortal({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '2rem' }}>
           
           {/* Card 1: Deluxe Limestone Suite (Room A) */}
-          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', display: 'flex', flexDirection: 'column' }}>
+          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column' }}>
             <div className="ostro-img-wrapper" style={{ height: '270px' }}>
               <img 
                 src="/images/ostro_suite.jpg" 
@@ -777,30 +774,30 @@ export default function CustomerPortal({
                 SUITE 01 • LIMESTONE TERRACE (48 m²)
               </div>
               <div style={{ position: 'absolute', bottom: '1.25rem', right: '1.25rem', background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.95rem', borderRadius: '9999px', fontSize: '0.9rem', color: '#fff', fontWeight: 700, border: '1px solid rgba(255,255,255,0.1)' }}>
-                $145 <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
+                $145 <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.7)', fontWeight: 400 }}>/ night</span>
               </div>
             </div>
 
             <div style={{ padding: '2rem 1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--ostro-sand-muted)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--text-muted)', fontWeight: 700 }}>
                     Ground Cliff Level • East Facing
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#059669', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
                     <Sparkles size={11} /> Best Direct Rate
                   </span>
                 </div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '0.65rem' }}>
                   Deluxe Limestone Suite
                 </h3>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
                   Carved local Tufo stone sanctuary with private sea-facing balcony, plush king bed, rainfall shower, and organic olive-oil amenities.
                 </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.75rem' }}>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>King Featherbed</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Sea Balcony</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Rain Shower</span>
+                  <span className="ostro-suite-pill">King Featherbed</span>
+                  <span className="ostro-suite-pill">Sea Balcony</span>
+                  <span className="ostro-suite-pill">Rain Shower</span>
                 </div>
               </div>
 
@@ -827,30 +824,30 @@ export default function CustomerPortal({
                 SUITE 02 • CLIFFSIDE EDGE (68 m²)
               </div>
               <div style={{ position: 'absolute', bottom: '1.25rem', right: '1.25rem', background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.95rem', borderRadius: '9999px', fontSize: '0.9rem', color: '#fff', fontWeight: 700, border: '1px solid rgba(255,255,255,0.1)' }}>
-                $210 <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
+                $210 <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.7)', fontWeight: 400 }}>/ night</span>
               </div>
             </div>
 
             <div style={{ padding: '2rem 1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--ostro-sand-muted)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--text-muted)', fontWeight: 700 }}>
                     Mid Promontory • Horizon Vista
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: '#34d399', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#059669', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
                     <Sparkles size={11} /> Most Requested
                   </span>
                 </div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '0.65rem' }}>
                   Executive Adriatic Suite
                 </h3>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
                   Panoramic cliffside suite with floor-to-ceiling glass, freestanding soaking stone tub overlooking the sea, and sunset ocean balcony.
                 </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.75rem' }}>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Soaking Stone Tub</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Panoramic Glass</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Sunset Balcony</span>
+                  <span className="ostro-suite-pill">Soaking Stone Tub</span>
+                  <span className="ostro-suite-pill">Panoramic Glass</span>
+                  <span className="ostro-suite-pill">Sunset Balcony</span>
                 </div>
               </div>
 
@@ -867,7 +864,7 @@ export default function CustomerPortal({
           </div>
 
           {/* Card 3: Presidential Cliff Penthouse (Room F) */}
-          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.09)', display: 'flex', flexDirection: 'column' }}>
+          <div className="glass-panel ostro-card-hover" style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column' }}>
             <div className="ostro-img-wrapper" style={{ height: '270px' }}>
               <img 
                 src="/images/ostro_dining.jpg" 
@@ -877,30 +874,30 @@ export default function CustomerPortal({
                 SUITE 03 • TOP PROMONTORY (120 m²)
               </div>
               <div style={{ position: 'absolute', bottom: '1.25rem', right: '1.25rem', background: 'rgba(15,23,42,0.92)', backdropFilter: 'blur(10px)', padding: '0.4rem 0.95rem', borderRadius: '9999px', fontSize: '0.9rem', color: '#fff', fontWeight: 700, border: '1px solid rgba(255,255,255,0.1)' }}>
-                $420 <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)', fontWeight: 400 }}>/ night</span>
+                $420 <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.7)', fontWeight: 400 }}>/ night</span>
               </div>
             </div>
 
             <div style={{ padding: '2rem 1.75rem', display: 'flex', flexDirection: 'column', flexGrow: 1, justifyContent: 'space-between' }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--ostro-sand-muted)', fontWeight: 700 }}>
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.14em', color: 'var(--text-muted)', fontWeight: 700 }}>
                     Summit Crest • 270° Marine Vista
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: '#f59e0b', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#b45309', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
                     ✦ VIP Concierge Included
                   </span>
                 </div>
-                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: '#fff', marginBottom: '0.65rem' }}>
+                <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '0.65rem' }}>
                   Presidential Cliff Penthouse
                 </h3>
                 <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '1.25rem' }}>
                   Private cliff promontory, horizon seawater plunge pool, dedicated butler service, curated Salento wine cellar, and 270° marine vista.
                 </p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1.75rem' }}>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Plunge Pool</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Cliff Butler</span>
-                  <span style={{ fontSize: '0.72rem', padding: '0.28rem 0.6rem', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', color: '#cbd5e1' }}>Private Solarium</span>
+                  <span className="ostro-suite-pill">Plunge Pool</span>
+                  <span className="ostro-suite-pill">Cliff Butler</span>
+                  <span className="ostro-suite-pill">Private Solarium</span>
                 </div>
               </div>
 
@@ -965,7 +962,7 @@ export default function CustomerPortal({
               fontFamily: 'var(--font-serif)', 
               fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', 
               fontWeight: 400, 
-              color: '#fff',
+              color: 'var(--text-primary)',
               lineHeight: 1.25,
               marginBottom: '1rem'
             }}>
@@ -977,11 +974,11 @@ export default function CustomerPortal({
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '2rem' }}>
               <div style={{ borderLeft: '2px solid rgba(245,158,11,0.5)', paddingLeft: '0.85rem' }}>
-                <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.88rem' }}>Thermal Grotto Spa</div>
+                <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.88rem' }}>Thermal Grotto Spa</div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Subterranean Roman sea salt baths and hydrotherapy</div>
               </div>
               <div style={{ borderLeft: '2px solid rgba(245,158,11,0.5)', paddingLeft: '0.85rem' }}>
-                <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.88rem' }}>Sunset Spritz Bar</div>
+                <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.88rem' }}>Sunset Spritz Bar</div>
                 <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Artisanal amari and cliffside apertivi at twilight</div>
               </div>
             </div>
@@ -1336,12 +1333,12 @@ export default function CustomerPortal({
                     padding: '1.25rem',
                     borderRadius: '12px',
                     border: property === 'City Hotel' ? '2px solid var(--primary-500)' : '1px solid var(--border-subtle)',
-                    background: property === 'City Hotel' ? 'rgba(99,102,241,0.12)' : 'rgba(255,255,255,0.02)',
+                    background: property === 'City Hotel' ? 'rgba(99,102,241,0.12)' : 'var(--bg-card-elevated)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  <h4 style={{ fontSize: '1.05rem', color: '#fff' }}>OSTRO Palazzo Lecce</h4>
+                  <h4 style={{ fontSize: '1.05rem', color: 'var(--text-primary)' }}>OSTRO Palazzo Lecce</h4>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>City Hotel • Baroque historic center & gardens</p>
                 </div>
 
@@ -1351,12 +1348,12 @@ export default function CustomerPortal({
                     padding: '1.25rem',
                     borderRadius: '12px',
                     border: property === 'Resort Hotel' ? '2px solid #f59e0b' : '1px solid var(--border-subtle)',
-                    background: property === 'Resort Hotel' ? 'rgba(217, 119, 6, 0.15)' : 'rgba(255,255,255,0.02)',
+                    background: property === 'Resort Hotel' ? 'rgba(217, 119, 6, 0.15)' : 'var(--bg-card-elevated)',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  <h4 style={{ fontSize: '1.05rem', color: '#fff' }}>OSTRO Cliff Sanctuary Salento</h4>
+                  <h4 style={{ fontSize: '1.05rem', color: 'var(--text-primary)' }}>OSTRO Cliff Sanctuary Salento</h4>
                   <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Resort Hotel • Salento cliffside promontory & private cove</p>
                 </div>
               </div>
@@ -1367,7 +1364,7 @@ export default function CustomerPortal({
                   <input 
                     id="checkin" 
                     type="date" 
-                    className="input-field"
+                    className="input-field" 
                     min={todayStr}
                     value={checkIn}
                     onChange={handleCheckInChange}
@@ -1379,7 +1376,7 @@ export default function CustomerPortal({
                   <input 
                     id="checkout" 
                     type="date" 
-                    className="input-field"
+                    className="input-field" 
                     min={formatDate(addDays(new Date(checkIn + 'T00:00:00'), 1))}
                     value={checkOut}
                     onChange={(e) => setCheckOut(e.target.value)}
@@ -1388,8 +1385,8 @@ export default function CustomerPortal({
               </div>
 
               <div style={{ marginTop: '0.75rem', fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '1.25rem' }}>
-                <span>📅 Computed Lead Time: <strong style={{ color: '#fff' }}>{leadTime} days</strong></span>
-                <span>🌙 Total Duration: <strong style={{ color: '#fff' }}>{totalNights} nights</strong> ({weekNights} weekdays, {weekendNights} weekend)</span>
+                <span>📅 Computed Lead Time: <strong style={{ color: 'var(--text-primary)' }}>{leadTime} days</strong></span>
+                <span>🌙 Total Duration: <strong style={{ color: 'var(--text-primary)' }}>{totalNights} nights</strong> ({weekNights} weekdays, {weekendNights} weekend)</span>
               </div>
             </div>
 
@@ -1400,7 +1397,7 @@ export default function CustomerPortal({
                   <Layers size={18} color="var(--primary-400)" />
                   <span>2. Travel Purpose & Booking Channel</span>
                 </div>
-                <span style={{ fontSize: '0.72rem', color: '#a5b4fc', background: 'rgba(99,102,241,0.15)', padding: '0.2rem 0.6rem', borderRadius: '9999px', border: '1px solid rgba(99,102,241,0.3)' }}>
+                <span style={{ fontSize: '0.72rem', color: '#6366f1', background: 'rgba(99,102,241,0.12)', padding: '0.2rem 0.6rem', borderRadius: '9999px', border: '1px solid rgba(99,102,241,0.3)', fontWeight: 600 }}>
                   Auto-Infers ML Market Segment
                 </span>
               </div>
@@ -1423,7 +1420,7 @@ export default function CustomerPortal({
                         padding: '1.15rem',
                         borderRadius: '14px',
                         border: isSelected ? `2px solid ${ch.color}` : '1px solid var(--border-subtle)',
-                        background: isSelected ? ch.bgColor : 'rgba(255,255,255,0.02)',
+                        background: isSelected ? ch.bgColor : 'var(--bg-card-elevated)',
                         cursor: 'pointer',
                         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                         display: 'flex',
@@ -1436,8 +1433,8 @@ export default function CustomerPortal({
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: isSelected ? ch.color : 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <IconComponent size={15} color={isSelected ? '#0f172a' : ch.color} />
+                            <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: isSelected ? ch.color : 'rgba(99,102,241,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <IconComponent size={15} color={isSelected ? '#ffffff' : ch.color} />
                             </div>
                             <span style={{ fontSize: '0.72rem', fontWeight: 700, color: ch.color, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                               {ch.badgeText}
@@ -1446,15 +1443,15 @@ export default function CustomerPortal({
                           {isSelected && <Check size={16} color={ch.color} />}
                         </div>
 
-                        <h4 style={{ fontSize: '0.98rem', color: '#fff', marginBottom: '0.25rem' }}>{ch.name}</h4>
+                        <h4 style={{ fontSize: '0.98rem', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{ch.name}</h4>
                         <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.4 }}>{ch.subtitle}</p>
                       </div>
 
-                      <div style={{ paddingTop: '0.5rem', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontSize: '0.72rem', color: isSelected ? '#fff' : 'var(--text-muted)' }}>
+                      <div style={{ paddingTop: '0.5rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontSize: '0.72rem', color: isSelected ? 'var(--text-primary)' : 'var(--text-muted)', fontWeight: isSelected ? 600 : 400 }}>
                           {ch.rateBadge}
                         </span>
-                        <span style={{ fontSize: '0.7rem', color: ch.color, fontWeight: 600 }}>
+                        <span style={{ fontSize: '0.7rem', color: ch.color, fontWeight: 700 }}>
                           {ch.market_segment}
                         </span>
                       </div>
@@ -1468,7 +1465,7 @@ export default function CustomerPortal({
                 <div style={{ padding: '1.25rem', background: 'rgba(99,102,241,0.08)', borderRadius: '12px', border: '1px solid rgba(99,102,241,0.3)', marginBottom: '1rem', animation: 'fadeIn 0.25s ease' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                     <Briefcase size={16} color="#818cf8" />
-                    <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>
+                    <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       Corporate Access Code & Company Contract
                     </span>
                   </div>
@@ -1670,13 +1667,13 @@ export default function CustomerPortal({
                         padding: '1rem 1.25rem',
                         borderRadius: '12px',
                         border: roomType === room.code ? '2px solid var(--primary-500)' : '1px solid var(--border-subtle)',
-                        background: roomType === room.code ? 'rgba(99,102,241,0.1)' : 'rgba(255,255,255,0.02)',
+                        background: roomType === room.code ? 'rgba(99,102,241,0.1)' : 'var(--bg-card-elevated)',
                         cursor: 'pointer'
                       }}
                     >
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                          <h4 style={{ fontSize: '0.98rem', color: '#fff' }}>{room.name}</h4>
+                          <h4 style={{ fontSize: '0.98rem', color: 'var(--text-primary)' }}>{room.name}</h4>
                           {currentChannel.discountPct > 0 && (
                             <span style={{ fontSize: '0.68rem', padding: '0.1rem 0.4rem', borderRadius: '4px', background: currentChannel.bgColor, color: currentChannel.color, fontWeight: 700 }}>
                               {currentChannel.discountPct}% OFF
@@ -1807,28 +1804,11 @@ export default function CustomerPortal({
               </div>
 
               {/* Automated Guest Stay & Cancellation History Card */}
-              <div style={{
-                marginTop: '1.25rem',
-                padding: '1.25rem 1.35rem',
-                borderRadius: '14px',
-                background: userHistory?.previous_cancellations > 0 
-                  ? 'linear-gradient(135deg, rgba(244,63,94,0.08) 0%, rgba(30,15,25,0.4) 100%)'
-                  : userHistory?.is_repeated_guest 
-                    ? 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(10,35,25,0.4) 100%)'
-                    : 'linear-gradient(135deg, rgba(99,102,241,0.08) 0%, rgba(20,20,40,0.4) 100%)',
-                border: userHistory?.previous_cancellations > 0 
-                  ? '1px solid rgba(244,63,94,0.35)'
-                  : userHistory?.is_repeated_guest 
-                    ? '1px solid rgba(16,185,129,0.35)'
-                    : '1px solid rgba(99,102,241,0.25)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.85rem'
-              }}>
+              <div className={`ostro-guest-history-card ${userHistory?.previous_cancellations > 0 ? 'is-risk' : 'is-clean'}`}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <ShieldCheck size={18} color={userHistory?.previous_cancellations > 0 ? '#fda4af' : userHistory?.is_repeated_guest ? '#34d399' : '#818cf8'} />
-                    <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>
+                    <ShieldCheck size={18} color={userHistory?.previous_cancellations > 0 ? '#f43f5e' : '#059669'} />
+                    <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                       Automated Stay & Cancellation History
                     </span>
                     <span style={{
@@ -1836,85 +1816,67 @@ export default function CustomerPortal({
                       padding: '0.12rem 0.45rem',
                       borderRadius: '9999px',
                       fontWeight: 700,
-                      background: 'rgba(255,255,255,0.06)',
-                      color: 'var(--text-secondary)',
-                      border: '1px solid rgba(255,255,255,0.1)'
+                      background: 'rgba(16, 185, 129, 0.12)',
+                      color: '#059669',
+                      border: '1px solid rgba(16, 185, 129, 0.3)'
                     }}>
                       ● Verified Guest Profile
                     </span>
                   </div>
 
                   <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                    Guest Profile: <strong style={{ color: '#e2e8f0' }}>{guestEmail || currentUser?.email || 'guest@ostro.it'}</strong>
+                    Guest Profile: <strong style={{ color: 'var(--text-primary)' }}>{guestEmail || currentUser?.email || 'guest@ostro.it'}</strong>
                   </span>
                 </div>
 
                 {/* Live Metrics Row */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.75rem' }}>
-                  <div style={{ padding: '0.65rem 0.85rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <div className="ostro-history-metric-box">
+                    <div className="ostro-history-metric-label">
                       Prior Reservations
                     </div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#fff', marginTop: '0.15rem' }}>
+                    <div className="ostro-history-metric-val">
                       {userHistory ? userHistory.total_past_bookings : 0} {userHistory?.total_past_bookings === 1 ? 'Stay' : 'Stays'}
                     </div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
                       {userHistory?.is_repeated_guest ? 'Returning Member' : 'First-Time Guest'}
                     </div>
                   </div>
 
-                  <div style={{ padding: '0.65rem 0.85rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <div className="ostro-history-metric-box">
+                    <div className="ostro-history-metric-label">
                       Completed Stays
                     </div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: '#34d399', marginTop: '0.15rem' }}>
+                    <div className="ostro-history-metric-val" style={{ color: '#059669' }}>
                       {userHistory ? userHistory.previous_bookings_not_canceled : 0} Kept
                     </div>
-                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
                       Honored bookings
                     </div>
                   </div>
 
-                  <div style={{ padding: '0.65rem 0.85rem', background: 'rgba(0,0,0,0.25)', borderRadius: '10px', border: userHistory?.previous_cancellations > 0 ? '1px solid rgba(244,63,94,0.3)' : '1px solid rgba(255,255,255,0.05)' }}>
-                    <div style={{ fontSize: '0.7rem', color: userHistory?.previous_cancellations > 0 ? '#fda4af' : 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <div className="ostro-history-metric-box">
+                    <div className="ostro-history-metric-label" style={{ color: userHistory?.previous_cancellations > 0 ? '#dc2626' : undefined }}>
                       Past Cancellations
                     </div>
-                    <div style={{ fontSize: '1.05rem', fontWeight: 800, color: userHistory?.previous_cancellations > 0 ? '#fb7185' : '#e2e8f0', marginTop: '0.15rem' }}>
+                    <div className="ostro-history-metric-val" style={{ color: userHistory?.previous_cancellations > 0 ? '#dc2626' : undefined }}>
                       {userHistory ? userHistory.previous_cancellations : 0} Cancelled
                     </div>
-                    <div style={{ fontSize: '0.68rem', color: userHistory?.previous_cancellations > 0 ? '#fca5a5' : 'var(--text-muted)' }}>
+                    <div style={{ fontSize: '0.68rem', color: userHistory?.previous_cancellations > 0 ? '#ef4444' : 'var(--text-muted)', marginTop: '0.15rem' }}>
                       {userHistory?.previous_cancellations > 0 ? 'On Account File' : 'Clean Record'}
                     </div>
                   </div>
                 </div>
 
                 {/* Status Notification Banner */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0.65rem 0.85rem',
-                  borderRadius: '8px',
-                  fontSize: '0.78rem',
-                  background: userHistory?.previous_cancellations > 0 
-                    ? 'rgba(244,63,94,0.1)'
-                    : userHistory?.is_repeated_guest 
-                      ? 'rgba(16,185,129,0.1)'
-                      : 'rgba(99,102,241,0.08)',
-                  color: userHistory?.previous_cancellations > 0 
-                    ? '#fecdd3'
-                    : userHistory?.is_repeated_guest 
-                      ? '#a7f3d0'
-                      : '#c7d2fe',
-                  border: `1px dashed ${userHistory?.previous_cancellations > 0 ? 'rgba(244,63,94,0.35)' : userHistory?.is_repeated_guest ? 'rgba(16,185,129,0.35)' : 'rgba(99,102,241,0.3)'}`
-                }}>
+                <div className={userHistory?.previous_cancellations > 0 ? "ostro-history-banner-risk" : "ostro-history-banner-clean"}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
                     {userHistory?.previous_cancellations > 0 ? (
-                      <AlertCircle size={15} color="#fb7185" />
+                      <AlertCircle size={16} color="#dc2626" />
                     ) : userHistory?.is_repeated_guest ? (
-                      <CheckCircle2 size={15} color="#34d399" />
+                      <CheckCircle2 size={16} color="#059669" />
                     ) : (
-                      <UserCheck size={15} color="#818cf8" />
+                      <UserCheck size={16} color="#6366f1" />
                     )}
                     <span>
                       {userHistory?.previous_cancellations > 0
@@ -1932,11 +1894,11 @@ export default function CustomerPortal({
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#38bdf8',
+                        color: 'var(--primary-500)',
                         cursor: 'pointer',
                         textDecoration: 'underline',
                         fontSize: '0.74rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
                         whiteSpace: 'nowrap',
                         marginLeft: '0.5rem'
                       }}
@@ -1962,13 +1924,13 @@ export default function CustomerPortal({
                     padding: '1.25rem',
                     borderRadius: '12px',
                     border: depositOption === 'No Deposit' ? '2px solid #34d399' : '1px solid var(--border-subtle)',
-                    background: depositOption === 'No Deposit' ? 'rgba(16,185,129,0.08)' : 'rgba(255,255,255,0.02)',
+                    background: depositOption === 'No Deposit' ? 'rgba(16,185,129,0.08)' : 'var(--bg-card-elevated)',
                     cursor: 'pointer'
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h4 style={{ fontSize: '0.98rem', color: '#fff' }}>Flexible Rate</h4>
-                    <span style={{ fontSize: '0.72rem', color: '#34d399', fontWeight: 700 }}>FREE CANCELLATION</span>
+                    <h4 style={{ fontSize: '0.98rem', color: 'var(--text-primary)' }}>Flexible Rate</h4>
+                    <span style={{ fontSize: '0.72rem', color: '#059669', fontWeight: 700 }}>FREE CANCELLATION</span>
                   </div>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
                     No deposit required. Cancel free up to 48 hours prior to arrival. Pay at hotel check-in.
@@ -1981,13 +1943,13 @@ export default function CustomerPortal({
                     padding: '1.25rem',
                     borderRadius: '12px',
                     border: depositOption === 'Non Refund' ? '2px solid var(--risk-high)' : '1px solid var(--border-subtle)',
-                    background: depositOption === 'Non Refund' ? 'rgba(244,63,94,0.08)' : 'rgba(255,255,255,0.02)',
+                    background: depositOption === 'Non Refund' ? 'rgba(244,63,94,0.08)' : 'var(--bg-card-elevated)',
                     cursor: 'pointer'
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h4 style={{ fontSize: '0.98rem', color: '#fff' }}>Saver Rate (15% Off)</h4>
-                    <span style={{ fontSize: '0.72rem', color: '#fda4af', fontWeight: 700 }}>NON-REFUNDABLE</span>
+                    <h4 style={{ fontSize: '0.98rem', color: 'var(--text-primary)' }}>Saver Rate (15% Off)</h4>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--risk-high)', fontWeight: 700 }}>NON-REFUNDABLE</span>
                   </div>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
                     Full payment charged upon booking. Non-refundable in case of cancellation or modification.
@@ -2000,7 +1962,7 @@ export default function CustomerPortal({
 
           {/* Sidebar Booking Summary & Order Checkout */}
           <div className="glass-panel" style={{ padding: '1.75rem', position: 'sticky', top: '6rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <h3 style={{ fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h3 style={{ fontSize: '1.15rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-primary)' }}>
               <Lock size={18} color="var(--primary-400)" />
               <span>Reservation Summary</span>
             </h3>
@@ -2019,11 +1981,11 @@ export default function CustomerPortal({
                 <span style={{ fontSize: '0.7rem', color: currentChannel.color, fontWeight: 700, textTransform: 'uppercase' }}>
                   Channel Routing
                 </span>
-                <p style={{ fontSize: '0.85rem', fontWeight: 700, color: '#fff' }}>
+                <p style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                   {currentChannel.name}
                 </p>
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#fff', background: 'rgba(0,0,0,0.3)', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
+              <span style={{ fontSize: '0.75rem', color: currentChannel.color, background: 'rgba(99,102,241,0.08)', border: `1px solid ${currentChannel.borderColor}`, padding: '0.2rem 0.5rem', borderRadius: '6px', fontWeight: 600 }}>
                 {currentChannel.market_segment}
               </span>
             </div>
@@ -2031,15 +1993,15 @@ export default function CustomerPortal({
             <div style={{ paddingBottom: '1rem', borderBottom: '1px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.85rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Property:</span>
-                <span style={{ fontWeight: 600 }}>{property}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{property}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Dates:</span>
-                <span style={{ fontWeight: 600 }}>{totalNights} nights ({checkIn} → {checkOut})</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{totalNights} nights ({checkIn} → {checkOut})</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Room Category:</span>
-                <span style={{ fontWeight: 600 }}>{selectedRoom.name}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{selectedRoom.name}</span>
               </div>
               {bookingChannel === 'GROUPS' && (
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -2055,28 +2017,19 @@ export default function CustomerPortal({
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Rate Plan:</span>
-                <span style={{ fontWeight: 600, color: depositOption === 'Non Refund' ? '#fda4af' : '#6ee7b7' }}>
+                <span style={{ fontWeight: 600, color: depositOption === 'Non Refund' ? 'var(--risk-high)' : '#059669' }}>
                   {depositOption === 'Non Refund' ? 'Non-Refundable (15% Off)' : 'Flexible Free Cancel'}
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-secondary)' }}>Country of Origin:</span>
-                <span style={{ fontWeight: 600, color: '#e2e8f0' }}>{COUNTRIES.find(c => c.code === country)?.name || country}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{COUNTRIES.find(c => c.code === country)?.name || country}</span>
               </div>
             </div>
 
             {/* Guest Name & Email OR Sign-In / Locked State */}
             {!currentUser ? (
-              <div style={{
-                padding: '1.25rem',
-                background: 'linear-gradient(135deg, rgba(99,102,241,0.18) 0%, rgba(168,85,247,0.12) 100%)',
-                border: '1px solid rgba(129,140,248,0.4)',
-                borderRadius: '16px',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.75rem'
-              }}>
+              <div className="ostro-locked-sidebar-card">
                 <div style={{
                   width: '40px',
                   height: '40px',
@@ -2088,10 +2041,10 @@ export default function CustomerPortal({
                   justifyContent: 'center',
                   margin: '0 auto'
                 }}>
-                  <Lock size={18} color="#c7d2fe" />
+                  <Lock size={18} color="#6366f1" />
                 </div>
                 <div>
-                  <h5 style={{ fontSize: '0.94rem', fontWeight: 800, color: '#ffffff', marginBottom: '0.25rem' }}>
+                  <h5 style={{ fontSize: '0.94rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
                     Customer Account Required to Reserve
                   </h5>
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
@@ -2101,18 +2054,8 @@ export default function CustomerPortal({
 
                 <button
                   type="button"
-                  className="submit-btn"
+                  className="ostro-reserve-auth-btn"
                   onClick={() => onOpenAuth && onOpenAuth('login', false)}
-                  style={{
-                    padding: '0.6rem 1rem',
-                    fontSize: '0.84rem',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.45rem',
-                    background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-                    boxShadow: '0 4px 12px rgba(99,102,241,0.35)'
-                  }}
                 >
                   <LogIn size={15} />
                   <span>Sign In / Register as Customer</span>
@@ -2128,11 +2071,11 @@ export default function CustomerPortal({
                 flexDirection: 'column',
                 gap: '0.6rem'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#f87171', fontWeight: 700, fontSize: '0.85rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#dc2626', fontWeight: 700, fontSize: '0.85rem' }}>
                   <Lock size={16} />
                   <span>Administrator Account: Reservation Locked</span>
                 </div>
-                <p style={{ fontSize: '0.78rem', color: '#fca5a5', lineHeight: 1.45 }}>
+                <p style={{ fontSize: '0.78rem', color: '#b91c1c', lineHeight: 1.45 }}>
                   Public guest reservations can only be created by customer accounts. As an administrator, please use the <strong>Manual Reservation Desk</strong> in the Admin Dashboard to register bookings for guests.
                 </p>
               </div>
@@ -2147,9 +2090,10 @@ export default function CustomerPortal({
                   alignItems: 'center',
                   gap: '0.45rem',
                   fontSize: '0.78rem',
-                  color: '#6ee7b7'
+                  color: '#059669',
+                  fontWeight: 600
                 }}>
-                  <CheckCircle2 size={16} color="#34d399" />
+                  <CheckCircle2 size={16} color="#059669" />
                   <span>Authenticated Customer: <strong>@{currentUser.username}</strong></span>
                 </div>
 
@@ -2194,28 +2138,28 @@ export default function CustomerPortal({
             )}
 
             {/* Price Calculations */}
-            <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <div style={{ padding: '1rem', background: 'var(--bg-card-subtle)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '0.4rem', border: '1px solid var(--border-subtle)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                 <span>Rate per room/night:</span>
-                <span style={{ fontWeight: 600 }}>${adr}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>${adr}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                 <span>Nights:</span>
-                <span>{totalNights} nights</span>
+                <span style={{ color: 'var(--text-primary)' }}>{totalNights} nights</span>
               </div>
               {effectiveRooms > 1 && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                   <span>Rooms:</span>
-                  <span style={{ color: '#c084fc', fontWeight: 700 }}>× {effectiveRooms} rooms</span>
+                  <span style={{ color: 'var(--ostro-terracotta)', fontWeight: 700 }}>× {effectiveRooms} rooms</span>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                 <span>Taxes & Service Fees:</span>
-                <span style={{ color: '#34d399' }}>Included</span>
+                <span style={{ color: '#059669', fontWeight: 600 }}>Included</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border-subtle)' }}>
-                <span style={{ fontWeight: 700 }}>Total Price:</span>
-                <span style={{ fontSize: '1.45rem', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-display)' }}>
+                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>Total Price:</span>
+                <span style={{ fontSize: '1.45rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-display)' }}>
                   ${estimatedTotal}
                 </span>
               </div>
@@ -2225,17 +2169,8 @@ export default function CustomerPortal({
             {!currentUser ? (
               <button 
                 type="button"
-                className="submit-btn"
+                className="ostro-reserve-auth-btn"
                 onClick={() => onOpenAuth && onOpenAuth('login', false)}
-                style={{
-                  background: 'linear-gradient(135deg, rgba(99,102,241,0.3) 0%, rgba(168,85,247,0.2) 100%)',
-                  border: '1px solid rgba(129,140,248,0.4)',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem'
-                }}
               >
                 <Lock size={16} />
                 <span>🔒 Reservation Locked — Sign In as Customer to Book</span>
@@ -2262,7 +2197,7 @@ export default function CustomerPortal({
             ) : (
               <button 
                 type="submit"
-                className="submit-btn"
+                className="ostro-reserve-submit-btn"
                 disabled={isSubmitting || totalNights <= 0}
               >
                 {isSubmitting ? (
@@ -2294,7 +2229,7 @@ export default function CustomerPortal({
           <span className="ostro-badge-gold" style={{ marginBottom: '0.5rem' }}>
             ✦ CRITICAL ACCLAIM & AWARDS
           </span>
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', fontWeight: 400, color: '#fff' }}>
+          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.8rem, 3vw, 2.5rem)', fontWeight: 400, color: 'var(--text-primary)' }}>
             Celebrated by the International Architectural Press
           </h2>
         </div>
@@ -2302,7 +2237,7 @@ export default function CustomerPortal({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
           <div className="glass-panel" style={{ padding: '2rem', borderRadius: '18px', border: '1px solid rgba(245,158,11,0.2)' }}>
             <Quote size={24} color="#f59e0b" style={{ marginBottom: '1rem', opacity: 0.8 }} />
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontStyle: 'italic', color: '#f5eee6', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
               "A triumph of Italian minimalism. OSTRO turns the wild cliffs of Salento into an unforgettable sanctuary suspended between raw stone and open sky."
             </p>
             <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f59e0b', letterSpacing: '0.05em' }}>
@@ -2313,7 +2248,7 @@ export default function CustomerPortal({
 
           <div className="glass-panel" style={{ padding: '2rem', borderRadius: '18px', border: '1px solid rgba(245,158,11,0.2)' }}>
             <Quote size={24} color="#f59e0b" style={{ marginBottom: '1rem', opacity: 0.8 }} />
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontStyle: 'italic', color: '#f5eee6', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
               "The most breathtaking ocean terrace in Southern Europe. The saltwater infinity pool merges seamlessly with the Adriatic at sunset."
             </p>
             <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f59e0b', letterSpacing: '0.05em' }}>
@@ -2324,7 +2259,7 @@ export default function CustomerPortal({
 
           <div className="glass-panel" style={{ padding: '2rem', borderRadius: '18px', border: '1px solid rgba(245,158,11,0.2)' }}>
             <Quote size={24} color="#f59e0b" style={{ marginBottom: '1rem', opacity: 0.8 }} />
-            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontStyle: 'italic', color: '#f5eee6', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+            <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', fontStyle: 'italic', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '1.25rem' }}>
               "Intimate brutalism executed with supreme warmth. Machine-learning rate precision meets timeless Pugliese hospitality."
             </p>
             <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#f59e0b', letterSpacing: '0.05em' }}>
@@ -2338,22 +2273,13 @@ export default function CustomerPortal({
       {/* ========================================================
           SECTION 6: CURATED OSTRO FOOTER & CONCIERGE INFO
           ======================================================== */}
-      <footer style={{ 
-        marginTop: '2rem', 
-        padding: '3rem 2rem 2rem 2rem', 
-        borderRadius: '24px', 
-        background: 'linear-gradient(180deg, rgba(20,24,33,0.6) 0%, rgba(10,12,18,0.95) 100%)', 
-        border: '1px solid rgba(245,158,11,0.2)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '2rem'
-      }}>
+      <footer className="ostro-site-footer">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem' }}>
           <div style={{ maxWidth: '380px' }}>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: '#fff', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+            <div className="ostro-footer-brand" style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', color: 'var(--text-primary)', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
               OSTRO
             </div>
-            <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--ostro-sand)', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
               Cliff Hotel & Sanctuaries • Salento, Puglia
             </div>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
@@ -2389,7 +2315,7 @@ export default function CustomerPortal({
           </div>
         </div>
 
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+        <div className="ostro-footer-divider" style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
           <div>
             © {new Date().getFullYear()} OSTRO Salento S.r.l. • Inspired by Behance OSTRO Architectural Concept.
           </div>

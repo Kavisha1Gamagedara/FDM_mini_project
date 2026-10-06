@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Lock, User, Mail, ShieldAlert, KeyRound, CheckCircle2, 
-  AlertCircle, ArrowRight, X, Sparkles, Building2, Eye, EyeOff, LogIn
+  AlertCircle, ArrowRight, X, Sparkles, Building2, Eye, EyeOff, LogIn, Compass
 } from 'lucide-react';
 
 export default function AuthModal({ 
@@ -35,6 +35,7 @@ export default function AuthModal({
 
   // Pre-fill Admin Demo Credentials
   const fillAdminCredentials = () => {
+    setMode('login');
     setUsername('admin');
     setPassword('admin123');
     setError(null);
@@ -42,6 +43,7 @@ export default function AuthModal({
 
   // Pre-fill Customer Demo Credentials
   const fillCustomerCredentials = () => {
+    setMode('login');
     setUsername('alexandra');
     setPassword('guest123');
     setError(null);
@@ -138,129 +140,78 @@ export default function AuthModal({
   return (
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1000 }}>
       <div 
-        className="modal-content" 
+        className="ostro-auth-modal" 
         onClick={(e) => e.stopPropagation()} 
-        style={{ maxWidth: '440px', padding: '2rem' }}
       >
         {/* Close Button */}
         <button 
           type="button" 
-          className="modal-close-btn" 
+          className="ostro-auth-close-btn" 
           onClick={onClose}
-          style={{ position: 'absolute', top: '1.25rem', right: '1.25rem' }}
+          title="Close window"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
+
+        {/* Brand Crest Header */}
+        <div className="ostro-auth-crest-wrap">
+          <div className="ostro-auth-crest-icon">
+            <Compass size={22} strokeWidth={2.2} />
+          </div>
+          <span className="ostro-auth-eyebrow">✦ OSTRO SALENTO SANCTUARY</span>
+          <h3 className="ostro-auth-title">
+            {mode === 'login' ? 'Sanctuary Access' : 'Create Guest Account'}
+          </h3>
+          <p className="ostro-auth-subtitle">
+            {mode === 'login' 
+              ? 'Sign in to confirm reservations or access the hotel operations desk.' 
+              : 'Register to unlock member rates and stay history tracking.'}
+          </p>
+        </div>
 
         {/* Admin Access Prompt if redirected */}
         {adminPrompt && (
-          <div style={{ 
-            padding: '0.75rem 0.9rem', 
-            background: 'rgba(244,63,94,0.1)', 
-            border: '1px solid rgba(244,63,94,0.3)', 
-            borderRadius: '12px', 
-            marginBottom: '1.25rem', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.65rem' 
-          }}>
-            <ShieldAlert size={18} color="#f43f5e" style={{ flexShrink: 0 }} />
-            <p style={{ fontSize: '0.78rem', color: '#fecdd3' }}>
-              <strong>Admin Privilege Required:</strong> Sign in with an administrator account to access the revenue & cancellation dashboard.
-            </p>
+          <div className="ostro-auth-alert-admin">
+            <ShieldAlert size={18} color="#e11d48" style={{ flexShrink: 0 }} />
+            <div>
+              <strong style={{ display: 'block', fontSize: '0.8rem' }}>Admin Access Required</strong>
+              <span>Sign in with an administrator account to access the operations desk.</span>
+            </div>
           </div>
         )}
 
         {/* Tab Switcher: Sign In vs Create Account */}
-        <div style={{ 
-          display: 'flex', 
-          background: 'rgba(255,255,255,0.03)', 
-          padding: '0.25rem', 
-          borderRadius: '12px', 
-          border: '1px solid var(--border-subtle)', 
-          marginBottom: '1.5rem', 
-          gap: '0.25rem' 
-        }}>
+        <div className="ostro-auth-tabs">
           <button
             type="button"
-            className="preset-btn"
+            className={`ostro-auth-tab-btn ${mode === 'login' ? 'active' : ''}`}
             onClick={() => { setMode('login'); setError(null); }}
-            style={{
-              flex: 1,
-              background: mode === 'login' ? 'var(--primary-500)' : 'transparent',
-              color: mode === 'login' ? '#fff' : 'var(--text-secondary)',
-              borderColor: mode === 'login' ? 'var(--primary-500)' : 'transparent',
-              fontSize: '0.8rem',
-              fontWeight: mode === 'login' ? 700 : 500,
-              padding: '0.45rem'
-            }}
           >
-            Sign In
+            <LogIn size={14} />
+            <span>Sign In</span>
           </button>
 
           <button
             type="button"
-            className="preset-btn"
+            className={`ostro-auth-tab-btn ${mode === 'register' ? 'active' : ''}`}
             onClick={() => { setMode('register'); setError(null); }}
-            style={{
-              flex: 1,
-              background: mode === 'register' ? 'var(--primary-500)' : 'transparent',
-              color: mode === 'register' ? '#fff' : 'var(--text-secondary)',
-              borderColor: mode === 'register' ? 'var(--primary-500)' : 'transparent',
-              fontSize: '0.8rem',
-              fontWeight: mode === 'register' ? 700 : 500,
-              padding: '0.45rem'
-            }}
           >
-            Create Account
+            <User size={14} />
+            <span>Create Account</span>
           </button>
-        </div>
-
-        {/* Header Title */}
-        <div style={{ marginBottom: '1.25rem', textAlign: 'center' }}>
-          <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff', fontFamily: 'var(--font-serif)', letterSpacing: '0.02em' }}>
-            {mode === 'login' ? 'Welcome to OSTRO Salento' : 'Create Your Guest Account'}
-          </h3>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
-            {mode === 'login' 
-              ? 'Sign in to confirm reservations or manage hotel operations.' 
-              : 'Register to unlock member rates and track your stay history.'}
-          </p>
         </div>
 
         {/* Alerts */}
         {error && (
-          <div style={{ 
-            padding: '0.75rem 1rem', 
-            background: 'rgba(244,63,94,0.12)', 
-            border: '1px solid rgba(244,63,94,0.3)', 
-            borderRadius: '10px', 
-            color: '#fda4af', 
-            fontSize: '0.8rem', 
-            marginBottom: '1rem', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.5rem' 
-          }}>
-            <AlertCircle size={16} />
+          <div className="ostro-auth-alert-error">
+            <AlertCircle size={16} style={{ flexShrink: 0 }} />
             <span>{error}</span>
           </div>
         )}
 
         {successMsg && (
-          <div style={{ 
-            padding: '0.75rem 1rem', 
-            background: 'rgba(16,185,129,0.12)', 
-            border: '1px solid rgba(16,185,129,0.3)', 
-            borderRadius: '10px', 
-            color: '#6ee7b7', 
-            fontSize: '0.8rem', 
-            marginBottom: '1rem', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '0.5rem' 
-          }}>
-            <CheckCircle2 size={16} />
+          <div className="ostro-auth-alert-success">
+            <CheckCircle2 size={16} style={{ flexShrink: 0 }} />
             <span>{successMsg}</span>
           </div>
         )}
@@ -268,13 +219,16 @@ export default function AuthModal({
         {/* UNIFIED SIGN IN FORM */}
         {mode === 'login' && (
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="input-group">
-              <label className="input-label" htmlFor="login_ident">Username or Email</label>
+            <div>
+              <label className="ostro-auth-label" htmlFor="login_ident">
+                <User size={13} color="var(--ostro-terracotta)" />
+                <span>Username or Email</span>
+              </label>
               <div style={{ position: 'relative' }}>
                 <input
                   id="login_ident"
                   type="text"
-                  className="input-field"
+                  className="ostro-auth-input"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="e.g. alexandra or admin"
@@ -284,31 +238,27 @@ export default function AuthModal({
               </div>
             </div>
 
-            <div className="input-group">
-              <label className="input-label" htmlFor="login_pwd">Password</label>
+            <div>
+              <label className="ostro-auth-label" htmlFor="login_pwd">
+                <KeyRound size={13} color="var(--ostro-terracotta)" />
+                <span>Password</span>
+              </label>
               <div style={{ position: 'relative' }}>
                 <input
                   id="login_pwd"
                   type={showPassword ? 'text' : 'password'}
-                  className="input-field"
+                  className="ostro-auth-input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                   required
+                  style={{ paddingRight: '2.5rem' }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  style={{ 
-                    position: 'absolute', 
-                    right: '10px', 
-                    top: '50%', 
-                    transform: 'translateY(-50%)', 
-                    background: 'none', 
-                    border: 'none', 
-                    color: 'var(--text-muted)', 
-                    cursor: 'pointer' 
-                  }}
+                  className="ostro-auth-eye-btn"
+                  title={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -317,16 +267,15 @@ export default function AuthModal({
 
             <button
               type="submit"
-              className="submit-btn"
+              className="ostro-auth-submit-btn"
               disabled={loading}
-              style={{ marginTop: '0.5rem' }}
             >
               {loading ? (
                 <span>Signing in...</span>
               ) : (
                 <>
                   <LogIn size={16} />
-                  <span>Sign In</span>
+                  <span>Sign In to Sanctuary</span>
                   <ArrowRight size={16} />
                 </>
               )}
@@ -334,7 +283,7 @@ export default function AuthModal({
 
             {/* Quick Demo Pre-Fill Helpers */}
             <div style={{ 
-              marginTop: '0.75rem', 
+              marginTop: '0.65rem', 
               paddingTop: '0.75rem', 
               borderTop: '1px solid var(--border-subtle)', 
               display: 'flex', 
@@ -343,27 +292,39 @@ export default function AuthModal({
               flexWrap: 'wrap',
               gap: '0.4rem'
             }}>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Quick Demo Fill:</span>
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Quick Demo Fill:</span>
+              <div style={{ display: 'flex', gap: '0.45rem' }}>
                 <button
                   type="button"
-                  className="preset-btn"
+                  className="ostro-auth-demo-pill ostro-auth-demo-guest"
                   onClick={fillCustomerCredentials}
-                  style={{ fontSize: '0.72rem', padding: '0.2rem 0.55rem' }}
                   title="Fill guest credentials: alexandra / guest123"
                 >
-                  👤 Guest
+                  <User size={12} />
+                  <span>Guest</span>
                 </button>
                 <button
                   type="button"
-                  className="preset-btn"
+                  className="ostro-auth-demo-pill ostro-auth-demo-admin"
                   onClick={fillAdminCredentials}
-                  style={{ fontSize: '0.72rem', padding: '0.2rem 0.55rem', color: '#fda4af', borderColor: 'rgba(244,63,94,0.3)' }}
                   title="Fill admin credentials: admin / admin123"
                 >
-                  👑 Admin
+                  <Sparkles size={12} />
+                  <span>Admin</span>
                 </button>
               </div>
+            </div>
+
+            {/* Mode Switch to Registration */}
+            <div className="ostro-auth-switch-footer">
+              <span>Don't have an account yet?</span>
+              <button 
+                type="button" 
+                className="ostro-auth-switch-link"
+                onClick={() => { setMode('register'); setError(null); }}
+              >
+                Create one here
+              </button>
             </div>
           </form>
         )}
@@ -371,38 +332,49 @@ export default function AuthModal({
         {/* CUSTOMER REGISTRATION FORM */}
         {mode === 'register' && (
           <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            <div className="input-group">
-              <label className="input-label" htmlFor="reg_name">Full Name</label>
-              <input
-                id="reg_name"
-                type="text"
-                className="input-field"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Jonathan Harker"
-                required
-              />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div>
+                <label className="ostro-auth-label" htmlFor="reg_name">
+                  <User size={13} color="var(--ostro-terracotta)" />
+                  <span>Full Name</span>
+                </label>
+                <input
+                  id="reg_name"
+                  type="text"
+                  className="ostro-auth-input"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Jonathan Harker"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="ostro-auth-label" htmlFor="reg_uname">
+                  <User size={13} color="var(--ostro-terracotta)" />
+                  <span>Username</span>
+                </label>
+                <input
+                  id="reg_uname"
+                  type="text"
+                  className="ostro-auth-input"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="e.g. jonathan"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="input-group">
-              <label className="input-label" htmlFor="reg_uname">Desired Username</label>
-              <input
-                id="reg_uname"
-                type="text"
-                className="input-field"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="e.g. jonathan"
-                required
-              />
-            </div>
-
-            <div className="input-group">
-              <label className="input-label" htmlFor="reg_email">Email Address</label>
+            <div>
+              <label className="ostro-auth-label" htmlFor="reg_email">
+                <Mail size={13} color="var(--ostro-terracotta)" />
+                <span>Email Address</span>
+              </label>
               <input
                 id="reg_email"
                 type="email"
-                className="input-field"
+                className="ostro-auth-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. jonathan@example.com"
@@ -410,47 +382,66 @@ export default function AuthModal({
               />
             </div>
 
-            <div className="input-group">
-              <label className="input-label" htmlFor="reg_pwd">Password</label>
-              <input
-                id="reg_pwd"
-                type="password"
-                className="input-field"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Minimum 4 characters"
-                required
-              />
-            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <div>
+                <label className="ostro-auth-label" htmlFor="reg_pwd">
+                  <Lock size={13} color="var(--ostro-terracotta)" />
+                  <span>Password</span>
+                </label>
+                <input
+                  id="reg_pwd"
+                  type="password"
+                  className="ostro-auth-input"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Min 4 chars"
+                  required
+                />
+              </div>
 
-            <div className="input-group">
-              <label className="input-label" htmlFor="reg_cpwd">Confirm Password</label>
-              <input
-                id="reg_cpwd"
-                type="password"
-                className="input-field"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Re-enter password"
-                required
-              />
+              <div>
+                <label className="ostro-auth-label" htmlFor="reg_cpwd">
+                  <KeyRound size={13} color="var(--ostro-terracotta)" />
+                  <span>Confirm Password</span>
+                </label>
+                <input
+                  id="reg_cpwd"
+                  type="password"
+                  className="ostro-auth-input"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter password"
+                  required
+                />
+              </div>
             </div>
 
             <button
               type="submit"
-              className="submit-btn"
+              className="ostro-auth-submit-btn"
               disabled={loading}
-              style={{ marginTop: '0.5rem' }}
             >
               {loading ? (
                 <span>Registering Account...</span>
               ) : (
                 <>
-                  <User size={16} />
-                  <span>Create Account & Sign In</span>
+                  <Sparkles size={16} />
+                  <span>Create Account & Unlock Sanctuary</span>
                 </>
               )}
             </button>
+
+            {/* Mode Switch to Login */}
+            <div className="ostro-auth-switch-footer">
+              <span>Already have an account?</span>
+              <button 
+                type="button" 
+                className="ostro-auth-switch-link"
+                onClick={() => { setMode('login'); setError(null); }}
+              >
+                Sign in here
+              </button>
+            </div>
           </form>
         )}
 

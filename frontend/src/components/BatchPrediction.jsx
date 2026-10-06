@@ -134,7 +134,7 @@ export default function BatchPrediction({ apiBaseUrl }) {
   return (
     <div className="batch-container">
       {/* Upload Box & Actions */}
-      <div className="mat-card" style={{ padding: '2.5rem', background: '#ffffff', border: '1.5px solid #e2e8f0', borderRadius: '18px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+      <div className="mat-card" style={{ padding: '2.5rem', borderRadius: '18px' }}>
         <div 
           className="upload-dropzone"
           onDrop={handleDrop}
@@ -208,7 +208,7 @@ export default function BatchPrediction({ apiBaseUrl }) {
           <div className="batch-stats-grid">
             <div className="stat-card">
               <span className="stat-title">Total Evaluated</span>
-              <span className="stat-value" style={{ color: '#ffffff' }}>
+              <span className="stat-value" style={{ color: 'var(--text-primary)' }}>
                 {batchResult.total_bookings}
               </span>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Reservations analyzed</span>
