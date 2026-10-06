@@ -5,6 +5,7 @@ import {
   TrendingDown, DollarSign, Users, Building2, Sparkles, 
   X, ShieldCheck, ArrowRight, ChevronRight, Ban
 } from 'lucide-react';
+import MonthlyCancellationLineChart from './MonthlyCancellationLineChart';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -403,6 +404,19 @@ export default function ReservationsRiskMonitor({
         </div>
 
       </div>
+
+      {/* ========================================================================= */}
+      {/* EXECUTIVE UPCOMING MONTHS CANCELLATION FORECAST (INTERACTIVE LINE CHART) */}
+      {/* ========================================================================= */}
+      <MonthlyCancellationLineChart 
+        reservations={reservations}
+        onSelectMonth={(monthName) => {
+          setSelectedMonth(monthName);
+          setSelectedDate('');
+          setDatePreset('all');
+        }}
+        selectedMonthFilter={selectedMonth}
+      />
 
       {/* ========================================================================= */}
       {/* 3 RISK CATEGORIES CARDS (Low, Medium, High) & EXPECTED CANCELLATION SUMMARY */}
