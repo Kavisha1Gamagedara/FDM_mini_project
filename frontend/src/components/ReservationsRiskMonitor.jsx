@@ -6,6 +6,7 @@ import {
   X, ShieldCheck, ArrowRight, ChevronRight, Ban
 } from 'lucide-react';
 import MonthlyCancellationLineChart from './MonthlyCancellationLineChart';
+import DailyCancellationInspector from './DailyCancellationInspector';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -416,6 +417,20 @@ export default function ReservationsRiskMonitor({
           setDatePreset('all');
         }}
         selectedMonthFilter={selectedMonth}
+      />
+
+      {/* ========================================================================= */}
+      {/* TARGET DATE CANCELLATION & ROOM INVENTORY INSPECTOR (HIGH-RISK WATCHLIST) */}
+      {/* ========================================================================= */}
+      <DailyCancellationInspector 
+        reservations={reservations}
+        selectedDate={selectedDate}
+        onSelectDate={(newDate) => {
+          setSelectedDate(newDate);
+          setDatePreset(newDate ? 'custom' : 'all');
+        }}
+        onInspectBooking={onSelectBooking}
+        onCancelReservation={onCancelReservation}
       />
 
       {/* ========================================================================= */}

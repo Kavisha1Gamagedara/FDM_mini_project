@@ -7,6 +7,7 @@ import ModelIntelModal from './components/ModelIntelModal';
 import CustomerPortal from './components/CustomerPortal';
 import ReservationsRiskMonitor from './components/ReservationsRiskMonitor';
 import AuthModal from './components/AuthModal';
+import AdminMaterialDashboard from './components/AdminMaterialDashboard';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -179,23 +180,25 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Top Header & System Indicator with Portal Switcher and RBAC Badges */}
-      <Header 
-        backendHealth={backendHealth} 
-        onOpenIntel={() => setIntelOpen(true)}
-        activePortal={activePortal}
-        onSelectPortal={(portal) => {
-          if (portal === 'admin' && currentUser?.role !== 'admin') {
-            handleOpenAuth('login', true);
-          } else {
-            setActivePortal(portal);
-          }
-        }}
-        customerBookingsCount={customerBookings.length}
-        currentUser={currentUser}
-        onOpenAuth={handleOpenAuth}
-        onLogout={handleLogout}
-      />
+      {/* Top Header only on customer view so admin has native Material sidebar & navbar */}
+      {activePortal === 'customer' && (
+        <Header 
+          backendHealth={backendHealth} 
+          onOpenIntel={() => setIntelOpen(true)}
+          activePortal={activePortal}
+          onSelectPortal={(portal) => {
+            if (portal === 'admin' && currentUser?.role !== 'admin') {
+              handleOpenAuth('login', true);
+            } else {
+              setActivePortal(portal);
+            }
+          }}
+          customerBookingsCount={customerBookings.length}
+          currentUser={currentUser}
+          onOpenAuth={handleOpenAuth}
+          onLogout={handleLogout}
+        />
+      )}
 
       {/* Main Content Render based on Active Portal */}
       <main>
@@ -217,99 +220,25 @@ export default function App() {
               onOpenAuth={handleOpenAuth}
             />
           ) : (
-            <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '6.5rem 1.5rem 3rem 1.5rem', width: '100%' }}>
-              {/* Admin Primary Tab Navigation */}
-              <nav className="tabs-nav" style={{ marginBottom: '1.75rem' }}>
-                <button
-                  type="button"
-                  id="tab-monitor-btn"
-                  className={`tab-btn ${activeTab === 'monitor' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('monitor')}
-                >
-                  <CalendarCheck size={18} />
-                  <span>Live Reservations & Risk Monitor</span>
-                </button>
-
-                <button
-                  type="button"
-                  id="tab-single-btn"
-                  className={`tab-btn ${activeTab === 'single' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('single')}
-                >
-                  <UserCheck size={18} />
-                  <span>Single Booking AI Inspector</span>
-                </button>
-
-                <button
-                  type="button"
-                  id="tab-batch-btn"
-                  className={`tab-btn ${activeTab === 'batch' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('batch')}
-                >
-                  <Layers size={18} />
-                  <span>Batch Portfolio CSV Analyzer</span>
-                </button>
-              </nav>
-
-              {/* Admin Views */}
-              {activeTab === 'monitor' && (
-                <ReservationsRiskMonitor
-                  reservations={customerBookings}
-                  onSelectBooking={(bk) => {
-                    setSelectedCustomerBooking(bk);
-                    setActiveTab('single');
-                  }}
-                  onRefresh={fetchSystemStatus}
-                  onCancelReservation={handleAdminCancelReservation}
-                  isLoading={isLoadingReservations}
-                />
-              )}
-
-              {activeTab === 'single' && (
-                <div>
-                  {selectedCustomerBooking && (
-                    <div style={{ 
-                      padding: '0.85rem 1.25rem', 
-                      marginBottom: '1.25rem', 
-                      borderRadius: '12px', 
-                      background: 'rgba(99,102,241,0.1)', 
-                      border: '1px solid rgba(99,102,241,0.3)',
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'space-between',
-                      flexWrap: 'wrap',
-                      gap: '0.75rem'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
-                        <Sparkles size={16} color="#818cf8" />
-                        <span>
-                          Currently Inspecting Live Reservation: <strong>{selectedCustomerBooking.guest_name}</strong> (#{selectedCustomerBooking.booking_ref})
-                        </span>
-                      </div>
-                      <button 
-                        type="button" 
-                        className="preset-btn"
-                        onClick={() => setActiveTab('monitor')}
-                        style={{ fontSize: '0.75rem', padding: '0.25rem 0.65rem' }}
-                      >
-                        ← Back to Daily Risk Monitor
-                      </button>
-                    </div>
-                  )}
-                  <SinglePrediction 
-                    metadata={metadata} 
-                    apiBaseUrl={API_BASE_URL} 
-                    selectedCustomerBooking={selectedCustomerBooking}
-                  />
-                </div>
-              )}
-
-              {activeTab === 'batch' && (
-                <BatchPrediction 
-                  apiBaseUrl={API_BASE_URL} 
-                />
-              )}
-            </div>
+            <AdminMaterialDashboard 
+              reservations={customerBookings}
+              selectedCustomerBooking={selectedCustomerBooking}
+              onSelectBooking={(bk) => {
+                setSelectedCustomerBooking(bk);
+                setActiveTab('single');
+              }}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              onRefresh={fetchSystemStatus}
+              onCancelReservation={handleAdminCancelReservation}
+              isLoading={isLoadingReservations}
+              metadata={metadata}
+              apiBaseUrl={API_BASE_URL}
+              currentUser={currentUser}
+              onLogout={handleLogout}
+              onSwitchToCustomer={() => setActivePortal('customer')}
+              onOpenIntel={() => setIntelOpen(true)}
+            />
           )}
         </ErrorBoundary>
       </main>
@@ -330,10 +259,12 @@ export default function App() {
         onClose={() => setIntelOpen(false)} 
       />
 
-      {/* Footer */}
-      <footer style={{ marginTop: '3.5rem', textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-        <p>OSTRO Salento • Cliff Sanctuary & Predictive Hospitality • Operational Intelligence Engine</p>
-      </footer>
+      {/* Footer for Customer Portal */}
+      {activePortal === 'customer' && (
+        <footer style={{ marginTop: '3.5rem', textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+          <p>OSTRO Salento • Cliff Sanctuary & Predictive Hospitality • Operational Intelligence Engine</p>
+        </footer>
+      )}
     </div>
   );
 }

@@ -161,10 +161,10 @@ export default function MonthlyCancellationLineChart({
     };
   }, [monthlyData]);
 
-  // SVG Chart Geometry Constants
-  const width = 860;
-  const height = 280;
-  const padding = { top: 35, right: 35, bottom: 45, left: 55 };
+  // SVG Chart Geometry Constants - Expanded for Maximum Visual Clarity
+  const width = 1000;
+  const height = 430;
+  const padding = { top: 50, right: 45, bottom: 55, left: 60 };
   const chartW = width - padding.left - padding.right;
   const chartH = height - padding.top - padding.bottom;
 
@@ -449,26 +449,26 @@ export default function MonthlyCancellationLineChart({
       <div style={{ position: 'relative', width: '100%', overflowX: 'auto', userSelect: 'none' }}>
         <svg 
           viewBox={`0 0 ${width} ${height}`} 
-          style={{ width: '100%', height: 'auto', minWidth: '640px', display: 'block', overflow: 'visible' }}
+          style={{ width: '100%', height: 'auto', minHeight: '380px', display: 'block', overflow: 'visible' }}
           onMouseLeave={() => setHoveredIndex(null)}
         >
           <defs>
             {/* Gradient Fill under predicted cancellations curve */}
             <linearGradient id="cancelGlowGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.38" />
-              <stop offset="70%" stopColor="#f43f5e" stopOpacity="0.08" />
+              <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.45" />
+              <stop offset="60%" stopColor="#f43f5e" stopOpacity="0.12" />
               <stop offset="100%" stopColor="#f43f5e" stopOpacity="0.0" />
             </linearGradient>
 
             {/* Gradient Fill under scheduled bookings */}
             <linearGradient id="schedGlowGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.15" />
+              <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.18" />
               <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.0" />
             </linearGradient>
 
             {/* Glow Filter */}
             <filter id="lineGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
           </defs>
@@ -483,14 +483,15 @@ export default function MonthlyCancellationLineChart({
                   y1={y} 
                   x2={width - padding.right} 
                   y2={y} 
-                  stroke="rgba(255, 255, 255, 0.08)" 
-                  strokeDasharray="4 4" 
+                  stroke="rgba(255, 255, 255, 0.09)" 
+                  strokeDasharray="5 5" 
                 />
                 <text 
-                  x={padding.left - 12} 
-                  y={y + 4} 
+                  x={padding.left - 14} 
+                  y={y + 5} 
                   fill="var(--text-muted)" 
-                  fontSize="11" 
+                  fontSize="12" 
+                  fontWeight="600"
                   textAnchor="end" 
                   fontFamily="monospace"
                 >
@@ -515,9 +516,9 @@ export default function MonthlyCancellationLineChart({
               d={lineSchedPath} 
               fill="none" 
               stroke="#38bdf8" 
-              strokeWidth="2.5" 
-              strokeDasharray="6 4"
-              strokeLinecap="round"
+              strokeWidth="3.2" 
+              strokeDasharray="7 5"
+              strokeLinecap="round" 
               strokeLinejoin="round"
               style={{ transition: 'all 0.3s ease' }}
             />
@@ -529,9 +530,9 @@ export default function MonthlyCancellationLineChart({
               d={lineHighPath} 
               fill="none" 
               stroke="#f59e0b" 
-              strokeWidth="2" 
-              strokeDasharray="2 3"
-              strokeLinecap="round"
+              strokeWidth="2.8" 
+              strokeDasharray="3 4"
+              strokeLinecap="round" 
               strokeLinejoin="round"
               style={{ transition: 'all 0.3s ease' }}
             />
@@ -543,7 +544,7 @@ export default function MonthlyCancellationLineChart({
               d={linePredPath} 
               fill="none" 
               stroke="#f43f5e" 
-              strokeWidth="3.5" 
+              strokeWidth="4" 
               strokeLinecap="round" 
               strokeLinejoin="round"
               filter="url(#lineGlow)"
@@ -581,9 +582,9 @@ export default function MonthlyCancellationLineChart({
                     x2={pt.x} 
                     y2={padding.top + chartH} 
                     stroke={isSelected ? '#34d399' : '#f43f5e'} 
-                    strokeWidth="1.5" 
+                    strokeWidth="1.8" 
                     strokeDasharray="3 3"
-                    opacity={isSelected ? 0.9 : 0.65}
+                    opacity={isSelected ? 0.95 : 0.75}
                   />
                 )}
 
@@ -592,10 +593,10 @@ export default function MonthlyCancellationLineChart({
                   <circle 
                     cx={pt.x} 
                     cy={pt.ySched} 
-                    r={isHovered ? 5.5 : 4} 
+                    r={isHovered ? 6.5 : 4.5} 
                     fill="#111827" 
                     stroke="#38bdf8" 
-                    strokeWidth="2.5" 
+                    strokeWidth="3" 
                   />
                 )}
 
@@ -604,10 +605,10 @@ export default function MonthlyCancellationLineChart({
                   <circle 
                     cx={pt.x} 
                     cy={pt.yHigh} 
-                    r={isHovered ? 4.5 : 3} 
+                    r={isHovered ? 5.5 : 3.5} 
                     fill="#111827" 
                     stroke="#f59e0b" 
-                    strokeWidth="2" 
+                    strokeWidth="2.5" 
                   />
                 )}
 
@@ -618,30 +619,55 @@ export default function MonthlyCancellationLineChart({
                       <circle 
                         cx={pt.x} 
                         cy={pt.yPred} 
-                        r="10" 
+                        r="12" 
                         fill="#f43f5e" 
-                        opacity="0.3" 
+                        opacity="0.35" 
                       />
                     )}
                     <circle 
                       cx={pt.x} 
                       cy={pt.yPred} 
-                      r={isHovered ? 6.5 : 4.5} 
+                      r={isHovered ? 7.5 : 5.5} 
                       fill="#f43f5e" 
                       stroke="#ffffff" 
-                      strokeWidth="2" 
+                      strokeWidth="2.5" 
                     />
+
+                    {/* Direct readable prediction badge right above the node */}
+                    <g transform={`translate(${pt.x}, ${pt.yPred - 24})`}>
+                      <rect 
+                        x="-20" 
+                        y="-10" 
+                        width="40" 
+                        height="18" 
+                        rx="9" 
+                        fill="#e11d48" 
+                        stroke="#ffffff" 
+                        strokeWidth="1.5" 
+                      />
+                      <text 
+                        x="0" 
+                        y="3" 
+                        textAnchor="middle" 
+                        fill="#ffffff" 
+                        fontSize="10" 
+                        fontWeight="700"
+                        fontFamily="sans-serif"
+                      >
+                        ~{pt.data.predictedCancellations}
+                      </text>
+                    </g>
                   </g>
                 )}
 
                 {/* X-Axis Month Label */}
                 <text 
                   x={pt.x} 
-                  y={padding.top + chartH + 24} 
+                  y={padding.top + chartH + 26} 
                   textAnchor="middle" 
                   fill={isHovered ? '#ffffff' : (isSelected ? '#34d399' : 'var(--text-secondary)')} 
-                  fontSize={isHovered ? '12' : '11'} 
-                  fontWeight={isHovered || isSelected ? '700' : '500'}
+                  fontSize={isHovered ? '13' : '12'} 
+                  fontWeight={isHovered || isSelected ? '700' : '600'}
                   letterSpacing="0.02em"
                 >
                   {pt.data.shortLabel}
